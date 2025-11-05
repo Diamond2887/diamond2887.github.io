@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《艾尔登法环》属性补正系统详解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e9e9e9;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(15, 23, 42, 0.8);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #3a506b;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #ffd166;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a5b4cb;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            color: #06d6a0;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3a506b;
+        }
+        
+        h3 {
+            color: #ffd166;
+            margin: 25px 0 15px;
+        }
+        
+        h4 {
+            color: #a5b4cb;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background-color: rgba(26, 32, 44, 0.6);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3a506b;
+        }
+        
+        .highlight {
+            background-color: rgba(6, 214, 160, 0.1);
+            border-left: 4px solid #06d6a0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background-color: rgba(239, 71, 111, 0.1);
+            border-left: 4px solid #ef476f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            background-color: rgba(58, 80, 107, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            background-color: rgba(58, 80, 107, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .tab:hover {
+            background-color: rgba(58, 80, 107, 0.7);
+        }
+        
+        .tab.active {
+            background-color: #3a506b;
+            color: #ffd166;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: rgba(26, 32, 44, 0.8);
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .chart-container {
+            background-color: rgba(15, 23, 42, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #3a506b;
+        }
+        
+        th {
+            background-color: rgba(58, 80, 107, 0.5);
+            color: #ffd166;
+        }
+        
+        tr:hover {
+            background-color: rgba(58, 80, 107, 0.2);
+        }
+        
+        .build-box {
+            background-color: rgba(26, 32, 44, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #ef476f;
+        }
+        
+        .build-title {
+            color: #ef476f;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        .attribute-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .attribute-item {
+            background-color: rgba(58, 80, 107, 0.3);
+            padding: 10px;
+            border-radius: 6px;
+        }
+        
+        .attribute-name {
+            color: #ffd166;
+            font-weight: bold;
+        }
+        
+        .attribute-value {
+            color: #06d6a0;
+        }
+        
+        .example-box {
+            background-color: rgba(26, 32, 44, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #118ab2;
+        }
+        
+        .example-title {
+            color: #118ab2;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .mechanism-box {
+            background-color: rgba(26, 32, 44, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ffd166;
+        }
+        
+        .mechanism-title {
+            color: #ffd166;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            color: #06d6a0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #3a506b;
+            color: #a5b4cb;
+            font-size: 0.9rem;
+        }
+        
+        .expandable {
+            margin: 15px 0;
+        }
+        
+        .expandable-header {
+            background-color: rgba(58, 80, 107, 0.5);
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .expandable-content {
+            display: none;
+            padding: 15px;
+            background-color: rgba(26, 32, 44, 0.6);
+            border-radius: 0 0 6px 6px;
+        }
+        
+        .expandable.active .expandable-content {
+            display: block;
+        }
+        
+        .section-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .section-nav-item {
+            padding: 10px 15px;
+            background-color: rgba(58, 80, 107, 0.5);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .section-nav-item:hover {
+            background-color: rgba(58, 80, 107, 0.7);
+        }
+        
+        .section-nav-item.active {
+            background-color: #3a506b;
+            color: #ffd166;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                min-width: 100%;
+            }
+            
+            .attribute-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-nav {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>《艾尔登法环》属性补正系统详解</h1>
+            <p class="subtitle">全面解析法术属性补正与武器质变补正机制，提供PVE与PVP场景下的实用角色build推荐（基于2025年11月版本）</p>
+        </header>
+        
+        <div class="section-nav">
+            <div class="section-nav-item active" data-section="section1">法术补正机制</div>
+            <div class="section-nav-item" data-section="section2">武器质变机制</div>
+            <div class="section-nav-item" data-section="section3">流派加点策略</div>
+            <div class="section-nav-item" data-section="section4">PVE Build推荐</div>
+            <div class="section-nav-item" data-section="section5">PVP Build推荐</div>
+            <div class="section-nav-item" data-section="section6">实战优化指南</div>
+        </div>
+        
+        <div class="section active" id="section1">
+            <h2>一、法术属性补正机制深度解析</h2>
+            
+            <div class="highlight">
+                <p>《艾尔登法环》的法术加成计算采用了相对复杂但可预测的公式体系。根据最新的游戏数据研究，<strong>魔法加成的基础公式为：魔法加成=100+∑(基础法强×属性修正倍率)×强化补正</strong>。</p>
+            </div>
+            
+            <div class="expandable">
+                <div class="expandable-header">
+                    <h3>法术加成计算公式与核心要素</h3>
+                    <span>▼</span>
+                </div>
+                <div class="expandable-content">
+                    <p>魔法加成公式详解：</p>
+                    <div class="formula">
+                        魔法加成 = 100 + ∑(基础法强 × 属性修正倍率) × 强化补正
+                    </div>
+                    <p><strong>基础法强</strong>：当角色智力达到99且法杖强化等级为+0时的魔法加成数值。</p>
+                    <p><strong>属性修正倍率</strong>：角色当前属性值对法杖潜力的发挥程度，不同法杖拥有不同的修正曲线。</p>
+                    <p><strong>强化补正</strong>：根据强化类型有所不同，满级时补正为0级时的3倍。</p>
+                    
+                    <div class="example-box">
+                        <div class="example-title">具体例子：死王子杖魔法加成计算</div>
+                        <p>当角色拥有80智力和80信仰时，使用15号修正曲线：</p>
+                        <div class="formula">
+                            100 + (58 × 95% + 58 × 95%) × 3 = 430.6 ≈ 430
+                        </div>
+                        <p>这个计算过程展示了智力和信仰双属性补正的协同效应。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="intelligence">智力补正</div>
+                <div class="tab" data-tab="faith">信仰补正</div>
+                <div class="tab" data-tab="arcane">感应补正</div>
+            </div>
+            
+            <div class="tab-content active" id="intelligence">
+                <h3>智力属性对辉石魔法的补正机制</h3>
+                <p>智力属性是辉石魔法的核心加成属性，直接决定了法师流派的输出上限。智力不仅影响魔法伤害，还决定了角色能够使用的法术等级和种类。</p>
+                
+                <div class="chart-container">
+                    <h4>智力属性收益曲线</h4>
+                    <table>
+                        <tr>
+                            <th>智力值</th>
+                            <th>修正倍率</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>40%</td>
+                            <td>基础法术门槛</td>
+                        </tr>
+                        <tr>
+                            <td>30</td>
+                            <td>55%</td>
+                            <td>早熟型法杖最佳收益点</td>
+                        </tr>
+                        <tr>
+                            <td>50</td>
+                            <td>70%</td>
+                            <td>中期收益阈值</td>
+                        </tr>
+                        <tr>
+                            <td>60</td>
+                            <td>75%</td>
+                            <td>软上限1，收益开始下降</td>
+                        </tr>
+                        <tr>
+                            <td>80</td>
+                            <td>90%</td>
+                            <td>软上限2，晚熟型法杖最佳收益点</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="mechanism-box">
+                    <div class="mechanism-title">法杖修正曲线类型</div>
+                    <p><strong>早熟型</strong>：30智力时达到55%修正，45智力时达到75%修正（例：亚人女王杖）</p>
+                    <p><strong>偏早熟型</strong>：20智力时达到40%修正，40智力时达到60%修正</p>
+                    <p><strong>晚熟型</strong>：80智力时才达到95%修正，60智力后成长更快（例：卢瑟特辉石杖）</p>
+                    <p><strong>偏晚熟型</strong>：60智力时达到75%修正，80智力时达到90%修正</p>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">彗星亚兹勒伤害示例</div>
+                    <p>在理想状态下（80智力、满级法杖、各种增益），彗星亚兹勒单次命中可以造成4000点以上的伤害。</p>
+                    <p>对于大型BOSS，彗星亚兹勒可以造成毁灭性打击，是法师流的核心输出法术。</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="faith">
+                <h3>信仰属性对祷告系统的补正机制</h3>
+                <p>信仰属性是祷告系统的核心，影响着黄金树魔法、火焰魔法、雷电魔法等多种类型的法术威力。与智力类似，<strong>信仰既是祷告伤害的修正器，也是使用祷告的必需能力值</strong>。</p>
+                
+                <div class="chart-container">
+                    <h4>不同类型圣印记的信仰补正曲线</h4>
+                    <table>
+                        <tr>
+                            <th>圣印记类型</th>
+                            <th>30信仰</th>
+                            <th>45信仰</th>
+                            <th>60信仰</th>
+                            <th>80信仰</th>
+                        </tr>
+                        <tr>
+                            <td>指头印记</td>
+                            <td>40%</td>
+                            <td>60%</td>
+                            <td>75%</td>
+                            <td>90%</td>
+                        </tr>
+                        <tr>
+                            <td>爪痕印记</td>
+                            <td>55%</td>
+                            <td>75%</td>
+                            <td>85%</td>
+                            <td>95%</td>
+                        </tr>
+                        <tr>
+                            <td>黄金树印记</td>
+                            <td>30%</td>
+                            <td>50%</td>
+                            <td>75%</td>
+                            <td>95%</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">龙飨印记双属性补正机制</div>
+                    <p>龙飨印记采用双属性补正模式，井号前代表信仰补正，井号后代表感应补正。</p>
+                    <p>当玩家拥有20信仰和40感应时：</p>
+                    <div class="formula">
+                        20信仰对应22法强 + 40感应对应153法强 = 175法强
+                    </div>
+                    <p>游戏内显示为275法术加成。</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="arcane">
+                <h3>感应属性对特殊法术的补正机制</h3>
+                <p>感应属性在《艾尔登法环》中是一个常被忽视但极具潜力的属性。虽然感应不直接影响主流的辉石魔法和大部分祷告，但它对某些特殊法术具有决定性影响。</p>
+                
+                <p><strong>感应属性主要影响龙息法术、血焰祷告等特殊类型法术的威力</strong>。龙息类法术是感应补正的典型代表。感应属性可显著增强龙息祷告的威力，如"腐败吐息"和"龙冰吐息"等。</p>
+                
+                <div class="highlight">
+                    <p>根据玩家测试数据，<strong>感应在30-50点时达到最高收益，特别是30点时效果最为明显</strong>。对于异常状态效果，感应的软上限在30-80点之间，20点时收益最低。</p>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">感应对出血效果的影响</div>
+                    <p>以血质变武器为例，感应属性对出血积累的影响：</p>
+                    <ul>
+                        <li>感应20点：出血积累+20</li>
+                        <li>感应30点：出血积累+45（收益最高点）</li>
+                        <li>感应50点：出血积累+65</li>
+                        <li>感应80点：出血积累+85</li>
+                    </ul>
+                    <p>这种设计使得出血流build需要在感应属性上投入大量点数。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="section2">
+            <h2>二、武器质变补正机制全面剖析</h2>
+            
+            <p>《艾尔登法环》的武器质变系统提供了多达13种不同的质变类型，每种质变都能显著改变武器的性能特征。</p>
+            
+            <div class="chart-container">
+                <h3>主要质变类型及其特点</h3>
+                <table>
+                    <tr>
+                        <th>质变类型</th>
+                        <th>伤害类型</th>
+                        <th>主要补正属性</th>
+                        <th>基础面板变化</th>
+                        <th>特点</th>
+                    </tr>
+                    <tr>
+                        <td>厚重</td>
+                        <td>物理</td>
+                        <td>力量</td>
+                        <td>+0%</td>
+                        <td>提升力量补正，适合力量型角色</td>
+                    </tr>
+                    <tr>
+                        <td>锋利</td>
+                        <td>物理</td>
+                        <td>敏捷</td>
+                        <td>+0%</td>
+                        <td>提升敏捷补正，适合敏捷型角色</td>
+                    </tr>
+                    <tr>
+                        <td>优质</td>
+                        <td>物理</td>
+                        <td>力量/敏捷</td>
+                        <td>-20%</td>
+                        <td>平衡力量和敏捷补正</td>
+                    </tr>
+                    <tr>
+                        <td>魔力</td>
+                        <td>魔法</td>
+                        <td>智力</td>
+                        <td>-24%</td>
+                        <td>附加魔法伤害，适合法师</td>
+                    </tr>
+                    <tr>
+                        <td>焰术</td>
+                        <td>火焰</td>
+                        <td>信仰</td>
+                        <td>-24%</td>
+                        <td>附加火焰伤害，适合信仰流</td>
+                    </tr>
+                    <tr>
+                        <td>血</td>
+                        <td>物理+出血</td>
+                        <td>感应</td>
+                        <td>-16%</td>
+                        <td>附加出血效果，适合出血流</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="highlight">
+                <p>无论哪种强化方式，<strong>最终强化到满级时，补正都为0级时的3倍</strong>。普通强化武器每5级能增加40%的补正，失色强化武器每级增加20%补正。</p>
+            </div>
+            
+            <div class="expandable">
+                <div class="expandable-header">
+                    <h3>武器强化规则详解</h3>
+                    <span>▼</span>
+                </div>
+                <div class="expandable-content">
+                    <p><strong>普通武器</strong>：使用普通锻造石强化，最高可强化至+25，每级强化需要3个锻造石。</p>
+                    <p><strong>特殊武器</strong>：使用失色锻造石强化，最高只能强化至+10，每级强化仅需要1个失色锻造石。</p>
+                    
+                    <div class="chart-container">
+                        <h4>普通强化武器的补正增长</h4>
+                        <table>
+                            <tr>
+                                <th>强化等级</th>
+                                <th>补正倍率</th>
+                                <th>累计提升</th>
+                            </tr>
+                            <tr>
+                                <td>+0</td>
+                                <td>100%</td>
+                                <td>0%</td>
+                            </tr>
+                            <tr>
+                                <td>+5</td>
+                                <td>140%</td>
+                                <td>40%</td>
+                            </tr>
+                            <tr>
+                                <td>+10</td>
+                                <td>180%</td>
+                                <td>80%</td>
+                            </tr>
+                            <tr>
+                                <td>+15</td>
+                                <td>220%</td>
+                                <td>120%</td>
+                            </tr>
+                            <tr>
+                                <td>+20</td>
+                                <td>260%</td>
+                                <td>160%</td>
+                            </tr>
+                            <tr>
+                                <td>+25</td>
+                                <td>300%</td>
+                                <td>200%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <div class="example-title">火焰质变武器伤害计算示例</div>
+                <p>以一把基础物理伤害为200的武器为例：</p>
+                <ul>
+                    <li>火焰质变扣除约三分之一的基础物理面板：200 × 0.67 ≈ 134物理伤害</li>
+                    <li>提供等量的火焰面板：134火焰伤害</li>
+                    <li>力量可以同时补正物理和火焰面板</li>
+                </ul>
+                <p>当角色拥有50力量时（厚重质变70%补正）：</p>
+                <div class="formula">
+                    总伤害 = (134 + 134 × 70%) + (134 + 134 × 70%) ≈ 455
+                </div>
+                <p>这种设计使得力量型角色使用火焰质变武器时能获得额外收益。</p>
+            </div>
+        </div>
+        
+        <div class="section" id="section3">
+            <h2>三、法术与武器补正的协同策略</h2>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="mage">法师流</div>
+                <div class="tab" data-tab="faith">信仰流</div>
+                <div class="tab" data-tab="melee">近战流</div>
+                <div class="tab" data-tab="hybrid">混合流</div>
+            </div>
+            
+            <div class="tab-content active" id="mage">
+                <h3>法师流角色的属性分配策略</h3>
+                <p>法师流角色的核心在于智力和专注力的精妙平衡，这种平衡直接决定了角色的输出能力和生存能力。</p>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">游戏前期 (1-30级)</div>
+                        <div class="attribute-value">智力→集中力→活力→耐力</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">中期阶段 (30-60级)</div>
+                        <div class="attribute-value">智力50→集中力30→活力30</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">后期阶段 (60级以上)</div>
+                        <div class="attribute-value">智力80→集中力40→活力40</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">法师流属性分配示例</div>
+                    <p><strong>前期加点顺序</strong>：</p>
+                    <ol>
+                        <li>优先将智力提升至20点（解锁大部分基础法术）</li>
+                        <li>集中力同步提升至20点（保证蓝量充足）</li>
+                        <li>活力提升至15-20点（确保基本的生存能力）</li>
+                        <li>耐力保持在10-12点（满足装备需求）</li>
+                    </ol>
+                    <p>这种分配方式确保了在资源有限的情况下，能够最大化法术伤害的同时保持足够的续航和生存能力。</p>
+                </div>
+                
+                <p>装备选择上，法师流需要特别注意武器的补正属性。陨石杖作为初期神器，在盖利德地区就能捡到，自带S级智力补正，配合岩石球法术推图效率极高。</p>
+            </div>
+            
+            <div class="tab-content" id="faith">
+                <h3>信仰流角色的属性分配策略</h3>
+                <p>信仰流角色的属性分配策略与法师流既有相似之处，又有其独特性。信仰流不仅要考虑伤害输出，还要兼顾治疗和辅助能力。</p>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">基础信仰流</div>
+                        <div class="attribute-value">信仰25点</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">进阶信仰流</div>
+                        <div class="attribute-value">信仰30-50点</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">纯信仰流</div>
+                        <div class="attribute-value">信仰60-80点</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">黄金树恢复治疗量示例</div>
+                    <p>黄金树恢复作为游戏中最强的回血法术，其治疗量极高：</p>
+                    <ul>
+                        <li>基础治疗量：800点</li>
+                        <li>受信仰属性加成：每点信仰增加约10点治疗量</li>
+                        <li>80信仰时治疗量可达1600点以上</li>
+                    </ul>
+                    <p>这种强大的治疗能力可以让玩家完全不带血瓶，直接携带13瓶蓝瓶，相当于2瓶红药的治疗效果。</p>
+                </div>
+                
+                <div class="expandable">
+                    <div class="expandable-header">
+                        <h4>信仰流核心祷告与效果</h4>
+                        <span>▼</span>
+                    </div>
+                    <div class="expandable-content">
+                        <p><strong>黄金树立誓</strong>：提供15%伤害提升，持续80秒，是信仰流的核心增益技能。</p>
+                        <p><strong>火焰赐予我力量</strong>：提升20%物理和火焰伤害，持续30秒，适合火焰祷告流。</p>
+                        <p><strong>划空癫火</strong>：远程癫火攻击，基础伤害300，受信仰和癫火圣印记加成。</p>
+                        <p><strong>黄金树恩惠</strong>：持续回血，持续80秒，提供稳定的生存能力。</p>
+                    </div>
+                </div>
+                
+                <p>装备选择上，癫火圣印记和黄金树圣印记是毕业级别的选择，前者强化癫火伤害，后者提升黄金律法祷告效果。</p>
+            </div>
+            
+            <div class="tab-content" id="melee">
+                <h3>近战流角色的属性分配策略</h3>
+                <p>近战流角色的属性分配策略主要分为力量型、敏捷型和力敏混合型三种方向。每种方向都有其独特的优势和适用场景。</p>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">力量型战士</div>
+                        <div class="attribute-value">力量50，活力40，耐力30</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">敏捷型战士</div>
+                        <div class="attribute-value">敏捷50，活力40，耐力20</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">力敏混合型</div>
+                        <div class="attribute-value">力量40，敏捷40，活力45</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">厚重质变与锋利质变补正曲线</div>
+                    <p>根据详细的数据分析，主要质变类型的属性补正遵循以下规律：</p>
+                    <ul>
+                        <li><strong>厚重质变</strong>：补正曲线为37%-70%-94%（20-50-80属性）</li>
+                        <li><strong>锋利质变</strong>：补正曲线为39%-71%-94%（20-50-80属性）</li>
+                    </ul>
+                    <p>这种补正曲线的设计反映了游戏对不同加点策略的平衡考量。20-50-80这三个软上限节点是大部分物理质变的共同特征。</p>
+                </div>
+                
+                <p>护符选择上，近战流通常会选择大槌护符、大壶众武护符等强化攻击性能的配置。防具方面，需要保证韧性值不低于60以避免攻击被打断。</p>
+            </div>
+            
+            <div class="tab-content" id="hybrid">
+                <h3>混合流角色的属性分配策略</h3>
+                <p>混合流角色是《艾尔登法环》中最具挑战性也最有趣的build类型，它们试图在不同属性之间找到最佳平衡点。</p>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">纯智力法师</div>
+                        <div class="attribute-value">40血、55蓝、80智、45敏</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">死王子流派</div>
+                        <div class="attribute-value">40红蓝、80智信、30耐</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">智信双修流</div>
+                        <div class="attribute-value">25血、30集中、45智、45信</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">夜与火之剑双属性加成</div>
+                    <p>夜与火之剑是智信双加成武器的代表：</p>
+                    <ul>
+                        <li>夜形态：释放魔法激光，伤害受智力加成</li>
+                        <li>火形态：喷射火焰，伤害受信仰加成</li>
+                        <li>在60智力、24信仰的配置下，单次战技伤害可达4000点以上</li>
+                        <li>甚至能对大型BOSS造成硬直</li>
+                    </ul>
+                    <p>这种设计使得夜与火之剑成为混合流build的核心武器之一。</p>
+                </div>
+                
+                <p>混合流角色的装备选择更加多样化。防具方面，需要根据具体build选择，通常会选择轻型或中型护甲以保持机动性。</p>
+            </div>
+        </div>
+        
+        <div class="section" id="section4">
+            <h2>四、PVE场景实用角色build推荐</h2>
+            
+            <div class="build-box">
+                <div class="build-title">纯法师流PVE build：极致输出的魔法掌控者</div>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心加点</div>
+                        <div class="attribute-value">40血、55蓝、24耐、17力、45敏、80智</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心装备</div>
+                        <div class="attribute-value">死王子杖、名刀月隐、猎犬长牙</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心法术</div>
+                        <div class="attribute-value">彗星亚兹勒、魔法之境、帚星</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">护符搭配</div>
+                        <div class="attribute-value">魔法师块、拉冈达肖像、魔力对蝎</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">实战策略与伤害输出</div>
+                    <p><strong>BOSS战策略：</strong> 面对大型BOSS时，先释放魔法之境（提升35%法术伤害），然后找好位置释放彗星亚兹勒，体型越大的敌人受到的伤害越高，熟练后打任何BOSS都能在几分钟内结束战斗。</p>
+                    <p><strong>清场策略：</strong> 面对群怪时，可以使用帚星或岩石球进行清场。帚星的基础伤害为250，配合80智力和满级法杖，实际伤害可达800以上。</p>
+                    <p><strong>近战应对：</strong> 遇到需要近战的情况，可以切换名刀月隐使用居合斩进行快速打击。名刀月隐的居合斩兼具物理和魔法伤害，在45敏捷和80智力的加成下，单次伤害可达1200以上。</p>
+                </div>
+            </div>
+            
+            <div class="build-box">
+                <div class="build-title">纯信仰流PVE build：神圣力量的虔诚信徒</div>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心加点</div>
+                        <div class="attribute-value">40血、55蓝、24耐、80信</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心装备</div>
+                        <div class="attribute-value">癫火圣印记、黄金树圣印记、亵渎圣剑</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心祷告</div>
+                        <div class="attribute-value">黄金树恢复、黄金树立誓、划空癫火</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">护符搭配</div>
+                        <div class="attribute-value">火蝎符、信徒的立誓布、双指传说</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">信仰流战术特点与实战应用</div>
+                    <p><strong>攻防一体：</strong> 进攻时可以使用火焰疗愈、划空癫火等强力祷告，防守时可以使用黄金树恢复进行治疗，黄金树恩惠提供持续回血。</p>
+                    <p><strong>持久战优势：</strong> 面对BOSS时，可以先开启黄金树立誓获得15%伤害提升，然后使用高伤害祷告进行输出。这种build特别适合持久战，因为强大的治疗能力保证了几乎无限的续航。</p>
+                    <p><strong>装备协同：</strong> 亵渎圣剑配合黄金树立誓，能够在近战中吸血，远程释放划空癫火，BOSS战前开启黄金树立誓与火焰力量获得额外增伤。</p>
+                </div>
+            </div>
+            
+            <div class="build-box">
+                <div class="build-title">出血流PVE build：百分比伤害的恐怖收割者</div>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心加点</div>
+                        <div class="attribute-value">40血、20蓝、30耐、20力、20敏、60感</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心装备</div>
+                        <div class="attribute-value">亵渎圣剑、莫格温圣矛、暗月大剑</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心技能</div>
+                        <div class="attribute-value">鲜血征收、切腹</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">护符搭配</div>
+                        <div class="attribute-value">鲜血君王的欢愉、溃烂血刃、黄金树恩惠+2</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">出血机制与伤害计算</div>
+                    <p><strong>出血效果：</strong> 当敌人出血量表积累满时，会立即损失最大生命值的15%+固定值（约200点）。</p>
+                    <p><strong>出血积累：</strong> 感应属性直接影响出血积累速度。60感应时，血质变武器的出血积累可达120以上。</p>
+                    <p><strong>鲜血君王的欢愉：</strong> 当敌人出血时，佩戴者获得20%全伤害加成，持续20秒。</p>
+                    <p><strong>实战策略：</strong> 开局可以使用切腹战技在自己身上触发出血，激活鲜血君王的欢愉效果。然后使用高频攻击的武器快速积累敌人的出血量表。一旦敌人进入出血状态，立即切换高伤害武器或技能进行输出。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="section5">
+            <h2>五、PVP场景实用角色build推荐</h2>
+            
+            <div class="build-box">
+                <div class="build-title">纯法师流PVP build：远程压制的魔法大师</div>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心加点</div>
+                        <div class="attribute-value">50血、30蓝、20耐、15力、45敏、60智</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心装备</div>
+                        <div class="attribute-value">学院辉石杖、名刀月隐、暗月大剑</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心法术</div>
+                        <div class="attribute-value">亚杜拉的月光剑、创星雨、毁灭流星</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">关键战技</div>
+                        <div class="attribute-value">猎犬步伐</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">PVP战术核心与伤害数据</div>
+                    <p><strong>猎犬步伐：</strong> 提供无敌帧，是法师在PVP中保持距离的关键。</p>
+                    <p><strong>创星雨：</strong> 范围控制法术，基础伤害150，配合60智力可达450，主要用于限制对手走位。</p>
+                    <p><strong>毁灭流星：</strong> 连发压制法术，单发伤害200，全中可达1200以上，用于消耗对手精力和血量。</p>
+                    <p><strong>亚杜拉的月光剑：</strong> 主力爆发技能，基础伤害400，配合60智力可达1200，且具有高削韧，能够两次打出处决硬直。</p>
+                    <p><strong>战术要点：</strong> 开局使用猎犬步伐保持距离，然后用创星雨隔断对手的接近路线。在对手试图近身时，使用连发的毁灭流星进行压制，消耗其精力和血量。一旦找到机会，立即释放亚杜拉的月光剑进行爆发。</p>
+                </div>
+            </div>
+            
+            <div class="build-box">
+                <div class="build-title">出血流PVP build：瞬间爆发的致命刺客</div>
+                
+                <div class="attribute-list">
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心加点</div>
+                        <div class="attribute-value">50血、20蓝、25耐、15力、50敏、60感</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心装备</div>
+                        <div class="attribute-value">双剥尸曲剑、双十字刀、莫格温圣矛</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">核心战技</div>
+                        <div class="attribute-value">切腹、猎犬步伐</div>
+                    </div>
+                    <div class="attribute-item">
+                        <div class="attribute-name">护符搭配</div>
+                        <div class="attribute-value">鲜血君王的欢愉、溃烂血刃、黄金树恩惠+2</div>
+                    </div>
+                </div>
+                
+                <div class="example-box">
+                    <div class="example-title">PVP战术特点与爆发伤害</div>
+                    <p><strong>双持出血武器：</strong> 双剥尸曲剑或双十字刀，配合切腹战技，出血积累可达150以上。</p>
+                    <p><strong>莫格温圣矛：</strong> 战技造成的伤害包括物理火焰混合伤害和出血百分比伤害，配合鲜血君王的欢愉护符（出血时增加20%全伤），能够实现恐怖的伤害输出。</p>
+                    <p><strong>爆发连招：</strong> 开局使用猎犬步伐快速接近对手，然后通过高频攻击快速积累出血量表。一旦对手进入出血状态，立即使用强力的武器技能进行爆发。</p>
+                    <p><strong>典型连招伤害：</strong> 双剥尸曲剑4次连击（约2秒）可触发出血，造成15%最大生命值伤害，然后切换莫格温圣矛使用战技，配合20%全伤加成，可再造成2000+伤害。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="section6">
+            <h2>六、实战应用与build优化指南</h2>
+            
+            <h3>游戏内伤害显示系统的高效利用</h3>
+            <p>《艾尔登法环》的伤害显示系统为玩家提供了丰富的信息，熟练掌握这些信息的解读方法是优化build的基础。</p>
+            
+            <div class="highlight">
+                <p><strong>基础伤害构成分析</strong>显示为A+B的形式，其中A代表基础伤害，B代表补正伤害。这个显示方式适用于物理伤害以及火、雷、圣等元素伤害。</p>
+            </div>
+            
+            <div class="example-box">
+                <div class="example-title">伤害显示示例</div>
+                <p>一把武器显示物理伤害为150+200：</p>
+                <ul>
+                    <li>基础物理伤害：150</li>
+                    <li>力量或敏捷补正提供了200的额外伤害</li>
+                    <li>总物理伤害：350</li>
+                </ul>
+                <p>对于混合伤害武器，如火焰质变武器，会显示为：</p>
+                <ul>
+                    <li>物理伤害：100+150</li>
+                    <li>火焰伤害：100+120</li>
+                    <li>总伤害：(100+150) + (100+120) = 470</li>
+                </ul>
+            </div>
+            
+            <h3>装备组合效果的科学测试方法</h3>
+            <p>科学的测试方法是优化装备组合的关键，以下是一些实用的测试技巧和流程：</p>
+            
+            <ul>
+                <li><strong>基础测试环境的建立：</strong> 选择一个固定的测试目标，最好是不会移动的假人或木桩。</li>
+                <li><strong>单一变量测试法：</strong> 每次测试只改变一个变量，例如只更换武器、只更换护符等。</li>
+                <li><strong>多次测量取平均值：</strong> 由于游戏中存在一定的随机性，建议进行至少10次以上的测试。</li>
+                <li><strong>不同场景下的测试：</strong> 装备的效果可能在不同场景下有所差异。</li>
+            </ul>
+            
+            <div class="example-box">
+                <div class="example-title">护符效果测试示例</div>
+                <p>测试魔力对蝎护符的效果：</p>
+                <ol>
+                    <li>选择固定的测试目标（如巨人山顶的巨人）</li>
+                    <li>不佩戴魔力对蝎，使用帚星攻击10次，记录平均伤害</li>
+                    <li>佩戴魔力对蝎，使用帚星攻击10次，记录平均伤害</li>
+                    <li>计算伤害提升百分比</li>
+                </ol>
+                <p>通过这种方法，可以准确评估护符的实际效果，避免受到其他因素的干扰。</p>
+            </div>
+            
+            <h3>build优化与调整的科学方法</h3>
+            <p>科学的build优化方法能够帮助玩家不断提升角色的战斗力，以下是一些实用的优化技巧和流程：</p>
+            
+            <ul>
+                <li><strong>洗点系统的合理利用：</strong> 玩家可以在击败满月女王雷娜拉后解锁"重新诞生"功能。</li>
+                <li><strong>阶段性优化策略：</strong> 根据游戏进程调整build配置。</li>
+                <li><strong>数据分析与对比：</strong> 建立一个数据记录表，记录不同装备组合、不同属性加点下的伤害数据。</li>
+                <li><strong>实战检验与调整：</strong> 理论数据只是参考，实际游戏中的表现才是最重要的。</li>
+            </ul>
+            
+            <div class="warning">
+                <p><strong>注意：</strong> 游戏提供了洗点功能，玩家可以在击败满月女王雷娜拉后解锁"重新诞生"功能，消耗泪滴幼体来重置所有属性点。这使得玩家可以根据游戏进程和装备获取情况随时调整build策略，大大提高了游戏的灵活性。</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>《艾尔登法环》属性补正系统详解 - 基于2025年11月版本数据</p>
+            <p>内容由 AI 生成，仅供参考</p>
+        </footer>
+    </div>
+
+    <script>
+        // 标签切换功能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有标签和内容的active类
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 为当前标签和对应内容添加active类
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 可展开内容功能
+        document.querySelectorAll('.expandable-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const expandable = header.parentElement;
+                expandable.classList.toggle('active');
+            });
+        });
+        
+        // 章节导航功能
+        document.querySelectorAll('.section-nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // 移除所有章节和导航项的active类
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.section-nav-item').forEach(i => i.classList.remove('active'));
+                
+                // 为当前章节和导航项添加active类
+                item.classList.add('active');
+                const sectionId = item.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+                
+                // 滚动到章节顶部
+                document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
