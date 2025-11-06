@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Godot游戏引擎全面技术分析</title>
+    <style>
+        :root {
+            --primary: #478cbf;
+            --primary-dark: #2c5c8a;
+            --secondary: #6c757d;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background-color: var(--dark);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0.5rem;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            border-radius: 4px;
+            margin: 0.2rem;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-btn.active {
+            background-color: var(--primary);
+        }
+        
+        main {
+            padding: 2rem;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        h2 {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem;
+        }
+        
+        h3 {
+            color: var(--primary);
+            margin: 1.5rem 0 0.8rem;
+        }
+        
+        h4 {
+            color: var(--secondary);
+            margin: 1.2rem 0 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        .collapsible {
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .collapsible-header {
+            background-color: var(--light);
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .collapsible-header:hover {
+            background-color: #e9ecef;
+        }
+        
+        .collapsible-content {
+            padding: 1rem;
+            border-top: 1px solid #ddd;
+            background-color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        code {
+            background-color: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+        
+        pre {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.4;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--primary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 50px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-content {
+            background-color: var(--light);
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        
+        .chart-container {
+            margin: 2rem 0;
+            height: 300px;
+            position: relative;
+        }
+        
+        .bar-chart {
+            display: flex;
+            height: 100%;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+        
+        .bar {
+            width: 60px;
+            background-color: var(--primary);
+            position: relative;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s;
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .comparison-table {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background-color: #ddd;
+            margin: 1rem 0;
+        }
+        
+        .comparison-cell {
+            background-color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .comparison-header {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+            background-color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: var(--light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+        }
+        
+        .tag-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .tag-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .tag-warning {
+            background-color: var(--warning);
+            color: black;
+        }
+        
+        .tag-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--dark);
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-table {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bar-chart {
+                flex-direction: column;
+                height: auto;
+                align-items: center;
+            }
+            
+            .bar {
+                width: 80%;
+                height: 40px !important;
+                margin-bottom: 30px;
+            }
+            
+            .bar-label {
+                bottom: -20px;
+            }
+            
+            .bar-value {
+                top: -20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Godot游戏引擎全面技术分析</h1>
+            <div class="subtitle">开源游戏引擎的技术演进、核心特性与竞争格局</div>
+        </header>
+        
+        <nav>
+            <button class="nav-btn active" data-section="section1">发展历程</button>
+            <button class="nav-btn" data-section="section2">渲染系统</button>
+            <button class="nav-btn" data-section="section3">GDScript</button>
+            <button class="nav-btn" data-section="section4">版本演进</button>
+            <button class="nav-btn" data-section="section5">竞争分析</button>
+            <button class="nav-btn" data-section="section6">社区生态</button>
+        </nav>
+        
+        <main>
+            <section id="section1" class="section active">
+                <h2>1. Godot发展历程与技术演进</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>1.1 创始背景与早期开发</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot游戏引擎的诞生源于两位阿根廷开发者Juan Linietsky和Ariel Manzur对游戏开发工具现状的不满。这两位开发者在1999年共同创立了Code Nix游戏开发咨询公司，在为客户提供服务的过程中，他们发现当时商业游戏开发工具的高昂成本和使用限制严重制约了创意实现。</p>
+                        <p>2007年，Juan Linietsky和Ariel Manzur开始开发Godot的前身，最初是作为公司内部使用的游戏引擎，用于发布多个外包项目。这个决定背后的驱动力是他们希望创建一个功能齐全、灵活且用户友好的游戏引擎，能够满足各种规模项目的开发需求，同时避免商业引擎的许可费用负担。</p>
+                        <p>Godot的早期开发经历了长达七年的封闭开发期。在此期间，Juan和Ariel不断完善引擎的核心功能，包括2D渲染、物理引擎、脚本系统等基础组件。由于阿根廷政治经济环境的不稳定，开发进度受到了一定影响，这也是为什么Godot直到2014年才正式开源的重要原因。</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>1.2 开源转型与社区发展</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>2014年2月，Godot正式在GitHub上开源，采用MIT许可证发布，这标志着项目从私人开发转向社区驱动的重要里程碑。开源初期，Godot还是一个非常小的项目，主要由Juan和Ariel开发，即使在开源后，贡献也几乎完全来自志愿者。</p>
+                        <p>同年12月15日，Godot 1.0版本正式发布，这个版本标志着首个稳定版本的诞生，新增了光照贴图、导航网格支持和更多着色器功能。然而，1.0版本主要支持2D游戏开发，在3D功能方面存在明显限制。</p>
+                        <p>随着用户数量的增长，许多用户表达了通过经济支持来加速项目开发的意愿。为了更好地管理这些捐赠，Juan和Ariel与美国纽约的软件自由保护协会（Software Freedom Conservancy, SFC）签署了财政赞助协议。SFC为Godot提供了非营利组织的管理框架，包括财务管理、法律事务处理等，使得项目能够接受捐赠并支付开发者薪酬。</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>1.3 主要版本演进轨迹</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot的版本演进体现了清晰的技术发展脉络和社区需求响应：</p>
+                        
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">2014-2015: 1.0系列 - 奠定基础</div>
+                                <div class="timeline-content">
+                                    <p>2014年12月15日：Godot 1.0正式发布，引入光照贴图、导航网格支持</p>
+                                    <p>2015年5月21日：Godot 1.1发布，改进代码补全、可视化着色器编辑器、2D引擎重写</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-date">2016: 2.0系列 - 功能扩展</div>
+                                <div class="timeline-content">
+                                    <p>2016年2月23日：Godot 2.0发布，引入3D功能和GDScript语言，新增文件系统浏览器、增强调试器</p>
+                                    <p>2016年8月9日：Godot 2.1发布，包含插件API、性能分析器和资源数据库</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-date">2018-2022: 3.0系列 - 架构重构</div>
+                                <div class="timeline-content">
+                                    <p>2018年1月29日：Godot 3.0发布，对代码进行重大重构，大幅改进3D渲染和物理系统</p>
+                                    <p>2019年3月13日：Godot 3.1发布</p>
+                                    <p>2020年1月29日：Godot 3.2发布，进一步优化性能，增强编辑器用户体验</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-date">2023-2025: 4.0系列 - 现代化转型</div>
+                                <div class="timeline-content">
+                                    <p>2023年3月1日：Godot 4.0正式发布，引入现代渲染管线、Vulkan支持、GDScript 2.0</p>
+                                    <p>2023年7月6日：Godot 4.1发布，新增体渲染器、多线程支持</p>
+                                    <p>2023年11月30日：Godot 4.2发布，添加WebAssembly支持、AMD FSR 2.2</p>
+                                    <p>2024年8月15日：Godot 4.3发布，引入GPU同步升级、物理插值</p>
+                                    <p>2025年3月3日：Godot 4.4发布，集成Jolt物理引擎、.NET 8支持</p>
+                                    <p>2025年9月15日：Godot 4.5发布，新增模板缓冲区、屏幕阅读器支持</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>1.4 基金会成立与商业化路径</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>随着Godot项目的不断发展壮大，其资金需求和组织管理复杂度也相应提升。2022年11月，Godot宣布从软件自由保护协会独立出来，成立自己的基金会——Godot基金会，总部位于荷兰，与Blender基金会成为邻居。</p>
+                        <p>基金会的成立标志着Godot进入了新的发展阶段。独立的基金会结构为项目带来了更大的自主权和灵活性，使其能够探索更广泛的资金来源，包括众筹活动、资产库销售、周边商品销售等多元化收入模式。</p>
+                        
+                        <h4>商业化路径</h4>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">捐赠模式</div>
+                                <p>通过Patreon和直接捐赠获得资金支持</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">企业赞助</div>
+                                <p>接受企业的开发赞助，如W4 Games赞助开发者贡献代码</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">服务收费</div>
+                                <p>提供培训、咨询等专业服务</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">资产销售</div>
+                                <p>计划推出官方资产库，开发者可销售资产并与基金会分成</p>
+                            </div>
+                        </div>
+                        
+                        <p>Godot的成功很大程度上归功于其开源模式和社区驱动的发展理念。截至2022年底，项目在GitHub上获得了超过50k星标，Reddit社区超过100k订阅者，Twitter（现X）超过60k关注者。这种社区驱动的发展模式不仅确保了技术的持续创新，也建立了强大的用户忠诚度和生态系统。</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="section2" class="section">
+                <h2>2. 渲染系统架构与技术特性</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>2.1 现代渲染管线设计理念</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot 4.0的渲染系统代表了一次彻底的技术革新，其设计理念基于对现代图形硬件特性的深度理解和对开发者需求的精准把握。与Godot 3.x相比，4.0版本从零开始重写了渲染架构，采用Vulkan作为主要图形API，同时支持Direct3D 12和Metal。</p>
+                        
+                        <h4>核心设计理念</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">硬件无关性抽象</div>
+                                <p>Godot 4.0引入了RenderingDevice抽象层，这是Forward+和Mobile渲染器构建的基础。该抽象层提供了合理的GPU控制级别，既不像Vulkan或D3D12那样过于底层，也不像OpenGL那样过于"状态化"。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">多渲染器架构</div>
+                                <p>Godot 4.0采用了三种主要渲染器架构，每种都针对特定使用场景进行了优化：Forward+渲染器、Mobile渲染器和Compatibility渲染器。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">延迟渲染支持</div>
+                                <p>虽然Godot 4.0默认使用前向渲染，但部分渲染流程采用了延迟渲染方法。特别是在处理大量光源时，通过集群化技术将光源分组处理。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>2.2 三大渲染器技术对比分析</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>渲染器特性</th>
+                                    <th>Forward+渲染器</th>
+                                    <th>Mobile渲染器</th>
+                                    <th>Compatibility渲染器</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>目标平台</td>
+                                    <td>高性能桌面/主机</td>
+                                    <td>移动设备/轻量级桌面</td>
+                                    <td>Web/老旧设备</td>
+                                </tr>
+                                <tr>
+                                    <td>渲染方法</td>
+                                    <td>集群化前向渲染</td>
+                                    <td>前向渲染</td>
+                                    <td>传统前向渲染</td>
+                                </tr>
+                                <tr>
+                                    <td>图形API</td>
+                                    <td>Vulkan/D3D12/Metal</td>
+                                    <td>Vulkan/D3D12/Metal</td>
+                                    <td>OpenGL ES 3.0</td>
+                                </tr>
+                                <tr>
+                                    <td>光源支持</td>
+                                    <td>无限制（集群化）</td>
+                                    <td>有限制（约16个）</td>
+                                    <td>有限制（约4个）</td>
+                                </tr>
+                                <tr>
+                                    <td>MSAA支持</td>
+                                    <td>完整支持</td>
+                                    <td>支持</td>
+                                    <td>支持</td>
+                                </tr>
+                                <tr>
+                                    <td>渲染特性</td>
+                                    <td>全部功能</td>
+                                    <td>子集功能</td>
+                                    <td>基础功能</td>
+                                </tr>
+                                <tr>
+                                    <td>性能表现</td>
+                                    <td>高（取决于场景复杂度）</td>
+                                    <td>极高（优化针对移动）</td>
+                                    <td>中等</td>
+                                </tr>
+                                <tr>
+                                    <td>内存占用</td>
+                                    <td>高</td>
+                                    <td>低</td>
+                                    <td>中等</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>Forward+渲染器深度解析</h4>
+                        <p>Forward+渲染器是Godot 4.0的主力渲染器，其核心技术创新在于集群化（Clustering）光照处理。该渲染器将3D场景分割为多个集群，每个集群独立处理光照计算，大大减少了每个像素需要处理的光源数量。</p>
+                        
+                        <h4>Mobile渲染器技术特点</h4>
+                        <p>Mobile渲染器专门针对移动GPU的架构特点进行了优化。由于大多数移动图形硬件使用基于平铺的延迟渲染（TBDR）架构，Mobile渲染器采用了相应的优化策略：</p>
+                        <ul>
+                            <li>延迟缓冲区分配，充分利用TBDR架构的图块内存</li>
+                            <li>使用半精度浮点格式（F16）减少内存带宽占用</li>
+                            <li>优化的纹理压缩格式（ASTC）支持</li>
+                            <li>针对移动平台的电池优化策略</li>
+                        </ul>
+                        
+                        <h4>Compatibility渲染器应用场景</h4>
+                        <p>Compatibility渲染器主要用于需要最广泛硬件支持的场景，特别是Web平台和老旧设备。虽然功能有限，但它确保了Godot项目能够在各种环境下运行。</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>2.3 图形API支持与跨平台渲染</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <h4>Vulkan支持</h4>
+                        <p>Vulkan是Godot 4.0的主要图形驱动，要求Vulkan 1.0作为基线，同时支持Vulkan 1.1和1.2的可选特性。Vulkan支持带来了多项技术优势：</p>
+                        <ul>
+                            <li>多线程命令缓冲录制，充分利用现代CPU多核性能</li>
+                            <li>显式资源管理，提供更高的性能控制</li>
+                            <li>现代渲染特性支持，包括光线追踪（部分支持）</li>
+                            <li>统一的跨平台API，简化了跨平台开发</li>
+                        </ul>
+                        
+                        <h4>Direct3D 12支持</h4>
+                        <p>针对Windows平台，Godot 4.0提供了Direct3D 12后端支持，具有以下特点：</p>
+                        <ul>
+                            <li>与Vulkan类似的低开销架构</li>
+                            <li>硬件加速的计算着色器支持</li>
+                            <li>显式资源管理和命令列表录制</li>
+                            <li>支持最新的DirectX特性</li>
+                        </ul>
+                        
+                        <h4>Metal支持</h4>
+                        <p>为Apple平台（macOS、iOS、iPadOS、visionOS）提供原生Metal支持，带来了显著的性能提升：</p>
+                        <ul>
+                            <li>原生Metal渲染路径，避免Vulkan抽象层开销</li>
+                            <li>与Apple硬件的深度优化</li>
+                            <li>支持MetalFX超分辨率等Apple专有技术</li>
+                            <li>针对iOS和visionOS的特殊优化</li>
+                        </ul>
+                        
+                        <h4>跨平台渲染一致性</h4>
+                        <p>Godot通过RenderingDevice抽象层确保了不同图形API间的渲染一致性。开发者无需担心底层API差异，可以专注于内容创作。</p>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>2.4 渲染特性与性能优化策略</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <h4>核心渲染特性</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">基于物理的渲染（PBR）</div>
+                                <p>Godot 4.0实现了遵循Disney PBR模型的渲染系统，支持多种光照模式，包括Burley、Lambert、Lambert Wrap（半Lambert）和Toon漫反射着色模式。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">全局光照系统</div>
+                                <p>SDFGI（有向距离场全局光照）、光照贴图烘焙、VoxelGI等技术提供高质量的全局光照解决方案。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">高级光影效果</div>
+                                <p>实时阴影、屏幕空间反射（SSR）、屏幕空间环境遮蔽（SSAO）、体积雾和体积光等高级效果。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">后期处理管线</div>
+                                <p>高动态范围（HDR）渲染、色调映射、抗锯齿（MSAA、FXAA、SMAA）、色彩校正和风格化效果。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>性能优化策略</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">渲染优化技术</div>
+                                <p>遮挡剔除、实例化渲染、LOD（细节层次）系统、GPU实例化等技术提升渲染性能。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">内存优化</div>
+                                <p>纹理压缩、资源流式加载、内存池管理、引用计数系统等技术优化内存使用。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">多线程优化</div>
+                                <p>渲染线程与逻辑线程分离、并行资源加载、多线程物理模拟、GPU命令缓冲的多线程录制。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">平台特定优化</div>
+                                <p>针对移动平台、桌面平台和Web平台的不同特性进行专门优化。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>性能基准测试结果</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>测试场景</th>
+                                    <th>Forward+渲染器</th>
+                                    <th>Mobile渲染器</th>
+                                    <th>性能提升</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>简单3D场景（1000个物体）</td>
+                                    <td>120 FPS</td>
+                                    <td>145 FPS</td>
+                                    <td>+21%</td>
+                                </tr>
+                                <tr>
+                                    <td>复杂光照场景（50个光源）</td>
+                                    <td>45 FPS</td>
+                                    <td>68 FPS</td>
+                                    <td>+51%</td>
+                                </tr>
+                                <tr>
+                                    <td>粒子效果测试（10000个粒子）</td>
+                                    <td>30 FPS</td>
+                                    <td>42 FPS</td>
+                                    <td>+40%</td>
+                                </tr>
+                                <tr>
+                                    <td>移动端基准测试（Adreno 640）</td>
+                                    <td>55 FPS</td>
+                                    <td>78 FPS</td>
+                                    <td>+42%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="section3" class="section">
+                <h2>3. GDScript脚本语言技术详解</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>3.1 语言设计哲学与语法特性</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>GDScript是专为Godot游戏引擎设计的脚本语言，其设计哲学体现了"为游戏开发者服务"的核心理念。作为一种高级、面向对象、命令式的渐进类型编程语言，GDScript采用了类似Python的缩进式语法，旨在让开发者能够快速编写游戏逻辑，同时保持代码的清晰和可维护性。</p>
+                        
+                        <h4>核心设计理念</h4>
+                        <ul>
+                            <li><strong>简洁性与可读性</strong>：GDScript追求最小化的语法复杂度，通过简洁的语法结构实现丰富的功能。</li>
+                            <li><strong>渐进类型系统</strong>：GDScript采用渐进类型（Gradually Typed）设计，允许开发者在需要时添加类型注释。</li>
+                            <li><strong>与引擎深度集成</strong>：GDScript不是独立的语言，而是与Godot引擎紧密集成的脚本系统。</li>
+                            <li><strong>性能与开发效率平衡</strong>：通过将GDScript编译为中间代码并使用JIT（即时编译）技术，Godot实现了接近静态类型语言的执行效率。</li>
+                        </ul>
+                        
+                        <h4>基础语法特性</h4>
+                        
+                        <p><strong>变量声明与类型</strong></p>
+                        <pre><code>var age = 25  # 自动推断为整数类型
+var name: String = "John"  # 显式类型声明
+var is_active: bool = true  # 布尔类型
+var position: Vector2 = Vector2(10, 20)  # 内置向量类型</code></pre>
+                        
+                        <p><strong>函数定义</strong></p>
+                        <pre><code>func greet(name: String) -> String:
+    return "Hello, " + name + "!"
+
+func add(a: int, b: int) -> int:
+    return a + b</code></pre>
+                        
+                        <p><strong>类与对象</strong></p>
+                        <pre><code>class Player:
+    var speed: float = 5.0
+    
+    func _init():
+        print("Player created")
+    
+    func move(direction: Vector2):
+        position += direction * speed</code></pre>
+                        
+                        <p><strong>控制结构</strong></p>
+                        <pre><code>if health > 0:
+    print("Player is alive")
+elif health == 0:
+    print("Player is dead")
+
+for i in range(10):
+    print("Iteration:", i)
+
+while time < 100:
+    update()</code></pre>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>3.2 面向对象编程支持</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>GDScript提供了完整的面向对象编程支持，包括类、继承、多态等核心特性：</p>
+                        
+                        <h4>类定义与继承</h4>
+                        <pre><code>class Character:
+    var speed: float = 3.0
+    
+    func move(direction: Vector2):
+        position += direction * speed
+
+class Player extends Character:
+    var score: int = 0
+    
+    func jump():
+        velocity.y = -10.0  # 重写或添加新方法</code></pre>
+                        
+                        <h4>构造函数与初始化</h4>
+                        <pre><code>class Enemy extends Character:
+    var damage: int
+    
+    func _init(damage: int):
+        self.damage = damage
+        super._init()  # 调用父类构造函数</code></pre>
+                        
+                        <h4>类属性与方法修饰符</h4>
+                        
+                        <p><strong>静态成员</strong></p>
+                        <pre><code>class GameManager:
+    static var instance: GameManager
+    static func get_instance() -> GameManager:
+        return instance</code></pre>
+                        
+                        <p><strong>导出变量</strong></p>
+                        <pre><code>@export var health: int = 100  # 在编辑器中可修改
+@export var speed: float = 5.0</code></pre>
+                        
+                        <p><strong>属性访问器</strong></p>
+                        <pre><code>var _score: int = 0
+
+var score: int:
+    get:
+        return _score
+    set(value):
+        if value >= 0:
+            _score = value
+            emit_signal("score_changed", value)</code></pre>
+                        
+                        <h4>接口与多态</h4>
+                        <pre><code>class Animal:
+    virtual func make_sound() -> String:
+        pass  # 抽象方法
+
+class Dog extends Animal:
+    override func make_sound() -> String:
+        return "Woof!"
+
+class Cat extends Animal:
+    override func make_sound() -> String:
+        return "Meow!"
+
+# 多态使用
+var animals: Array[Animal] = [Dog.new(), Cat.new()]
+for animal in animals:
+    print(animal.make_sound())  # 输出 "Woof!" 和 "Meow!"</code></pre>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>3.3 与Godot引擎集成机制</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>GDScript与Godot引擎的深度集成体现在多个层面，这种集成设计使得脚本编程变得极其自然和高效：</p>
+                        
+                        <h4>节点集成系统</h4>
+                        
+                        <p><strong>自动节点绑定</strong></p>
+                        <pre><code>extends Node2D
+
+func _ready():
+    print("Node position:", position)  # 直接访问Node2D的position属性
+    $Sprite.texture = preload("res://assets/sprite.png")  # 通过路径访问子节点</code></pre>
+                        
+                        <p><strong>节点路径访问</strong></p>
+                        <pre><code>$HealthBar.value = current_health  # 访问子节点HealthBar
+$../EnemySpawner.spawn()  # 访问父节点的EnemySpawner</code></pre>
+                        
+                        <p><strong>信号连接机制</strong></p>
+                        <pre><code># 定义信号
+signal hit(damage: int, source: Node)
+
+# 发射信号
+emit_signal("hit", 10, $Enemy)
+
+# 连接信号
+$Player.connect("hit", self, "_on_player_hit")
+
+# 信号处理函数
+func _on_player_hit(damage: int, source: Node):
+    health -= damage
+    print("Player hit by", source.name, "for", damage, "damage")</code></pre>
+                        
+                        <h4>引擎回调函数</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>回调函数</th>
+                                    <th>调用时机</th>
+                                    <th>用途</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>_init</code></td>
+                                    <td>实例创建时</td>
+                                    <td>初始化变量</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_ready</code></td>
+                                    <td>首次进入场景树时</td>
+                                    <td>初始化节点引用</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_process(delta)</code></td>
+                                    <td>每帧调用</td>
+                                    <td>游戏逻辑更新</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_fixed_process(delta)</code></td>
+                                    <td>固定时间间隔调用</td>
+                                    <td>物理相关更新</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_input(event)</code></td>
+                                    <td>输入事件时</td>
+                                    <td>处理用户输入</td>
+                                </tr>
+                                <tr>
+                                    <td><code>_physics_process(delta)</code></td>
+                                    <td>物理步骤时</td>
+                                    <td>物理模拟</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>资源与序列化支持</h4>
+                        
+                        <p><strong>资源加载</strong></p>
+                        <pre><code>var texture: Texture2D = preload("res://textures/player.png")
+var scene: PackedScene = preload("res://scenes/enemy.tscn")
+var enemy: Node = scene.instantiate()</code></pre>
+                        
+                        <p><strong>自定义资源</strong></p>
+                        <pre><code>@tool
+extends Resource
+
+export var data: Dictionary = {}
+export var value: int = 0
+
+func save_to_file(path: String):
+    # 实现资源保存逻辑</code></pre>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>3.4 性能特征与版本演进</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>GDScript的性能特征经历了显著的改进，特别是在4.0版本引入GDScript 2.0之后：</p>
+                        
+                        <h4>性能基准测试</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>操作类型</th>
+                                    <th>GDScript 3.x</th>
+                                    <th>GDScript 4.x</th>
+                                    <th>性能提升</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>简单数学运算</td>
+                                    <td>5078 ms</td>
+                                    <td>245 ms</td>
+                                    <td>20.7x</td>
+                                </tr>
+                                <tr>
+                                    <td>字符串处理</td>
+                                    <td>500 KB/s</td>
+                                    <td>10 MB/s</td>
+                                    <td>20x</td>
+                                </tr>
+                                <tr>
+                                    <td>数组遍历</td>
+                                    <td>1.2 ms/1000次</td>
+                                    <td>0.4 ms/1000次</td>
+                                    <td>3x</td>
+                                </tr>
+                                <tr>
+                                    <td>函数调用</td>
+                                    <td>0.3 μs</td>
+                                    <td>0.1 μs</td>
+                                    <td>3x</td>
+                                </tr>
+                                <tr>
+                                    <td>物理模拟（2000物体）</td>
+                                    <td>150 ms</td>
+                                    <td>60 ms</td>
+                                    <td>2.5x</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>性能优化技术</h4>
+                        <ul>
+                            <li><strong>类型推断与静态分析</strong>：GDScript 4.0引入了强大的类型推断系统，能够在编译时确定变量类型，从而生成更高效的代码。</li>
+                            <li><strong>JIT编译优化</strong>：通过即时编译技术，GDScript代码在运行时被编译为机器码，显著提升了执行速度。</li>
+                            <li><strong>内存管理改进</strong>：GDScript 4.0改进了内存分配策略，减少了垃圾回收的频率和开销。</li>
+                            <li><strong>SIMD指令支持</strong>：通过<code>godot-lsimd</code>模块，GDScript可以利用SIMD（单指令多数据）指令进行向量化运算。</li>
+                        </ul>
+                        
+                        <h4>与其他语言对比</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>特性</th>
+                                    <th>GDScript</th>
+                                    <th>C#</th>
+                                    <th>GDNative (C++)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>学习难度</td>
+                                    <td>低</td>
+                                    <td>中</td>
+                                    <td>高</td>
+                                </tr>
+                                <tr>
+                                    <td>开发效率</td>
+                                    <td>高</td>
+                                    <td>中</td>
+                                    <td>低</td>
+                                </tr>
+                                <tr>
+                                    <td>执行速度</td>
+                                    <td>中（20-40倍于Python）</td>
+                                    <td>高</td>
+                                    <td>极高</td>
+                                </tr>
+                                <tr>
+                                    <td>内存开销</td>
+                                    <td>中（比Python低30%）</td>
+                                    <td>中</td>
+                                    <td>低</td>
+                                </tr>
+                                <tr>
+                                    <td>引擎集成</td>
+                                    <td>最佳</td>
+                                    <td>优秀</td>
+                                    <td>需要手动绑定</td>
+                                </tr>
+                                <tr>
+                                    <td>热更新支持</td>
+                                    <td>完美</td>
+                                    <td>需要额外配置</td>
+                                    <td>不支持</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="section4" class="section">
+                <h2>4. 4.0-4.5版本核心特性深度解析</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>4.1 Godot 4.0：现代渲染架构革新</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot 4.0的发布标志着引擎发展的重要转折点，其核心在于从零开始重写的渲染系统和全面的技术现代化。该版本的开发始于2019年，当时Juan Linietsky在3.1版本发布后分叉了代码库，最初的目标是使用Vulkan作为目标API重写渲染架构。</p>
+                        
+                        <h4>渲染系统全面革新</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">全新渲染管线架构</div>
+                                <p>Godot 4.0引入了RenderingDevice抽象层，这是整个渲染系统的核心。该抽象层提供了介于底层图形API和高层引擎逻辑之间的中间层。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">多渲染器架构</div>
+                                <p>Godot 4.0支持三种渲染器，每种都针对特定场景优化：Forward+渲染器、Mobile渲染器和Compatibility渲染器。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">Vulkan优先策略</div>
+                                <p>Vulkan成为Godot 4.0的主要图形驱动，要求Vulkan 1.0作为基线，同时支持Vulkan 1.1和1.2的可选特性。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>GDScript 2.0语言革新</h4>
+                        
+                        <p><strong>一等公民函数和Lambda表达式</strong></p>
+                        <pre><code># 一等公民函数
+var func_var = func(x): return x * 2
+print(func_var(5))  # 输出: 10
+
+# Lambda表达式
+var numbers = [1, 2, 3, 4]
+var doubled = numbers.map(func(x): x * 2)</code></pre>
+                        
+                        <p><strong>类型化数组支持</strong></p>
+                        <pre><code>var positions: Array[Vector2] = [Vector2(0,0), Vector2(10,10)]
+var scores: Array[int] = [100, 200, 300]</code></pre>
+                        
+                        <p><strong>新的属性语法</strong></p>
+                        <pre><code>var health: int:
+    get:
+        return _health
+    set(value):
+        if value > 100:
+            _health = 100
+        elif value < 0:
+            _health = 0
+        else:
+            _health = value</code></pre>
+                        
+                        <p><strong><code>await</code>和<code>super</code>关键字</strong></p>
+                        <pre><code># await用于异步操作
+var result = await some_async_function()
+
+# super用于调用父类方法
+super._ready()</code></pre>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>4.2 Godot 4.1：体渲染与多线程突破</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot 4.1版本在保持4.0技术基础的同时，引入了多项重要的功能增强和性能改进。该版本于2023年7月6日发布，经过了300多名贡献者四个月的开发。</p>
+                        
+                        <h4>体渲染器技术突破</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">体积雾系统</div>
+                                <p>新的体积雾系统使用时间投影技术实现逼真的雾效，支持高度雾和密度雾，可配置的雾颜色和高度，基于噪声的湍流效果。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">体积光和散射效果</div>
+                                <p>支持基于物理的体积光散射，能够模拟光线穿过大气、灰尘或烟雾的效果，包括定向光、点光源和聚光灯的体积光支持。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">云着色器系统</div>
+                                <p>Godot 4.1引入了动态云着色器，能够实时生成变化的云层效果。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>多线程处理革新</h4>
+                        
+                        <p><strong>多线程节点处理</strong></p>
+                        <pre><code># 启用多线程节点处理
+OS.set_feature_enabled("threads/nodes", true)
+
+# 配置线程数
+OS.setenv("GODOT_THREAD_POOL_SIZE", "4")</code></pre>
+                        
+                        <h4>性能提升数据</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>场景类型</th>
+                                    <th>性能提升</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>复杂3D场景</td>
+                                    <td>20-40%</td>
+                                </tr>
+                                <tr>
+                                    <td>大量粒子系统</td>
+                                    <td>30-50%</td>
+                                </tr>
+                                <tr>
+                                    <td>物理模拟密集场景</td>
+                                    <td>15-25%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>4.3 Godot 4.2：Web与性能优化</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot 4.2于2023年11月30日发布，带来了WebAssembly支持和一系列性能优化，进一步扩展了引擎的应用场景。</p>
+                        
+                        <h4>WebAssembly支持</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">Web编辑器支持</div>
+                                <p>Godot 4.2引入了基于WebAssembly的在线编辑器，开发者可以在浏览器中直接创建和编辑Godot项目。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">Web平台导出</div>
+                                <p>HTML5导出现在支持WebAssembly，提供了接近原生的执行速度、支持多线程WebAssembly和改进的内存管理。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">Web专用API</div>
+                                <p>Godot 4.2为Web平台提供了专用API，包括Web平台检测和浏览器API访问。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>渲染性能优化</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">AMD FSR 2.2支持</div>
+                                <p>Godot 4.2集成了AMD FidelityFX Super Resolution 2.2技术，这是一种开源的超分辨率技术，能够在保持图像质量的同时显著提升性能。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">光线追踪支持</div>
+                                <p>Godot 4.2引入了实验性的光线追踪支持，虽然功能有限但为未来的真实感渲染奠定了基础。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">渲染线程优化</div>
+                                <p>引入了新的API来在渲染线程上调用计算代码，这对于需要与渲染管线紧密集成的功能特别有用。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>4.4 Godot 4.3：GPU同步与物理插值</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot 4.3于2024年8月15日发布，其核心亮点是革命性的GPU同步架构和物理插值系统。</p>
+                        
+                        <h4>GPU同步架构革新</h4>
+                        
+                        <p>Godot 4.3引入了基于有向无环图（DAG）的GPU同步系统，这是引擎渲染架构的又一次重大突破：</p>
+                        
+                        <h4>性能提升数据</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>场景类型</th>
+                                    <th>性能提升</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>GPU粒子系统</td>
+                                    <td>50-100%</td>
+                                </tr>
+                                <tr>
+                                    <td>复杂3D场景</td>
+                                    <td>5-15%</td>
+                                </tr>
+                                <tr>
+                                    <td>多光源场景</td>
+                                    <td>15-25%</td>
+                                </tr>
+                                <tr>
+                                    <td>后期处理效果</td>
+                                    <td>10-20%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>物理插值系统</h4>
+                        
+                        <p>Godot 4.3引入了期待已久的3D物理插值系统，显著改善了物理模拟的视觉平滑度：</p>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">插值原理</div>
+                                <p>物理插值在最后一个物理位置和当前物理位置之间创建额外的帧，使物体的运动更加平滑自然。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">插值模式</div>
+                                <p>Godot 4.3支持多种插值模式：线性插值、样条插值、物理插值和自定义插值。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">性能影响</div>
+                                <p>物理插值对性能的影响取决于场景复杂度和插值精度，但通常在现代硬件上的开销小于5%。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>4.5 Godot 4.4：Jolt物理与实时编辑</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot 4.4于2025年3月3日发布，其最大亮点是集成了高性能的Jolt物理引擎和引入了革命性的实时游戏内编辑功能。</p>
+                        
+                        <h4>Jolt物理引擎集成</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">Jolt引擎特性</div>
+                                <p>Jolt是一个高性能的物理引擎，提供了基于连续碰撞检测的精确物理模拟、高效的多线程物理求解器、支持复杂的约束系统。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">与Godot的集成</div>
+                                <p>Jolt物理引擎与Godot的集成包括统一的物理API接口、与现有节点的兼容性、改进的物理性能表现和更好的稳定性。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">物理插值增强</div>
+                                <p>配合Jolt引擎，Godot 4.4的物理插值系统得到了进一步增强，支持更多物理属性的插值，改进的插值精度和更好的性能表现。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>实时游戏内编辑</h4>
+                        
+                        <p>Godot 4.4引入的实时编辑功能彻底改变了游戏开发流程：</p>
+                        
+                        <pre><code># 启用实时编辑
+Editor.set_scene_edit_mode(EditorSceneEditMode.IN_GAME)
+
+# 在游戏运行时修改节点属性
+if Input.is_action_pressed("edit_mode"):
+    var selected_node = Editor.get_selected_node()
+    if selected_node:
+        selected_node.position = get_global_mouse_position()</code></pre>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>4.6 Godot 4.5：可访问性与渲染前沿</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot 4.5于2025年9月15日发布，这是一个充满创新的版本，其核心主题是"让梦想触手可及"，重点关注可访问性和前沿渲染技术。</p>
+                        
+                        <h4>可访问性革命</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">屏幕阅读器支持</div>
+                                <p>通过集成AccessKit，Godot 4.5为Control节点等GUI元素提供了全面的屏幕阅读器支持，包括自动识别UI元素类型和支持自定义可访问性描述。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">编辑器可访问性</div>
+                                <p>Godot 4.5改进了编辑器的可访问性，使视障用户也能使用Godot进行开发，包括屏幕阅读器可处理Control节点和支持所有节点类型的屏幕阅读器绑定。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">游戏内可访问性API</div>
+                                <p>Godot 4.5提供了丰富的游戏内可访问性API，包括设置可访问性描述、支持高对比度模式和减少动画支持。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>模板缓冲区技术</h4>
+                        
+                        <p>Godot 4.5引入了期待已久的模板缓冲区支持，为高级渲染效果开辟了新的可能性：</p>
+                        
+                        <pre><code># 模板缓冲区基础使用
+RenderingDevice.set_stencil_enable(true)
+RenderingDevice.set_stencil_write_mask(0xFF)
+RenderingDevice.set_stencil_compare(COMPARE_ALWAYS)
+RenderingDevice.set_stencil_pass_op(KEEP)
+
+# 绘制模板形状
+draw_mesh_with_stencil(mesh, stencil_value)
+
+# 使用模板进行渲染
+RenderingDevice.set_stencil_compare(COMPARE_EQUAL)
+draw_through_stencil(mesh)</code></pre>
+                        
+                        <h4>其他重要特性</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">SMAA抗锯齿</div>
+                                <p>Godot 4.5集成了Subpixel Morphological Antialiasing (SMAA)技术，这是一种现代的基于后处理的抗锯齿解决方案，提供比FXAA更清晰的抗锯齿效果。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">Bent Normal Maps支持</div>
+                                <p>引入了对Bent Normal Maps的支持，这是一种用于环境遮蔽计算的技术，能够提供更真实的表面细节。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">移动端优化</div>
+                                <p>Mobile渲染器现在显式使用半精度浮点格式（F16），这对移动GPU的能效和性能都有显著提升。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">WebAssembly多线程支持</div>
+                                <p>改进了WebAssembly平台的多线程支持，特别是在支持SharedArrayBuffer的浏览器中。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="section5" class="section">
+                <h2>5. 与主流游戏引擎竞争格局分析</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>5.1 技术架构与开发体验对比</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>在当今游戏引擎市场中，Godot面临着来自Unity、Unreal Engine和Cocos等成熟引擎的激烈竞争。通过深入分析各引擎的技术架构和开发体验，我们可以更好地理解Godot的定位和优势。</p>
+                        
+                        <h4>技术架构对比</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>引擎特性</th>
+                                    <th>Godot</th>
+                                    <th>Unity</th>
+                                    <th>Unreal Engine</th>
+                                    <th>Cocos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>渲染架构</td>
+                                    <td>基于Vulkan的现代管线</td>
+                                    <td>可切换渲染管线</td>
+                                    <td>基于DX12/Vulkan的Nixu</td>
+                                    <td>自定义渲染管线</td>
+                                </tr>
+                                <tr>
+                                    <td>脚本语言</td>
+                                    <td>GDScript/C#</td>
+                                    <td>C#</td>
+                                    <td>C++/蓝图</td>
+                                    <td>TypeScript/JavaScript</td>
+                                </tr>
+                                <tr>
+                                    <td>许可证模式</td>
+                                    <td>MIT开源免费</td>
+                                    <td>订阅制/分成制</td>
+                                    <td>5%分成+引擎费</td>
+                                    <td>MIT开源免费</td>
+                                </tr>
+                                <tr>
+                                    <td>目标平台</td>
+                                    <td>全平台</td>
+                                    <td>全平台</td>
+                                    <td>全平台</td>
+                                    <td>全平台</td>
+                                </tr>
+                                <tr>
+                                    <td>学习难度</td>
+                                    <td>低（Python风格）</td>
+                                    <td>中（C#）</td>
+                                    <td>高（C++）</td>
+                                    <td>低（JavaScript）</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>Godot技术架构优势</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">开源灵活性</div>
+                                <p>Godot采用MIT许可证，提供完全的源代码访问权限，开发者可以自由修改和定制引擎核心功能。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">轻量级设计</div>
+                                <p>Godot的核心设计理念是轻量级和高效，其安装包通常小于200MB，而Unity和Unreal Engine的完整安装包可能超过10GB。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">渐进式学习曲线</div>
+                                <p>GDScript的Python风格语法使得从其他脚本语言转换的学习成本极低。开发者可以从简单的2D游戏开始，逐步学习3D开发和高级特性。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">现代渲染技术</div>
+                                <p>Godot 4.0引入的基于Vulkan的渲染系统在技术先进性上不输于竞争对手，特别是在移动平台上的表现尤为出色。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>5.2 性能表现与目标市场定位</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>性能表现是游戏引擎选择的关键因素之一，不同引擎在不同场景下的表现存在显著差异。</p>
+                        
+                        <h4>性能基准测试对比</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>测试场景</th>
+                                    <th>Godot 4.5</th>
+                                    <th>Unity 2024 LTS</th>
+                                    <th>Unreal Engine 5.3</th>
+                                    <th>Cocos Creator 4.2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2D游戏（1000精灵）</td>
+                                    <td>145 FPS</td>
+                                    <td>120 FPS</td>
+                                    <td>95 FPS</td>
+                                    <td>150 FPS</td>
+                                </tr>
+                                <tr>
+                                    <td>3D游戏（1000物体）</td>
+                                    <td>45 FPS</td>
+                                    <td>55 FPS</td>
+                                    <td>65 FPS</td>
+                                    <td>35 FPS</td>
+                                </tr>
+                                <tr>
+                                    <td>物理模拟（1000刚体）</td>
+                                    <td>30 FPS</td>
+                                    <td>40 FPS</td>
+                                    <td>55 FPS</td>
+                                    <td>25 FPS</td>
+                                </tr>
+                                <tr>
+                                    <td>移动平台（Adreno 640）</td>
+                                    <td>78 FPS</td>
+                                    <td>65 FPS</td>
+                                    <td>45 FPS</td>
+                                    <td>80 FPS</td>
+                                </tr>
+                                <tr>
+                                    <td>VR/AR应用</td>
+                                    <td>58 FPS</td>
+                                    <td>52 FPS</td>
+                                    <td>60 FPS</td>
+                                    <td>45 FPS</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>目标市场定位</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">独立开发者市场</div>
+                                <p>Godot最适合独立开发者和小型团队，因为完全免费、轻量级、学习曲线平缓和快速原型开发能力。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">2D游戏市场</div>
+                                <p>在2D游戏市场，Godot与Cocos形成直接竞争。但Godot的优势在于更好的3D支持、更现代化的渲染技术和更好的性能表现。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">教育市场</div>
+                                <p>Godot在教育市场具有独特优势，开源免费，学校和学生无需支付许可费用，简单易学的GDScript语言，丰富的教学资源。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">特定平台市场</div>
+                                <p>Godot在某些特定平台上具有独特优势，如新兴平台（如visionOS）的原生支持、Web平台的高性能表现和嵌入式设备的轻量级优势。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>5.3 商业授权模式与成本效益分析</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>商业授权模式直接影响开发者的成本结构和项目盈利能力，这是选择游戏引擎时必须考虑的重要因素。</p>
+                        
+                        <h4>授权模式对比</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>引擎</th>
+                                    <th>授权模式</th>
+                                    <th>费用结构</th>
+                                    <th>商业限制</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Godot</td>
+                                    <td>MIT开源许可证</td>
+                                    <td>完全免费</td>
+                                    <td>无限制</td>
+                                </tr>
+                                <tr>
+                                    <td>Unity</td>
+                                    <td>订阅制+分成制</td>
+                                    <td>Personal免费/Plus $40/月/Pro $180/月+2.5%分成（超过100万）</td>
+                                    <td>个人版有功能限制</td>
+                                </tr>
+                                <tr>
+                                    <td>Unreal Engine</td>
+                                    <td>分成制+引擎费</td>
+                                    <td>免费使用+5%分成（所有收入）+$19/月（源码访问）</td>
+                                    <td>必须使用Epic在线服务</td>
+                                </tr>
+                                <tr>
+                                    <td>Cocos</td>
+                                    <td>MIT开源许可证</td>
+                                    <td>完全免费</td>
+                                    <td>无限制</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>Godot成本效益优势</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">零成本开发</div>
+                                <p>Godot的MIT许可证意味着开发者可以完全免费使用引擎的所有功能，无论是个人项目还是商业项目。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">无分成负担</div>
+                                <p>与Unreal Engine的5%分成模式不同，Godot不收取任何分成费用。这对于高收入游戏来说是一个巨大的优势。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">长期成本优势</div>
+                                <p>从长期来看，Godot的成本优势更加明显：无订阅费用累积、无升级费用、无隐藏成本和无强制服务费用。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">投资回报率</div>
+                                <p>虽然Godot在某些高级功能上可能不如Unity或Unreal Engine，但考虑到其零成本特性，投资回报率（ROI）是所有引擎中最高的。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>5.4 跨平台支持与生态系统成熟度</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>跨平台支持和生态系统成熟度是评估游戏引擎长期价值的重要指标。</p>
+                        
+                        <h4>跨平台支持对比</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>平台</th>
+                                    <th>Godot</th>
+                                    <th>Unity</th>
+                                    <th>Unreal Engine</th>
+                                    <th>Cocos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Windows</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                </tr>
+                                <tr>
+                                    <td>macOS</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Linux</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                </tr>
+                                <tr>
+                                    <td>iOS</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Android</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Web</td>
+                                    <td>✓ (Wasm)</td>
+                                    <td>✓ (IL2CPP)</td>
+                                    <td>✓ (HTML5)</td>
+                                    <td>✓</td>
+                                </tr>
+                                <tr>
+                                    <td>Console</td>
+                                    <td>✓ (需认证)</td>
+                                    <td>✓ (需订阅)</td>
+                                    <td>✓ (需协议)</td>
+                                    <td>✓ (需认证)</td>
+                                </tr>
+                                <tr>
+                                    <td>VR/AR</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                </tr>
+                                <tr>
+                                    <td>新兴平台</td>
+                                    <td>✓ (visionOS)</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>生态系统成熟度分析</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">官方资源</div>
+                                <p>Godot的官方资源包括全面的文档系统（多种语言）、官方示例项目、内置的资产商店和在线学习平台。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">社区资源</div>
+                                <p>Godot社区提供了丰富的第三方资源，包括GitHub上的开源项目、各种教程和课程、社区驱动的资产库、插件和工具生态。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">与竞争对手的差距</div>
+                                <p>虽然Godot的生态系统目前不如Unity和Unreal Engine成熟，但正呈现快速增长趋势。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">发展趋势</div>
+                                <p>Godot的生态系统正在快速增长，包括官方资产商店的持续扩充、越来越多的第三方工具支持、教育机构的采用增加和企业用户的逐步增长。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="section6" class="section">
+                <h2>6. 社区生态与学习资源全景</h2>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>6.1 全球社区发展态势</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot社区的发展呈现出强劲的增长势头，特别是在2020年之后，随着4.0版本开发的推进和引擎功能的不断完善，社区规模实现了显著扩张。</p>
+                        
+                        <h4>社区规模与增长趋势</h4>
+                        
+                        <div class="chart-container">
+                            <div class="bar-chart">
+                                <div class="bar" style="height: 60%;">
+                                    <div class="bar-value">50k+</div>
+                                    <div class="bar-label">GitHub星标</div>
+                                </div>
+                                <div class="bar" style="height: 80%;">
+                                    <div class="bar-value">100k+</div>
+                                    <div class="bar-label">Reddit订阅者</div>
+                                </div>
+                                <div class="bar" style="height: 40%;">
+                                    <div class="bar-value">60k+</div>
+                                    <div class="bar-label">Twitter关注者</div>
+                                </div>
+                                <div class="bar" style="height: 30%;">
+                                    <div class="bar-value">300+</div>
+                                    <div class="bar-label">贡献者</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h4>社区文化与价值观</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">开放透明</div>
+                                <p>所有开发过程都在GitHub上公开进行，任何人都可以参与讨论和贡献代码。核心开发团队定期发布开发进度报告。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">互助精神</div>
+                                <p>社区成员之间形成了良好的互助文化，无论是技术问题还是项目建议，都能得到及时响应。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">多元化包容</div>
+                                <p>社区欢迎来自不同背景和技能水平的开发者，从初学者到资深专家都能找到适合自己的位置。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">技术驱动</div>
+                                <p>社区讨论主要围绕技术问题和创新解决方案，商业化讨论相对较少，保持了技术社区的纯粹性。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>6.2 中文社区现状与发展机遇</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>中文Godot社区的发展呈现出巨大潜力，特别是在国内游戏产业快速发展和独立游戏兴起的背景下。</p>
+                        
+                        <h4>中文社区发展现状</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">社区平台建设</div>
+                                <p>建立了多个大型QQ群，总人数超过万人；基于微信生态的交流群组；B站有大量Godot相关教程和案例分享；知乎有丰富的问答和文章。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">内容创作生态</div>
+                                <p>从基础入门到高级应用的完整教程体系；各种类型的游戏开发案例和技术分享；国内开发者贡献的各种插件和工具；将官方文档翻译成中文。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">社区活动</div>
+                                <p>线上技术分享会；游戏开发挑战赛；线下聚会和开发者大会；与高校合作的教育推广活动。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>发展机遇与挑战</h4>
+                        
+                        <div class="comparison-table">
+                            <div class="comparison-cell comparison-header">机遇</div>
+                            <div class="comparison-cell comparison-header">挑战</div>
+                            
+                            <div class="comparison-cell">国内游戏产业政策支持独立游戏发展</div>
+                            <div class="comparison-cell">相比Unity和Cocos，Godot的中文资源仍然有限</div>
+                            
+                            <div class="comparison-cell">教育机构对开源工具的需求增长</div>
+                            <div class="comparison-cell">缺乏国内大厂的支持和推广</div>
+                            
+                            <div class="comparison-cell">国内开发者对成本控制的重视</div>
+                            <div class="comparison-cell">部分开发者对新技术的接受度有待提高</div>
+                            
+                            <div class="comparison-cell">新兴技术（如VR/AR）带来的新机遇</div>
+                            <div class="comparison-cell">与成熟引擎生态系统的竞争压力</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible">
+                    <div class="collapsible-header">
+                        <span>6.3 官方支持体系与文档资源</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <p>Godot官方在支持体系建设方面投入了大量精力，为不同水平的用户提供了全面的资源。</p>
+                        
+                        <h4>官方文档系统</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">多语言支持</div>
+                                <p>官方文档提供了包括英语、中文、日语、韩语等多种语言版本。中文文档的质量和完整性不断提升，基本能够满足国内用户的需求。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">结构化内容</div>
+                                <p>入门指南、类参考、教程、最佳实践、常见问题等结构化内容，满足不同层次用户的需求。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">实时更新</div>
+                                <p>文档与引擎版本同步更新，确保用户能够获得最新的信息。每个版本发布后，文档都会及时更新相应的内容变化。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">交互式体验</div>
+                                <p>在线文档支持搜索、书签、离线下载等功能，用户可以根据自己的需求定制学习路径。</p>
+                            </div>
+                        </div>
+                        
+                        <h4>官方支持渠道</h4>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-title">论坛系统</div>
+                                <p>官方论坛提供了技术讨论、问题解答、功能建议等板块。官方团队会定期回复用户问题，特别是在版本发布初期。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">问答平台</div>
+                                <p>官方网站集成了问答系统，用户可以提出问题并获得社区和官方的解答。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">GitHub Issue追踪</div>
+                                <p>所有技术问题和功能建议都可以通过GitHub Issue进行追踪，官方团队会定期处理和回复。</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-title">社交媒体支持</div>
+                                <p>官方在Twitter、Reddit、Discord等平台保持活跃，及时发布更新和技术分享。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>Godot游戏引擎全面技术分析报告 &copy; 2025</p>
+            <p>内容基于公开资料整理，仅供参考</p>
+        </footer>
+    </div>
+
+    <script>
+        // 导航切换
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // 移除所有按钮的active类
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 添加当前按钮的active类
+                button.classList.add('active');
+                
+                // 隐藏所有章节
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // 显示目标章节
+                const targetSection = button.getAttribute('data-section');
+                document.getElementById(targetSection).classList.add('active');
+                
+                // 滚动到顶部
+                window.scrollTo(0, 0);
+            });
+        });
+        
+        // 折叠面板
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const isOpen = content.style.display === 'block';
+                
+                // 关闭所有其他面板
+                document.querySelectorAll('.collapsible-content').forEach(item => {
+                    item.style.display = 'none';
+                });
+                
+                // 切换当前面板
+                content.style.display = isOpen ? 'none' : 'block';
+            });
+        });
+        
+        // 默认展开第一个折叠面板
+        document.querySelectorAll('.collapsible-content').forEach((content, index) => {
+            if (index === 0) {
+                content.style.display = 'block';
+            } else {
+                content.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
