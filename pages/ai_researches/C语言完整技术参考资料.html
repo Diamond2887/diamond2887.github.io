@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C语言完整技术参考资料</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+            margin: 30px 0 20px;
+        }
+        
+        h3 {
+            color: #3498db;
+            margin: 25px 0 15px;
+        }
+        
+        h4 {
+            color: #2980b9;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f6fc;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        
+        .details-container {
+            margin: 20px 0;
+        }
+        
+        details {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        summary {
+            padding: 15px 20px;
+            background-color: #e8f4fc;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2c3e50;
+            transition: background-color 0.3s;
+        }
+        
+        summary:hover {
+            background-color: #d4e9fa;
+        }
+        
+        details[open] summary {
+            background-color: #d4e9fa;
+            border-bottom: 1px solid #c5e1f7;
+        }
+        
+        .details-content {
+            padding: 20px;
+        }
+        
+        .note {
+            background-color: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background-color: #ffeaea;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .tip {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid #eaeaea;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            pre {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C语言完整技术参考资料</h1>
+            <p class="subtitle">全面、系统的C语言编程指南与标准库参考</p>
+        </header>
+        
+        <div class="content">
+            <h2>1. C语言语法体系详解</h2>
+            
+            <div class="details-container">
+                <details>
+                    <summary>1.1 基础语法结构</summary>
+                    <div class="details-content">
+                        <h3>1.1.1 变量定义与数据类型</h3>
+                        <p>C语言提供了丰富的数据类型系统，包括基本数据类型和扩展类型。基本数据类型主要包括整型、字符型和浮点型。</p>
+                        
+                        <h4>基本数据类型说明：</h4>
+                        <table>
+                            <tr>
+                                <th>类型</th>
+                                <th>关键字</th>
+                                <th>典型大小(字节)</th>
+                                <th>表示范围/精度</th>
+                                <th>用途说明</th>
+                            </tr>
+                            <tr>
+                                <td><strong>整型</strong></td>
+                                <td>int</td>
+                                <td>4</td>
+                                <td>-2,147,483,648 ~ 2,147,483,647</td>
+                                <td>存储整数</td>
+                            </tr>
+                            <tr>
+                                <td><strong>字符型</strong></td>
+                                <td>char</td>
+                                <td>1</td>
+                                <td>-128 ~ 127 或 0 ~ 255</td>
+                                <td>存储单个字符</td>
+                            </tr>
+                            <tr>
+                                <td><strong>单精度浮点</strong></td>
+                                <td>float</td>
+                                <td>4</td>
+                                <td>约7位有效数字</td>
+                                <td>存储带小数部分的数值，精度较低</td>
+                            </tr>
+                            <tr>
+                                <td><strong>双精度浮点</strong></td>
+                                <td>double</td>
+                                <td>8</td>
+                                <td>约15位有效数字</td>
+                                <td>存储带小数部分的数值，精度较高</td>
+                            </tr>
+                            <tr>
+                                <td><strong>无值型</strong></td>
+                                <td>void</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>通常表示函数不返回结果或指针无类型</td>
+                            </tr>
+                        </table>
+                        
+                        <p>长度修饰符包括short（短整型，通常2字节）和long（长整型，通常4或8字节）。符号修饰符包括signed（有符号，默认）和unsigned（无符号，非负整数，范围翻倍）。</p>
+                        
+                        <p>C99标准引入了long long int类型（至少64位），该类型不是C89的一部分，但既是C99的组成部分也是GNU C扩展。</p>
+                        
+                        <h4>变量定义示例：</h4>
+                        <pre><code>int sum = 0;          // 定义并初始化整型变量
+float height = 1.75f; // 定义单精度浮点数，'f'后缀表示float类型
+char grade = 'A';     // 定义字符型变量</code></pre>
+                        
+                        <h4>变量的命名规则：</h4>
+                        <ul>
+                            <li>只能包含字母、数字和下划线</li>
+                            <li>必须以字母或下划线开头</li>
+                            <li>不能使用C语言关键字作为变量名</li>
+                        </ul>
+                        
+                        <h4>常量定义方式：</h4>
+                        <pre><code>// 使用const关键字定义具有类型的常量
+const double PI = 3.14159;   // 定义双精度浮点常量
+const int MAX_SIZE = 100;    // 定义整型常量
+
+// 使用#define预处理指令进行文本替换
+#define PI 3.14159
+#define MAX_SIZE 100</code></pre>
+                        
+                        <div class="note">
+                            <p><strong>注意：</strong>const常量有数据类型，由编译器进行类型检查；#define定义的常量是简单的文本替换，无类型检查。</p>
+                        </div>
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>1.1.2 运算符与表达式</summary>
+                    <div class="details-content">
+                        <p>C语言提供了完整的运算符体系，包括算术运算符、关系运算符、逻辑运算符、赋值运算符等。</p>
+                        
+                        <h4>算术运算符：</h4>
+                        <table>
+                            <tr>
+                                <th>运算符</th>
+                                <th>含义</th>
+                                <th>示例</th>
+                                <th>备注</th>
+                            </tr>
+                            <tr>
+                                <td>+</td>
+                                <td>加法</td>
+                                <td>a + b</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>减法</td>
+                                <td>a - b</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>*</td>
+                                <td>乘法</td>
+                                <td>a * b</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>/</td>
+                                <td>除法</td>
+                                <td>a / b</td>
+                                <td>整数相除结果为整数，如5/2结果是2</td>
+                            </tr>
+                            <tr>
+                                <td>%</td>
+                                <td>取模（求余）</td>
+                                <td>a % b</td>
+                                <td>仅用于整数，求两数相除的余数，如5%2结果是1</td>
+                            </tr>
+                        </table>
+                        
+                        <h4>关系与逻辑运算符：</h4>
+                        <p>关系运算符用于比较大小，结果为逻辑值（真为1，假为0）：>（大于）、<（小于）、>=（大于等于）、<=（小于等于）、==（等于）、!=（不等于）。</p>
+                        
+                        <p>逻辑运算符用于组合多个条件：&&（逻辑与：两条件同真则为真）、||（逻辑或：两条件有一为真则为真）、!（逻辑非：取反）。</p>
+                        
+                        <h4>自增/自减运算符：</h4>
+                        <p>++/--运算符用于将变量值加1或减1：</p>
+                        <ul>
+                            <li>i++（后置）：先使用i的当前值，再将i加1</li>
+                            <li>++i（前置）：先将i加1，再使用i的新值</li>
+                        </ul>
+                        
+                        <pre><code>int a = 5;
+int b = 10;
+printf("b++ = %d\n", b++);   // 输出10，然后b变为11 (后置)
+printf("++b = %d\n", ++b);   // b先变为12，然后输出12 (前置)</code></pre>
+                        
+                        <h4>表达式与优先级：</h4>
+                        <p>表达式是由运算符和操作数组合而成，用于计算一个值。运算符的优先级决定了表达式中运算的执行顺序，基本规则是：先乘除取余，后加减，括号优先。当优先级相同时，结合性（自左向右或自右向左）决定计算顺序。</p>
+                        
+                        <pre><code>int a = 5, b = 3, c = 2;
+int result;
+
+result = a + b * c;     // 乘法优先级高于加法，等价于 a + (b * c)
+printf("a + b * c = %d\n", result);  // 输出11
+
+result = (a + b) * c;   // 括号改变优先级
+printf("(a + b) * c = %d\n", result);  // 输出16</code></pre>
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>1.2 控制流结构</summary>
+                    <div class="details-content">
+                        <p>C语言的控制流结构包括顺序结构、选择结构和循环结构三种基本类型。</p>
+                        
+                        <h3>1.2.1 条件语句</h3>
+                        
+                        <h4>if-else语句：</h4>
+                        <p>if语句用于条件判断并执行相应代码块：</p>
+                        <pre><code>if (条件表达式) {
+    语句块1;
+} else {
+    语句块2;
+}</code></pre>
+                        
+                        <h4>示例：</h4>
+                        <pre><code>int score;
+printf("请输入成绩（0-100）: ");
+scanf("%d", &score);
+
+if (score >= 90) {
+    printf("成绩优秀！\n");
+} else if (score >= 80) {
+    printf("成绩良好！\n");
+} else if (score >= 70) {
+    printf("成绩中等！\n");
+} else if (score >= 60) {
+    printf("成绩及格！\n");
+} else {
+    printf("很遗憾，不及格。\n");
+}</code></pre>
+                        
+                        <h4>switch-case语句：</h4>
+                        <p>switch语句适用于对同一个变量或表达式进行等值判断的多分支选择：</p>
+                        <pre><code>switch (表达式) {
+    case 常量表达式1:
+        语句块1;
+        break;
+    case 常量表达式2:
+        语句块2;
+        break;
+    ...
+    default:
+        语句块n;
+        break;
+}</code></pre>
+                        
+                        <h4>示例：</h4>
+                        <pre><code>int day;
+printf("请输入星期几（1-7）: ");
+scanf("%d", &day);
+
+switch (day) {
+    case 1:
+        printf("星期一\n");
+        break;
+    case 2:
+        printf("星期二\n");
+        break;
+    case 3:
+        printf("星期三\n");
+        break;
+    case 4:
+        printf("星期四\n");
+        break;
+    case 5:
+        printf("星期五\n");
+        break;
+    case 6:
+        printf("星期六\n");
+        break;
+    case 7:
+        printf("星期日\n");
+        break;
+    default:
+        printf("输入错误！\n");
+}</code></pre>
+                        
+                        <div class="warning">
+                            <p><strong>注意：</strong>break的重要性：如果省略break，程序会从匹配的case标签开始，一直执行到后续所有case（包括default）的语句，直到遇到break或switch结束，这称为"case穿透"。</p>
+                        </div>
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>1.3 数组与指针</summary>
+                    <div class="details-content">
+                        <h3>1.3.1 数组</h3>
+                        <p>数组是相同类型元素的集合，每个元素可通过下标引用或指针间接访问。</p>
+                        
+                        <h4>数组定义与初始化：</h4>
+                        <p>一维数组定义语法：</p>
+                        <pre><code>数据类型 数组名[元素个数];</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>int my_array[10];  // 定义一个包含10个整数的数组</code></pre>
+                        
+                        <p>数组初始化方式：</p>
+                        <pre><code>int arr1[5] = {1, 2, 3, 4, 5};  // 完全初始化
+int arr2[] = {6, 7, 8, 9, 10};  // 省略元素个数，由初始化列表确定
+int arr3[5] = {1, 2};           // 部分初始化，其余元素自动初始化为0</code></pre>
+                        
+                        <h4>二维数组：</h4>
+                        <p>二维数组定义语法：</p>
+                        <pre><code>数据类型 数组名[行数][列数];</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>int matrix[3][4] = {
+    {1, 2, 3, 4},
+    {5, 6, 7, 8},
+    {9, 10, 11, 12}
+};</code></pre>
+                        
+                        <h4>数组名作为指针：</h4>
+                        <p>在C语言中，数组名可以看作是一个指向数组首元素的常量指针。通过数组名可以访问和修改数组中的元素。指针和数组在C语言中具有很高的互操作性，可以使用指针来访问和操作数组，也可以使用数组来表示和操作指针。</p>
+                        
+                        <p>例如：</p>
+                        <pre><code>int arr[5] = {1, 2, 3, 4, 5};
+int *ptr = arr;  // 指针指向数组首元素
+
+for (int i = 0; i < 5; i++) {
+    printf("%d ", *(ptr + i));  // 通过指针访问数组元素
+}
+printf("\n");
+
+for (int i = 0; i < 5; i++) {
+    printf("%d ", ptr[i]);  // 等价于*(ptr + i)
+}
+printf("\n");</code></pre>
+                        
+                        <h3>1.3.2 指针</h3>
+                        <p>指针是C语言中最为强大的特性之一，它允许直接对内存地址进行操作。指针变量存储的值为另一变量的地址，通过指针可以实现变量的间接访问。理解指针是掌握内存管理的关键。</p>
+                        
+                        <h4>指针声明与初始化：</h4>
+                        <p>指针声明语法：</p>
+                        <pre><code>数据类型 *指针名;</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>int *ip;      // 声明一个指向int类型的指针
+float *fp;    // 声明一个指向float类型的指针
+char *cp;     // 声明一个指向char类型的指针</code></pre>
+                        
+                        <p>指针初始化：</p>
+                        <pre><code>int num = 10;
+int *ptr = &num;  // 指针指向变量num的地址</code></pre>
+                        
+                        <h4>指针操作：</h4>
+                        <p>指针声明后，可以通过&操作符获取变量的地址，并通过*操作符来访问指针指向的内存地址中存储的值。</p>
+                        
+                        <p>例如：</p>
+                        <pre><code>int a = 5;
+int *pa = &a;  // pa指向a的地址
+
+printf("a = %d\n", a);         // 输出：a = 5
+printf("*pa = %d\n", *pa);      // 输出：*pa = 5
+printf("&a = %p\n", &a);        // 输出a的地址
+printf("pa = %p\n", pa);        // 输出pa存储的地址
+
+*pa = 10;  // 通过指针修改a的值
+printf("a = %d\n", a);         // 输出：a = 10</code></pre>
+                        
+                        <h4>指针运算：</h4>
+                        <p>指针可以进行以下运算：</p>
+                        <ul>
+                            <li>指针与整数相加/相减：移动指针指向的位置</li>
+                            <li>指针相减：计算两个指针之间的元素个数</li>
+                            <li>指针比较：比较两个指针的地址大小</li>
+                        </ul>
+                        
+                        <p>例如：</p>
+                        <pre><code>int arr[5] = {1, 2, 3, 4, 5};
+int *ptr = arr;
+
+printf("ptr = %p, *ptr = %d\n", ptr, *ptr);        // 输出首元素地址和值
+ptr++;
+printf("ptr = %p, *ptr = %d\n", ptr, *ptr);        // 指针后移一位
+ptr = ptr + 3;
+printf("ptr = %p, *ptr = %d\n", ptr, *ptr);        // 指针移动3位
+ptr--;
+printf("ptr = %p, *ptr = %d\n", ptr, *ptr);        // 指针前移一位</code></pre>
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>1.4 函数</summary>
+                    <div class="details-content">
+                        <p>函数是C语言程序的基本模块，用于将程序分解为独立的子过程。</p>
+                        
+                        <h3>1.4.1 函数定义与调用</h3>
+                        
+                        <h4>函数定义：</h4>
+                        <p>函数定义包括函数头和函数体两部分：</p>
+                        <pre><code>返回类型 函数名(参数列表) {
+    函数体语句;
+}</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>int add(int a, int b) {
+    return a + b;
+}</code></pre>
+                        
+                        <h4>函数声明：</h4>
+                        <p>函数声明用于向编译器说明函数的名称、参数类型和返回类型：</p>
+                        <pre><code>返回类型 函数名(参数列表);</code></pre>
+                        
+                        <p>函数声明通常放在使用该函数的代码之前，或放在头文件中。例如：</p>
+                        <pre><code>int add(int, int);  // 声明时参数名可选</code></pre>
+                        
+                        <h4>函数调用：</h4>
+                        <p>函数调用的语法为：</p>
+                        <pre><code>函数名(参数列表);</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>int result = add(3, 5);  // 调用add函数，传递3和5作为参数
+printf("3 + 5 = %d\n", result);  // 输出：8</code></pre>
+                        
+                        <h3>1.4.2 参数传递机制</h3>
+                        <p>C语言中参数按值传递（传递的是值的拷贝）。这意味着函数内部对参数的修改不会影响函数外部的变量。</p>
+                        
+                        <p>例如：</p>
+                        <pre><code>void increment(int x) {
+    x++;  // 仅修改局部拷贝
+}
+
+int main() {
+    int a = 5;
+    increment(a);
+    printf("a = %d\n", a);  // 输出：a = 5（未改变）
+    return 0;
+}</code></pre>
+                        
+                        <p>如果需要在函数中修改外部变量，可以传递指针：</p>
+                        <pre><code>void increment(int *x) {
+    (*x)++;  // 通过指针修改值
+}
+
+int main() {
+    int a = 5;
+    increment(&a);
+    printf("a = %d\n", a);  // 输出：a = 6（已改变）
+    return 0;
+}</code></pre>
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>1.5 复合类型</summary>
+                    <div class="details-content">
+                        <h3>1.5.1 结构体</h3>
+                        <p>结构体是程序员定义的数据类型，由不同数据类型的变量组成（可能包括其他结构体类型）。</p>
+                        
+                        <h4>结构体定义：</h4>
+                        <p>使用struct关键字定义结构体：</p>
+                        <pre><code>struct 结构体名 {
+    数据类型 成员1;
+    数据类型 成员2;
+    ...
+};</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>struct point {
+    int x;
+    int y;
+};</code></pre>
+                        
+                        <h4>结构体变量声明：</h4>
+                        <p>1. 定义时声明变量：</p>
+                        <pre><code>struct point {
+    int x;
+    int y;
+} p1, p2;  // 声明p1和p2为struct point类型</code></pre>
+                        
+                        <p>2. 先定义类型，后声明变量：</p>
+                        <pre><code>struct point {
+    int x;
+    int y;
+};
+struct point p1, p2;  // 使用struct关键字声明变量</code></pre>
+                        
+                        <p>3. 使用typedef简化：</p>
+                        <pre><code>typedef struct {
+    int x;
+    int y;
+} Point;  // 定义Point为结构体类型别名
+
+Point p1, p2;  // 直接使用Point声明变量</code></pre>
+                        
+                        <h4>结构体成员访问：</h4>
+                        <p>使用点运算符(.)访问结构体成员：</p>
+                        <pre><code>struct point p;
+p.x = 10;
+p.y = 20;
+printf("点坐标: (%d, %d)\n", p.x, p.y);</code></pre>
+                        
+                        <h4>结构体指针：</h4>
+                        <p>使用箭头运算符(->)通过指针访问结构体成员：</p>
+                        <pre><code>struct point *pp = &p;
+pp->x = 30;  // 等价于(*pp).x = 30;
+pp->y = 40;  // 等价于(*pp).y = 40;
+printf("点坐标: (%d, %d)\n", pp->x, pp->y);</code></pre>
+                    </div>
+                </details>
+            </div>
+            
+            <h2>2. C标准库全面参考</h2>
+            
+            <div class="details-container">
+                <details>
+                    <summary>2.1 输入输出函数（stdio.h）</summary>
+                    <div class="details-content">
+                        <p>stdio.h头文件包含了C语言的标准输入输出函数，是最常用的头文件之一。</p>
+                        
+                        <h3>2.1.1 格式化输入输出</h3>
+                        
+                        <h4>printf函数：</h4>
+                        <p>printf是格式化输出函数，用于向标准输出设备（通常是屏幕）按规定格式输出信息。函数原型：</p>
+                        <pre><code>int printf(const char *format, ...);</code></pre>
+                        
+                        <p>format参数包含格式说明符，用于指定输出格式。常见格式说明符：</p>
+                        <ul>
+                            <li>%d：整数（十进制）</li>
+                            <li>%f：浮点数</li>
+                            <li>%c：字符</li>
+                            <li>%s：字符串</li>
+                            <li>%p：指针地址</li>
+                            <li>%x/%X：整数（十六进制）</li>
+                            <li>%o：整数（八进制）</li>
+                        </ul>
+                        
+                        <p>格式修饰符：</p>
+                        <ul>
+                            <li>%ld：长整数</li>
+                            <li>%lf：双精度浮点数</li>
+                            <li>%lu：无符号长整数</li>
+                            <li>%hd：短整数</li>
+                            <li>%.nf：保留n位小数</li>
+                            <li>%m.nf：总宽度m，小数位n</li>
+                        </ul>
+                        
+                        <p>例如：</p>
+                        <pre><code>int a = 10;
+float b = 3.14f;
+char c = 'A';
+char str[] = "Hello";
+
+printf("整数: %d\n", a);            // 输出：整数: 10
+printf("浮点数: %.2f\n", b);        // 输出：浮点数: 3.14
+printf("字符: %c\n", c);            // 输出：字符: A
+printf("字符串: %s\n", str);        // 输出：字符串: Hello
+printf("指针: %p\n", &a);           // 输出变量地址
+printf("十六进制: %x\n", a);        // 输出：十六进制: a</code></pre>
+                        
+                        <h4>scanf函数：</h4>
+                        <p>scanf是格式化输入函数，用于从标准输入设备（通常是键盘）读取数据。函数原型：</p>
+                        <pre><code>int scanf(const char *format, ...);</code></pre>
+                        
+                        <div class="warning">
+                            <p><strong>使用scanf时需要注意：</strong></p>
+                            <ul>
+                                <li>格式字符串中的普通字符必须与输入完全匹配</li>
+                                <li>使用&运算符获取变量地址</li>
+                                <li>注意缓冲区溢出问题</li>
+                            </ul>
+                        </div>
+                        
+                        <p>例如：</p>
+                        <pre><code>int age;
+float height;
+char name[20];
+
+printf("请输入年龄: ");
+scanf("%d", &age);
+
+printf("请输入身高: ");
+scanf("%f", &height);
+
+printf("请输入姓名: ");
+scanf("%s", name);  // 注意：%s遇到空格会停止
+
+printf("\n输入的信息：");
+printf("\n年龄: %d", age);
+printf("\n身高: %.2f", height);
+printf("\n姓名: %s", name);</code></pre>
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>2.2 字符串处理函数（string.h）</summary>
+                    <div class="details-content">
+                        <p>string.h头文件包含了丰富的字符串处理函数，用于字符串的复制、比较、查找等操作。</p>
+                        
+                        <h3>2.2.1 字符串基础操作</h3>
+                        
+                        <h4>字符串长度：</h4>
+                        <p>strlen函数计算字符串的长度（不包括'\0'）：</p>
+                        <pre><code>size_t strlen(const char *str);</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>char str[] = "Hello, World!";
+int length = strlen(str);  // length = 13</code></pre>
+                        
+                        <h4>字符串复制：</h4>
+                        <p>1. strcpy：复制字符串（不安全）</p>
+                        <pre><code>char *strcpy(char *dest, const char *src);</code></pre>
+                        
+                        <p>2. strncpy：复制指定长度的字符串</p>
+                        <pre><code>char *strncpy(char *dest, const char *src, size_t n);</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>char dest[20];
+char src[] = "Hello";
+
+strcpy(dest, src);        // dest = "Hello"
+strncpy(dest, src, 3);    // dest = "Hel"（注意没有自动添加'\0'）</code></pre>
+                        
+                        <h4>字符串连接：</h4>
+                        <p>1. strcat：连接字符串（不安全）</p>
+                        <pre><code>char *strcat(char *dest, const char *src);</code></pre>
+                        
+                        <p>2. strncat：连接指定长度的字符串</p>
+                        <pre><code>char *strncat(char *dest, const char *src, size_t n);</code></pre>
+                        
+                        <p>例如：</p>
+                        <pre><code>char dest[20] = "Hello";
+char src[] = ", World!";
+
+strcat(dest, src);        // dest = "Hello, World!"
+strncat(dest, src, 5);    // dest = "Hello, Wo"（连接前5个字符）</code></pre>
+                        
+                        <h3>2.2.2 字符串比较</h3>
+                        <p>字符串比较函数：</p>
+                        <p>1. strcmp：比较两个字符串</p>
+                        <pre><code>int strcmp(const char *s1, const char *s2);</code></pre>
+                        
+                        <p>2. strncmp：比较前n个字符</p>
+                        <pre><code>int strncmp(const char *s1, const char *s2, size_t n);</code></pre>
+                        
+                        <p>比较结果：</p>
+                        <ul>
+                            <li>返回值 < 0：s1小于s2</li>
+                            <li>返回值 = 0：s1等于s2</li>
+                            <li>返回值 > 0：s1大于s2</li>
+                        </ul>
+                        
+                        <p>例如：</p>
+                        <pre><code>char str1[] = "apple";
+char str2[] = "banana";
+char str3[] = "app";
+
+int result1 = strcmp(str1, str2);  // 负值（'a' < 'b'）
+int result2 = strcmp(str1, str3);  // 正值（"apple" > "app"）
+int result3 = strncmp(str1, str3, 3);  // 0（前3个字符相同）</code></pre>
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>2.3 数学函数（math.h）</summary>
+                    <div class="details-content">
+                        <p>math.h头文件包含了丰富的数学函数，支持三角函数、指数对数、取整等运算。</p>
+                        
+                        <h3>2.3.1 基本数学运算</h3>
+                        
+                        <h4>三角函数：</h4>
+                        <ul>
+                            <li>sin：正弦函数</li>
+                            <li>cos：余弦函数</li>
+                            <li>tan：正切函数</li>
+                            <li>asin：反正弦函数</li>
+                            <li>acos：反余弦函数</li>
+                            <li>atan：反正切函数</li>
+                            <li>atan2：四象限反正切函数</li>
+                        </ul>
+                        
+                        <div class="note">
+                            <p><strong>注意：</strong>所有三角函数的参数都是弧度值。</p>
+                        </div>
+                        
+                        <h4>双曲函数：</h4>
+                        <ul>
+                            <li>sinh：双曲正弦</li>
+                            <li>cosh：双曲余弦</li>
+                            <li>tanh：双曲正切</li>
+                        </ul>
+                        
+                        <h3>2.3.2 指数与对数</h3>
+                        
+                        <h4>指数函数：</h4>
+                        <ul>
+                            <li>exp：自然指数函数</li>
+                            <li>pow：幂函数</li>
+                            <li>sqrt：平方根</li>
+                            <li>cbrt：立方根（C99）</li>
+                        </ul>
+                        
+                        <h4>对数函数：</h4>
+                        <ul>
+                            <li>log：自然对数（以e为底）</li>
+                            <li>log10：常用对数（以10为底）</li>
+                            <li>log2：以2为底的对数（C99）</li>
+                        </ul>
+                        
+                        <h3>2.3.3 其他数学函数</h3>
+                        
+                        <h4>取整函数：</h4>
+                        <ul>
+                            <li>ceil：向上取整</li>
+                            <li>floor：向下取整</li>
+                            <li>trunc：截断取整（C99）</li>
+                            <li>round：四舍五入取整（C99）</li>
+                        </ul>
+                        
+                        <h4>绝对值函数：</h4>
+                        <ul>
+                            <li>abs：整数绝对值</li>
+                            <li>fabs：浮点数绝对值</li>
+                            <li>labs：长整数绝对值</li>
+                        </ul>
+                        
+                        <h4>其他函数：</h4>
+                        <ul>
+                            <li>fmod：浮点数取模</li>
+                            <li>hypot：计算直角三角形斜边（C99）</li>
+                            <li>ldexp：计算x*2^exp</li>
+                            <li>frexp：将数分解为尾数和指数</li>
+                            <li>modf：分解整数和小数部分</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+            
+            <div class="tip">
+                <p><strong>提示：</strong>以上只是C语言技术参考的部分内容。完整的参考资料包含了更多详细的概念、示例和说明。建议在实际编程过程中结合具体需求查阅相关部分。</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>C语言完整技术参考资料 &copy; 2023 - 全面系统的C语言编程指南</p>
+        </footer>
+    </div>
+</body>
+</html>

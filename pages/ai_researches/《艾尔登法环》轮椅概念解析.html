@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《艾尔登法环》"轮椅"概念解析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #e6e6e6;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #2d4059 0%, #1a1a2e 100%);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            color: #e84545;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        
+        .subtitle {
+            color: #b8b8b8;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        section {
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            color: #e84545;
+            border-bottom: 2px solid #e84545;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            color: #f05945;
+            margin: 15px 0 10px;
+            font-size: 1.4em;
+        }
+        
+        h4 {
+            color: #f3bda1;
+            margin: 12px 0 8px;
+            font-size: 1.2em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        details {
+            background-color: #2d4059;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        summary {
+            background-color: #3a506b;
+            color: #e6e6e6;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        
+        summary:hover {
+            background-color: #4a6180;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background-color: #2d4059;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #3a506b;
+        }
+        
+        th {
+            background-color: #e84545;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #3a506b;
+        }
+        
+        tr:hover {
+            background-color: #4a6180;
+        }
+        
+        .highlight {
+            background-color: rgba(232, 69, 69, 0.2);
+            padding: 10px;
+            border-left: 4px solid #e84545;
+            margin: 15px 0;
+        }
+        
+        .note {
+            background-color: rgba(59, 130, 246, 0.2);
+            padding: 10px;
+            border-left: 4px solid #3b82f6;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background-color: rgba(245, 158, 11, 0.2);
+            padding: 10px;
+            border-left: 4px solid #f59e0b;
+            margin: 15px 0;
+        }
+        
+        .data-box {
+            background-color: #3a506b;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .data-title {
+            font-weight: bold;
+            color: #f3bda1;
+            margin-bottom: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #3a506b;
+            color: #b8b8b8;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>《艾尔登法环》"轮椅"概念解析</h1>
+        <p class="subtitle">操作简单、威力强大的装备与流派指南</p>
+        <p>在《艾尔登法环》的游戏社区中，"轮椅"并非指游戏内的特定装备或物品，而是玩家对那些<b>操作简单、威力强大、适合新手或"手残党"使用</b>的武器、防具、法术等装备的戏称。</p>
+    </header>
+
+    <section>
+        <h2>一、武器类"轮椅"装备</h2>
+        
+        <details>
+            <summary>1.1 血怪手臂 (DLC黄金树之影新增)</summary>
+            <div class="content">
+                <p>血怪手臂是《艾尔登法环》DLC"黄金树之影"中新增的<b>特大剑类武器</b>，被玩家誉为DLC最强"轮椅"武器之一。</p>
+                
+                <div class="data-box">
+                    <div class="data-title">基础属性数据 (L0)</div>
+                    <table>
+                        <tr><td>攻击力</td><td>物理147，魔力0，火0，雷0，圣0</td></tr>
+                        <tr><td>致命一击</td><td>100</td></tr>
+                        <tr><td>重量</td><td>20</td></tr>
+                        <tr><td>防御时减伤率</td><td>物理76%，魔力46%，火46%，雷46%，圣46%</td></tr>
+                        <tr><td>防御强度</td><td>51</td></tr>
+                        <tr><td>必需能力值</td><td>力气28，灵巧11，感应16</td></tr>
+                        <tr><td>能力加成</td><td>力气D，灵巧E，感应D</td></tr>
+                    </table>
+                </div>
+                
+                <div class="data-box">
+                    <div class="data-title">强化后数据 (L25)</div>
+                    <table>
+                        <tr><td>满强化面板</td><td>884-899 (不同来源略有差异)</td></tr>
+                        <tr><td>出血质变后累计出血量表</td><td>228</td></tr>
+                    </table>
+                </div>
+                
+                <div class="highlight">
+                    <p><b>核心优势：</b>血怪手臂的重击自带出血效果，配合血质变后不仅拥有高削韧能力，还具备极高的出血特性。玩家评价其为"当之无愧的轮椅第一，超大范围操作简单，出血量大"。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary>1.2 卡利亚突刺盾 (DLC黄金树之影新增)</summary>
+            <div class="content">
+                <p>卡利亚突刺盾是DLC新增的<b>突刺盾类武器</b>，其最大特点是攻防一体，被誉为"最轮椅的流派"之一。</p>
+                
+                <div class="data-box">
+                    <div class="data-title">基础属性数据 (L0)</div>
+                    <table>
+                        <tr><td>攻击力</td><td>物理122，魔力36，火0，雷0，圣0</td></tr>
+                        <tr><td>致命一击</td><td>100</td></tr>
+                        <tr><td>重量</td><td>10.5</td></tr>
+                        <tr><td>防御时减伤率</td><td>物理94%，魔力64%，火36%，雷34%，圣35%</td></tr>
+                        <tr><td>防御强度</td><td>64</td></tr>
+                        <tr><td>必需能力值</td><td>力气17，灵巧13，智力15</td></tr>
+                        <tr><td>能力加成</td><td>力气D，灵巧D，智力D</td></tr>
+                    </table>
+                </div>
+                
+                <div class="highlight">
+                    <p><b>核心优势：</b>卡利亚突刺盾的<b>战技"盾牌攻击"</b>可以透过盾牌进行攻击，再次发动能使出最多三次的追击，消耗专注值为- (无消耗)。玩家评价其"可攻可守，容错十分高"，是典型的"有手就行"的装备。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary>1.3 其他主流"轮椅"武器</summary>
+            <div class="content">
+                <p>根据玩家推荐，《艾尔登法环》中的<b>十大轮椅武器</b>还包括：</p>
+                
+                <table>
+                    <tr>
+                        <th>武器名称</th>
+                        <th>特点</th>
+                    </tr>
+                    <tr>
+                        <td>蒙格圣血矛</td>
+                        <td>超大范围操作简单，出血量大，戏称"000"，不论是清杂兵还是BOSS战都非常强力</td>
+                    </tr>
+                    <tr>
+                        <td>粉碎巨人锤</td>
+                        <td>超高伤害韧性高，配合狮子斩能快速解决熔炉骑士、铃珠猎人等强敌</td>
+                    </tr>
+                    <tr>
+                        <td>碎星大剑</td>
+                        <td>清杂兵超好用，战技可将周围敌人吸在一起，对空中的怪也有用</td>
+                    </tr>
+                    <tr>
+                        <td>死亡勾棒</td>
+                        <td>伤害爆炸，战技有超远铺路和范围爆炸两种，还带冰伤属性</td>
+                    </tr>
+                    <tr>
+                        <td>亵渎圣剑</td>
+                        <td>特色拜年剑法，击杀怪物回血，距离远削韧高，被称为"担架神器"</td>
+                    </tr>
+                    <tr>
+                        <td>众使者的长笛</td>
+                        <td>吹泡泡攻击，对大型BOSS如飞龙效果极佳</td>
+                    </tr>
+                    <tr>
+                        <td>猎犬长牙</td>
+                        <td>新手必备神器，获取简单，可召唤狼哥战斗，带出血伤害</td>
+                    </tr>
+                    <tr>
+                        <td>暗月大剑</td>
+                        <td>法爷必备近战武器，战技耗蓝低，能持续一分钟</td>
+                    </tr>
+                    <tr>
+                        <td>黑夜骑兵戟</td>
+                        <td>配合冰枪战灰成为中远程杀器</td>
+                    </tr>
+                    <tr>
+                        <td>尸山血海</td>
+                        <td>虽被削过但战技依然舒服，外观帅气</td>
+                    </tr>
+                </table>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>二、防具类"轮椅"装备</h2>
+        
+        <details>
+            <summary>2.1 大山羊套装</summary>
+            <div class="content">
+                <p>大山羊套装被公认为目前版本中<b>防御力最高的套装</b>，是"轮椅"流派的标配防具。</p>
+                
+                <div class="data-box">
+                    <div class="data-title">套装整体属性</div>
+                    <table>
+                        <tr><td>物理减伤率总和</td><td>45%</td></tr>
+                        <tr><td>强韧度 (Poise)</td><td>100点</td></tr>
+                        <tr><td>重量</td><td>63 (整套)</td></tr>
+                        <tr><td>免疫力</td><td>170</td></tr>
+                        <tr><td>健壮度</td><td>197</td></tr>
+                        <tr><td>专注度</td><td>110</td></tr>
+                        <tr><td>生命力</td><td>130</td></tr>
+                    </table>
+                </div>
+                
+                <div class="data-box">
+                    <div class="data-title">单件装备属性</div>
+                    <table>
+                        <tr>
+                            <th>装备部位</th>
+                            <th>物理防御</th>
+                            <th>强韧度</th>
+                        </tr>
+                        <tr>
+                            <td>头盔</td>
+                            <td>7</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>铠甲</td>
+                            <td>20</td>
+                            <td>47</td>
+                        </tr>
+                        <tr>
+                            <td>臂甲</td>
+                            <td>5</td>
+                            <td>10</td>
+                        </tr>
+                        <tr>
+                            <td>腿甲</td>
+                            <td>11</td>
+                            <td>28</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="highlight">
+                    <p><b>核心优势：</b>大山羊套装的极高强韧度和物理减伤率，玩家评价其"能把强韧度堆到100点，基本可以无视所有怪的第一击，不被打断攻击"，是典型的"铁王八"流派装备。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary>2.2 其他推荐防具</summary>
+            <div class="content">
+                <p>除大山羊套装外，玩家还推荐以下防具作为"轮椅"流派的选择：</p>
+                
+                <table>
+                    <tr>
+                        <th>防具名称</th>
+                        <th>特点</th>
+                    </tr>
+                    <tr>
+                        <td>孤牢骑士套装</td>
+                        <td>主要看颜值选择，属性不如大山羊套装</td>
+                    </tr>
+                    <tr>
+                        <td>罗刹套装 (DLC新增)</td>
+                        <td>能为角色提供8%的增伤，是癫火调香瓶流派的推荐防具</td>
+                    </tr>
+                    <tr>
+                        <td>白面具</td>
+                        <td>敌人出血时可以增加攻击力，是双小曲吸血流的必备头盔</td>
+                    </tr>
+                </table>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>三、法术类"轮椅"装备</h2>
+        
+        <details>
+            <summary>3.1 拒绝的刺</summary>
+            <div class="content">
+                <p>拒绝的刺是DLC"黄金树之影"中最具代表性的<b>"轮椅"法术</b>，被玩家称为"DLC最超模的魔法"。</p>
+                
+                <div class="data-box">
+                    <div class="data-title">基础数据</div>
+                    <table>
+                        <tr><td>信仰需求</td><td>24点</td></tr>
+                        <tr><td>属性加成</td><td>吃魔力和感应双加成</td></tr>
+                        <tr><td>伤害类型</td><td>物理伤害+出血伤害 (出血占一半伤害)</td></tr>
+                    </table>
+                </div>
+                
+                <div class="data-box">
+                    <div class="data-title">削弱前后对比</div>
+                    <table>
+                        <tr>
+                            <th>属性</th>
+                            <th>削弱前 (版本1.12及之前)</th>
+                            <th>削弱后 (版本1.13及之后)</th>
+                        </tr>
+                        <tr>
+                            <td>伤害倍率</td>
+                            <td>125</td>
+                            <td>63 (下调约50%)</td>
+                        </tr>
+                        <tr>
+                            <td>失衡值</td>
+                            <td>5</td>
+                            <td>1.67 (下调约67%)</td>
+                        </tr>
+                        <tr>
+                            <td>出血值</td>
+                            <td>72</td>
+                            <td>17 (下调约76%)</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="highlight">
+                    <p><b>核心机制：</b>拒绝的刺可以无限复读，配合蓝秘密露滴可以实现无限蓝量，在魔法之境法阵内使用伤害更高。但需要注意的是，该法术对不能出血的BOSS伤害会大幅下降。</p>
+                </div>
+                
+                <div class="warning">
+                    <p><b>版本更新说明：</b>拒绝的刺在版本1.13中遭到了大幅削弱，总体直伤削减约60%，玩家在选择时需要考虑到这一点。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary>3.2 其他推荐"轮椅"法术</summary>
+            <div class="content">
+                <p>除拒绝的刺外，玩家还推荐以下法术作为"轮椅"选择：</p>
+                
+                <table>
+                    <tr>
+                        <th>法术名称</th>
+                        <th>特点</th>
+                    </tr>
+                    <tr>
+                        <td>魔法之境</td>
+                        <td>在原地生成法阵，法阵内使用魔法可提升魔法威力，与拒绝的刺配合效果极佳</td>
+                    </tr>
+                    <tr>
+                        <td>彗星亚兹勒 (彗星大炮)</td>
+                        <td>经典的"逃课"法术，伤害极高</td>
+                    </tr>
+                    <tr>
+                        <td>帚星</td>
+                        <td>对不会读指令的BOSS非常好用</td>
+                    </tr>
+                    <tr>
+                        <td>黑夜彗星</td>
+                        <td>用来对付读指令的小怪</td>
+                    </tr>
+                    <tr>
+                        <td>辉石魔砾</td>
+                        <td>日常推图打小怪用的基础魔法</td>
+                    </tr>
+                </table>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>四、祷告类"轮椅"装备</h2>
+        
+        <details>
+            <summary>4.1 黄金树立誓</summary>
+            <div class="content">
+                <p>黄金树立誓被玩家誉为<b>"必带祷告没有之一"</b>，是几乎所有"轮椅"流派都会携带的核心增益祷告。</p>
+                
+                <div class="data-box">
+                    <div class="data-title">基础效果</div>
+                    <table>
+                        <tr><td>PVE效果</td><td>减少10%所有伤害，增加15%造成的所有伤害</td></tr>
+                        <tr><td>PVP效果</td><td>减少5%所有伤害，增加8%所有伤害</td></tr>
+                        <tr><td>持续时间</td><td>80秒</td></tr>
+                        <tr><td>获取地点</td><td>火山路上一个破屋里</td></tr>
+                    </table>
+                </div>
+                
+                <div class="highlight">
+                    <p><b>实际测试效果：</b>黄金树立誓实际效果为提升15%伤害附加9%全减伤，持续时间1分20秒 (80秒)。门槛低持续久，是性价比极高的增益祷告。</p>
+                </div>
+                
+                <div class="note">
+                    <p><b>注意事项：</b>黄金树立誓<b>不能与军旗的BUFF相叠加</b>，它们会相互覆盖。军旗提升20%的伤害持续30秒，而黄金树立誓是15%伤害80秒。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary>4.2 黑焰庇佑</summary>
+            <div class="content">
+                <p>黑焰庇佑是另一个重要的"轮椅"祷告，主要提供高额物理减伤。</p>
+                
+                <div class="data-box">
+                    <div class="data-title">基础效果</div>
+                    <table>
+                        <tr><td>效果</td><td>减少35%物理伤害</td></tr>
+                        <tr><td>副作用</td><td>减少20%生命恢复</td></tr>
+                        <tr><td>持续时间</td><td>70秒</td></tr>
+                        <tr><td>获取方式</td><td>百智爵士支线获得</td></tr>
+                    </table>
+                </div>
+                
+                <div class="highlight">
+                    <p><b>实际应用效果：</b>黑焰庇佑+黄金树立誓+龙徽大盾护符+老将套装，在不带+5护符的前提下可以达到<b>69.8%的常态物理减免</b>，如果配合献斗盾护符可以在满血时提供<b>78.9%的物理抗性</b>。</p>
+                </div>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>五、护符类"轮椅"装备</h2>
+        
+        <details>
+            <summary>5.1 核心"轮椅"护符组合</summary>
+            <div class="content">
+                <h3>血血怪铁王八流派护符组合</h3>
+                <table>
+                    <tr>
+                        <th>护符名称</th>
+                        <th>效果</th>
+                        <th>备注</th>
+                    </tr>
+                    <tr>
+                        <td>斧护符</td>
+                        <td>强化蓄力攻击10% (仅限R2蓄力攻击)</td>
+                        <td>核心护符</td>
+                    </tr>
+                    <tr>
+                        <td>铜绿圆碟</td>
+                        <td>重负重 (>70%) 减伤10%，超重负 (>100%) 减伤20%</td>
+                        <td>核心护符</td>
+                    </tr>
+                    <tr>
+                        <td>龙徽大盾护符</td>
+                        <td>提升物理减伤</td>
+                        <td>可替换</td>
+                    </tr>
+                    <tr>
+                        <td>大山羊护符</td>
+                        <td>提供韧性，防止被打断</td>
+                        <td>可替换</td>
+                    </tr>
+                </table>
+                
+                <h3>突刺盾流派护符组合</h3>
+                <p><b>第一套 (高容错)：</b>矛护符、双手剑护符、珍珠盾护符、大盾护符</p>
+                <p><b>第二套 (高攻击)：</b>矛护符、双手剑护符、曲剑护符、腐败翼剑徽章</p>
+                
+                <h3>盾戳流派护符组合</h3>
+                <p>珍珠盾护符、绿琥珀链坠+3、双首龟护符、大盾护符</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>5.2 DLC新增强力护符</summary>
+            <div class="content">
+                <p>DLC"黄金树之影"新增了多个强力护符，其中三个被称为"盾戳流三神器"：</p>
+                
+                <table>
+                    <tr>
+                        <th>护符名称</th>
+                        <th>效果</th>
+                    </tr>
+                    <tr>
+                        <td>珍珠盾护符</td>
+                        <td>举盾防御时提升除物理属性以外的所有减伤率，是盾戳流的必带护符</td>
+                    </tr>
+                    <tr>
+                        <td>绿琥珀链坠+3</td>
+                        <td>大幅提升精力恢复速度</td>
+                    </tr>
+                    <tr>
+                        <td>双首龟护符</td>
+                        <td>进一步提升精力恢复速度</td>
+                    </tr>
+                </table>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>六、调香瓶类"轮椅"装备</h2>
+        
+        <details>
+            <summary>6.1 雷电调香瓶</summary>
+            <div class="content">
+                <div class="data-box">
+                    <div class="data-title">基础属性数据</div>
+                    <table>
+                        <tr><td>攻击力</td><td>雷电110，物理0，魔力0，火0，圣0</td></tr>
+                        <tr><td>致命一击</td><td>100</td></tr>
+                        <tr><td>重量</td><td>1.0</td></tr>
+                        <tr><td>防御时减伤率</td><td>物理21%，魔力28%，火25%，雷电65%，圣28%</td></tr>
+                        <tr><td>防御强度</td><td>15</td></tr>
+                        <tr><td>必需能力值</td><td>力气3，灵巧16，信仰14</td></tr>
+                        <tr><td>能力加成</td><td>灵巧D，信仰D</td></tr>
+                    </table>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary>6.2 癫火调香瓶</summary>
+            <div class="content">
+                <p>癫火调香瓶被认为比雷电调香瓶更强，是"唯一指定推荐"的调香瓶。</p>
+                
+                <div class="data-box">
+                    <div class="data-title">推荐配置</div>
+                    <table>
+                        <tr><td>强化等级</td><td>+25满级</td></tr>
+                        <tr><td>战灰</td><td>串联火花香 (DLC新战灰)</td></tr>
+                        <tr><td>护符组合</td><td>亚历山大的碎片、调香师护符、火对蝎、献斗剑护符 (或龙徽大盾护符)</td></tr>
+                        <tr><td>防具推荐</td><td>罗刹套装 (提供8%增伤)</td></tr>
+                        <tr><td>灵药推荐</td><td>带火破露滴 (提升火焰伤害)、油光露滴 (自动给敌人上油)</td></tr>
+                    </table>
+                </div>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>七、"轮椅"流派加点推荐</h2>
+        
+        <details>
+            <summary>7.1 血血怪铁王八流派加点</summary>
+            <div class="content">
+                <table>
+                    <tr>
+                        <th>属性</th>
+                        <th>推荐值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>生命值</td>
+                        <td>60</td>
+                        <td>进入DLC的基本要求，否则容错率过低</td>
+                    </tr>
+                    <tr>
+                        <td>耐力</td>
+                        <td>40+</td>
+                        <td>持盾消耗耐力较多</td>
+                    </tr>
+                    <tr>
+                        <td>力气</td>
+                        <td>48</td>
+                        <td>满足指纹盾的使用需求</td>
+                    </tr>
+                    <tr>
+                        <td>灵巧</td>
+                        <td>11</td>
+                        <td>满足血血怪手臂的使用需求</td>
+                    </tr>
+                    <tr>
+                        <td>智力</td>
+                        <td>12</td>
+                        <td>满足魔法护盾的使用需求</td>
+                    </tr>
+                    <tr>
+                        <td>信仰</td>
+                        <td>15/25/30</td>
+                        <td>三个节点，决定能使用多少祷告</td>
+                    </tr>
+                    <tr>
+                        <td>感应</td>
+                        <td>无视</td>
+                        <td>不需要</td>
+                    </tr>
+                    <tr>
+                        <td>毕业等级</td>
+                        <td>201级</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </details>
+        
+        <details>
+            <summary>7.2 其他流派加点</summary>
+            <div class="content">
+                <h3>突刺盾流派加点</h3>
+                <table>
+                    <tr>
+                        <th>属性</th>
+                        <th>推荐值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>生命值</td>
+                        <td>60</td>
+                        <td>保证基本容错</td>
+                    </tr>
+                    <tr>
+                        <td>精力</td>
+                        <td>40+</td>
+                        <td>持盾流派基本要求</td>
+                    </tr>
+                    <tr>
+                        <td>智力</td>
+                        <td>12</td>
+                        <td>满足魔力盾牌的使用</td>
+                    </tr>
+                    <tr>
+                        <td>其他属性</td>
+                        <td>满足拿起核心武器即可</td>
+                        <td>对加点要求很低，非常适合新手</td>
+                    </tr>
+                </table>
+                
+                <h3>拒绝的刺法师流派加点</h3>
+                <table>
+                    <tr>
+                        <th>属性</th>
+                        <th>推荐值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>生命值</td>
+                        <td>60</td>
+                        <td>必须保证</td>
+                    </tr>
+                    <tr>
+                        <td>集中力</td>
+                        <td>38</td>
+                        <td>正好满足一次蓝瓶的补充</td>
+                    </tr>
+                    <tr>
+                        <td>耐力</td>
+                        <td>30-40</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>力气</td>
+                        <td>10左右</td>
+                        <td>能拿起法杖就行</td>
+                    </tr>
+                    <tr>
+                        <td>智力</td>
+                        <td>80</td>
+                        <td>吃死王子杖的补正</td>
+                    </tr>
+                    <tr>
+                        <td>信仰</td>
+                        <td>80</td>
+                        <td>吃死王子杖的补正</td>
+                    </tr>
+                    <tr>
+                        <td>感应</td>
+                        <td>剩余点数全加</td>
+                        <td>增加出血量表累计和母亲杖补正</td>
+                    </tr>
+                </table>
+                
+                <div class="note">
+                    <p><b>特点：</b>拒绝的刺法师流派需要的等级很高，DLC不建议低等级玩家玩法师。</p>
+                </div>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>八、"轮椅"流派实战思路</h2>
+        
+        <details>
+            <summary>8.1 血血怪铁王八流派</summary>
+            <div class="content">
+                <h3>战斗流程</h3>
+                <ol>
+                    <li><b>猴戏阶段：</b>使用黄金树立誓与黑焰庇护，左手切法杖使用魔力盾牌，武器用岩石剑附魔+喝灵药</li>
+                    <li><b>进BOSS房：</b>直接召唤大哥，让大哥先上，自己在旁边寻找机会</li>
+                    <li><b>主要输出：</b>使用重击打出血和韧性，利用高削韧特性压制敌人</li>
+                    <li><b>防御策略：</b>持盾硬刚，利用高物理减伤率承受伤害</li>
+                </ol>
+                
+                <div class="note">
+                    <p><b>注意事项：</b>虽然这套配装很"无脑"，但仍需要背板BOSS技能，特别是魔法攻击和大范围AOE无法完全防住。</p>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary>8.2 其他流派实战思路</summary>
+            <div class="content">
+                <h3>突刺盾流派</h3>
+                <p><b>战斗方式：</b></p>
+                <ul>
+                    <li>全程双持突刺盾，点击右键全程防御</li>
+                    <li>在防御中点击左键进行攻击</li>
+                    <li>利用高削韧快速让BOSS倒地</li>
+                    <li>虽然伤害不如其他流派直观，但容错率极高</li>
+                </ul>
+                
+                <p><b>适用场景：</b>对人形怪物效果极佳，但对大型敌人 (如融泥骑士、影轮草) 特别"坐牢"。建议同时携带突刺盾与癫火调香瓶，根据敌人类型切换。</p>
+                
+                <h3>盾戳流派</h3>
+                <p><b>操作方法：</b></p>
+                <ul>
+                    <li>进入战斗前使用战灰切腹+灵药</li>
+                    <li>一边按住左键防御，一边不停按右键戳戳戳</li>
+                    <li>主要伤害来源是出血，打中次数越多伤害越高</li>
+                    <li>真正的"有手就行"，完全不需要任何操作技巧</li>
+                </ul>
+            </div>
+        </details>
+    </section>
+
+    <section>
+        <h2>九、总结与建议</h2>
+        
+        <details>
+            <summary>9.1 "轮椅"装备的共同特点</summary>
+            <div class="content">
+                <ol>
+                    <li><b>操作简单：</b>不需要复杂的操作技巧，"有手就行"</li>
+                    <li><b>威力强大：</b>伤害高、防御高或效果显著</li>
+                    <li><b>适应性强：</b>对大多数敌人和场景都有效</li>
+                    <li><b>降低难度：</b>能够显著降低游戏难度，适合新手或"手残党"</li>
+                </ol>
+            </div>
+        </details>
+        
+        <details>
+            <summary>9.2 装备选择建议</summary>
+            <div class="content">
+                <p>根据不同玩家的需求，我们给出以下建议：</p>
+                
+                <table>
+                    <tr>
+                        <th>玩家类型</th>
+                        <th>推荐流派</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>新手玩家</td>
+                        <td>盾戳流或血血怪铁王八流</td>
+                        <td>操作简单，容错率高</td>
+                    </tr>
+                    <tr>
+                        <td>喜欢魔法的玩家</td>
+                        <td>拒绝的刺流派</td>
+                        <td>但要注意已经被削弱</td>
+                    </tr>
+                    <tr>
+                        <td>追求极限输出的玩家</td>
+                        <td>癫火调香瓶</td>
+                        <td>是目前版本的首选</td>
+                    </tr>
+                    <tr>
+                        <td>喜欢近战的玩家</td>
+                        <td>卡利亚突刺盾和血怪手臂</td>
+                        <td>都是极佳选择</td>
+                    </tr>
+                </table>
+            </div>
+        </details>
+        
+        <details>
+            <summary>9.3 最终建议</summary>
+            <div class="content">
+                <p>虽然"轮椅"装备能够大幅降低游戏难度，但《艾尔登法环》的魅力在于其挑战性和成就感。建议玩家在熟悉游戏机制后，可以尝试使用其他装备，体验更多样化的玩法。同时，记得关注游戏的版本更新，因为强力"轮椅"装备可能会被调整。</p>
+                
+                <div class="highlight">
+                    <p>最后，无论选择哪种"轮椅"装备，最重要的是享受游戏的过程。希望这份详细的数据资料能够帮助你在交界地的冒险更加顺利！</p>
+                </div>
+            </div>
+        </details>
+    </section>
+
+    <footer>
+        <p>内容由 AI 生成 | 《艾尔登法环》"轮椅"概念解析</p>
+    </footer>
+</body>
+</html>
