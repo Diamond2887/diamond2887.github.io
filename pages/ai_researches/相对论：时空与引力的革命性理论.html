@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>相对论：时空与引力的革命性理论</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .intro {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .subsection-title {
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            margin: 25px 0 15px;
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .panel-header:hover {
+            background-color: #34495e;
+        }
+        
+        .panel-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s;
+        }
+        
+        .panel.active .panel-content {
+            padding: 20px;
+            max-height: 5000px;
+        }
+        
+        .panel-icon {
+            transition: transform 0.3s;
+        }
+        
+        .panel.active .panel-icon {
+            transform: rotate(180deg);
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .highlight {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid var(--secondary-color);
+            margin: 15px 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+        
+        .formula {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin: 15px 0;
+            font-family: 'Cambria Math', serif;
+            font-size: 1.2rem;
+        }
+        
+        .figure {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .figure img {
+            max-width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .figure-caption {
+            font-style: italic;
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            padding: 15px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-year {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin-top: 40px;
+            box-shadow: var(--shadow);
+        }
+        
+        .conclusion h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .timeline-item:nth-child(odd)::after,
+            .timeline-item:nth-child(even)::after {
+                left: 21px;
+            }
+        }
+        
+        .person-card {
+            display: flex;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .person-image {
+            width: 120px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .person-info {
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .person-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .person-dates {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .contributions {
+            margin-top: 10px;
+        }
+        
+        .contribution-item {
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .contribution-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+        }
+        
+        .svg-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .nav-tab {
+            padding: 10px 20px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            margin-right: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-tab.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .nav-tab:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>相对论：时空与引力的革命性理论</h1>
+            <p class="subtitle">从爱因斯坦的灵光乍现到现代物理学的基石，探索时空、引力和宇宙的本质</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="intro">
+            <p>相对论作为20世纪物理学最伟大的理论突破之一，深刻地改变了人类对时空和引力的认识。从1905年爱因斯坦建立狭义相对论，到1915年完成广义相对论，这一理论体系不仅解决了经典物理学面临的根本性矛盾，还预言了许多令人惊叹的物理现象。</p>
+            <p>本文将系统梳理相对论的历史发展脉络，深入阐释其核心物理原理，并详细分析狭义相对论效应和广义相对论预言的重要现象。</p>
+        </section>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="history">历史发展</button>
+            <button class="nav-tab" data-tab="principles">核心原理</button>
+            <button class="nav-tab" data-tab="special">狭义相对论</button>
+            <button class="nav-tab" data-tab="general">广义相对论</button>
+        </div>
+        
+        <div id="history" class="tab-content active">
+            <section class="section">
+                <h2 class="section-title">一、相对论的历史发展脉络</h2>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>1.1 狭义相对论的历史背景</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>狭义相对论的提出源于19世纪末物理学界面临的一场深刻危机。当时，经典物理学体系看似完整成熟，但在其晴朗天空的远处却漂浮着两朵令人不安的乌云。第一朵乌云是关于"以太"是否存在的迈克耳孙-莫雷实验，第二朵乌云是研究物体热辐射性质的"黑体辐射"实验。这两朵乌云最终分别催生了相对论和量子论，成为近代物理学的两块基石。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="200" viewBox="0 0 600 200">
+                                <rect x="0" y="0" width="600" height="200" fill="#e3f2fd" />
+                                <text x="300" y="50" text-anchor="middle" font-size="18" font-weight="bold">经典物理学面临的两朵乌云</text>
+                                
+                                <g transform="translate(150, 100)">
+                                    <circle cx="0" cy="0" r="40" fill="#3498db" />
+                                    <text x="0" y="5" text-anchor="middle" fill="white" font-size="14">迈克耳孙-莫雷实验</text>
+                                    <text x="0" y="25" text-anchor="middle" fill="white" font-size="12">以太探测</text>
+                                </g>
+                                
+                                <g transform="translate(450, 100)">
+                                    <circle cx="0" cy="0" r="40" fill="#e74c3c" />
+                                    <text x="0" y="5" text-anchor="middle" fill="white" font-size="14">黑体辐射</text>
+                                    <text x="0" y="25" text-anchor="middle" fill="white" font-size="12">紫外灾难</text>
+                                </g>
+                                
+                                <g transform="translate(150, 160)">
+                                    <text x="0" y="0" text-anchor="middle" font-size="14" fill="#2c3e50">催生相对论</text>
+                                </g>
+                                
+                                <g transform="translate(450, 160)">
+                                    <text x="0" y="0" text-anchor="middle" font-size="14" fill="#2c3e50">催生量子论</text>
+                                </g>
+                            </svg>
+                        </div>
+                        
+                        <p>为了证明以太的存在，物理学家们设计了多个精密实验。其中最著名的是1887年迈克尔逊和莫雷在美国克利夫兰进行的实验。他们使用迈克耳孙发明的灵敏仪器——迈克耳孙干涉仪，试图测出地球绕日运行穿过以太的速度，也就是"以太漂移"的速度。然而，实验结果却完全出人意料：无论怎样调整实验装置，光速在所有方向上都没有表现出预期的变化。这一零结果表明，"以太"假说存在严重问题，因为如果"以太"存在，光速应该表现出方向依赖性。</p>
+                        
+                        <p>面对这一困境，荷兰物理学家洛伦兹（H.A. Lorentz，1853-1928）试图在牛顿的绝对时空框架中解释迈克耳孙-莫雷实验的零结果。1892年，他提出了"长度收缩"假说，认为运动物体在运动方向上会发生收缩，这个收缩正好抵消两个互相垂直的光束的光程差。1904年，洛伦兹发表了《以任意小于光速的系统中的电磁现象》，正式提出了完整的洛伦兹变换公式。</p>
+                        
+                        <p>与此同时，法国数学家庞加莱（Henri Poincaré）也做出了重要贡献。1902年，庞加莱明确指出，洛伦兹的理论意味着同时性的相对性。1904年，他在圣路易斯举行的演讲中，定义了相对性原理："物理现象所得出的法则对于一个静止观测者和一个匀速运动的观测者来说是完全相同的，因此我们无法也不能确定我们自己是否处于一个匀速运动中"。</p>
+                        
+                        <p>然而，真正的突破来自爱因斯坦。1905年，年仅27岁的爱因斯坦发表了《论运动物体的电动力学》一文，构建起狭义相对论的大厦。爱因斯坦的独特之处在于，他不是试图在经典框架内修补漏洞，而是彻底摒弃了牛顿的绝对时空概念。他认识到，只要摒弃物体长度和事件同时性的绝对性，而将时间和空间合并为被称做时空的四维连续统，则可以找到同时满足相对性原理和光速不变原理的解决方案。</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>1.2 广义相对论的历史背景</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>如果说狭义相对论的建立还有洛伦兹等其他科学家的贡献，那么广义相对论的建立几乎是爱因斯坦一己之力。爱因斯坦建立广义相对论的过程，不同于其他新的物理理论产生的常规途径。广义相对论在很大程度上是爱因斯坦的独自发现，现成的物理认识的各种因素不曾对广义相对论提出紧迫的需要。</p>
+                        
+                        <p>爱因斯坦创立广义相对论的思想发展过程大致可以划分为三个阶段：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>第一阶段（1907年冬-1912年春）</strong>：爱因斯坦在提出狭义相对论后不久，便已经开始思索坐标系有没有进一步的等效性这个问题。1907年12月4日，他完成了《关于相对性原理和由此得出的结论》一文，在最后一章"相对性原理和引力"中，第一次提出了广义相对论的两个基本公设，并分析了由此引出的结论。通常，我们认为这就是广义相对论的明确起点。</p>
+                        </div>
+                        
+                        <div class="highlight">
+                            <p><strong>第二阶段（1912年夏-1915年夏）</strong>：爱因斯坦从转动圆盘上欧几里得几何不成立，领悟出引力问题的相对论性处理需要非平坦度规。1912年7月25日，爱因斯坦离开布拉格重回母校苏黎世工业大学任教授。为了解决爱因斯坦提出的问题，他的大学同学格罗斯曼立即到图书馆查阅了文献，很快发现确实存在一种爱因斯坦所需要的几何，这就是黎曼几何。</p>
+                        </div>
+                        
+                        <div class="highlight">
+                            <p><strong>第三阶段（1915年10月-11月）</strong>：爱因斯坦在1915年10月重新回到普遍协变的要求上来，使他多年辛勤的劳动迅速结晶为丰硕的理论成果。1915年11月里，他接连发表了四篇重要论文，并于11月25日建立了普遍协变的引力场方程。在最后一次演讲中，爱因斯坦及时地提出了一组可以描述广义相对论的协变方程，那次演讲的题目为"引力场方程"。</p>
+                        </div>
+                        
+                        <p>爱因斯坦建立广义相对论是基于深刻的物理洞察。他只用了几个星期就建立起了狭义相对论，而建立起广义相对论却用了整整十年时间。在深入研究了惯性力后，他提出了著名的等效原理，发现参考系问题有可能和引力问题一并解决。爱因斯坦认为，要实现惯性系和非惯性系平权必须考虑引力作用。</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>1.3 关键人物及其贡献</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>在相对论的建立过程中，多位科学家做出了重要贡献，形成了一条清晰的思想传承脉络。</p>
+                        
+                        <div class="person-card">
+                            <div class="person-image">L</div>
+                            <div class="person-info">
+                                <div class="person-name">亨德里克·洛伦兹 (Hendrik Lorentz)</div>
+                                <div class="person-dates">1853-1928</div>
+                                <p>洛伦兹是狭义相对论的重要先驱。他的贡献包括：1892年提出长度收缩假说，1904年发表完整的洛伦兹变换公式。洛伦兹的坐标变换、局域时间、对应态、长度收缩以及质量的速度依赖公式等新想法和新概念，直接导致了狭义相对论的诞生。</p>
+                                <div class="contributions">
+                                    <div class="contribution-item">提出长度收缩假说（1892）</div>
+                                    <div class="contribution-item">完善洛伦兹变换公式（1904）</div>
+                                    <div class="contribution-item">引入局域时间概念</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="person-card">
+                            <div class="person-image">P</div>
+                            <div class="person-info">
+                                <div class="person-name">亨利·庞加莱 (Henri Poincaré)</div>
+                                <div class="person-dates">1854-1912</div>
+                                <p>庞加莱在数学和物理概念上都做出了重要贡献。1902年，他明确指出洛伦兹的理论意味着同时性的相对性。1904年，他定义了相对性原理，并详细说明了时钟同步方法。1905年，庞加莱确立了狭义相对论的赝欧几何结构。</p>
+                                <div class="contributions">
+                                    <div class="contribution-item">明确同时性的相对性（1902）</div>
+                                    <div class="contribution-item">定义相对性原理（1904）</div>
+                                    <div class="contribution-item">确立赝欧几何结构（1905）</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="person-card">
+                            <div class="person-image">E</div>
+                            <div class="person-info">
+                                <div class="person-name">阿尔伯特·爱因斯坦 (Albert Einstein)</div>
+                                <div class="person-dates">1879-1955</div>
+                                <p>爱因斯坦则完成了决定性的综合和推广。1905年，他发表了《论运动物体的电动力学》和《物体的惯性同它所含的能量有关吗》两篇经典论文，建立了狭义相对论。爱因斯坦的革命性贡献在于，他不是像洛伦兹那样在经典框架内修补，而是彻底抛弃了绝对时空概念，提出了全新的时空观。</p>
+                                <div class="contributions">
+                                    <div class="contribution-item">建立狭义相对论（1905）</div>
+                                    <div class="contribution-item">提出质能方程 E=mc²（1905）</div>
+                                    <div class="contribution-item">建立广义相对论（1915）</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="person-card">
+                            <div class="person-image">M</div>
+                            <div class="person-info">
+                                <div class="person-name">赫尔曼·闵可夫斯基 (Hermann Minkowski)</div>
+                                <div class="person-dates">1864-1909</div>
+                                <p>闵可夫斯基是爱因斯坦在苏黎世联邦理工学院的数学老师。1908年，他将爱因斯坦的狭义相对论整理成4维时空的形式，采用四维的语言重新描述了狭义相对论。闵可夫斯基的工作为相对论提供了优美的几何表述，使人们能够更直观地理解时空的统一性。</p>
+                                <div class="contributions">
+                                    <div class="contribution-item">提出四维时空概念（1908）</div>
+                                    <div class="contribution-item">为相对论提供几何表述</div>
+                                    <div class="contribution-item">引入闵可夫斯基时空</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="person-card">
+                            <div class="person-image">G</div>
+                            <div class="person-info">
+                                <div class="person-name">马塞尔·格罗斯曼 (Marcel Grossmann)</div>
+                                <div class="person-dates">1878-1936</div>
+                                <p>格罗斯曼是爱因斯坦的大学同学，也是他在建立广义相对论过程中的重要合作者。1912年，正是格罗斯曼帮助爱因斯坦找到了黎曼几何这一正确的数学工具。在一年多的时间内，他们合写了三篇文章，这些文章标志着广义相对论发展过程中的一个重要阶段。</p>
+                                <div class="contributions">
+                                    <div class="contribution-item">引入黎曼几何工具（1912）</div>
+                                    <div class="contribution-item">与爱因斯坦合作发展广义相对论</div>
+                                    <div class="contribution-item">协助建立爱因斯坦场方程</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>1.4 重要时间节点</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1865年</div>
+                                    <p>麦克斯韦建立电磁场理论，预言了以光速传播的电磁波的存在，但没有指明光速是相对于哪个参考系的。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1887年</div>
+                                    <p>迈克尔逊和莫雷进行了著名的迈克耳孙-莫雷实验，试图测量地球相对于以太的运动，结果得到零结果，这成为经典物理学的重大难题。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1905年</div>
+                                    <p>爱因斯坦完成了划时代论文《论动体的电动力学》，建立了狭义相对论。同年，他还发表了《物体的惯性同它所含的能量有关吗》，提出了著名的质能公式E=mc²。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1907年</div>
+                                    <p>爱因斯坦在《关于相对性原理和由此得出的结论》一文中，第一次提出了广义相对论的基本思想，特别是等效原理的概念。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1908年</div>
+                                    <p>闵可夫斯基在科隆举行的德国自然科学家与医生大会上发表了题为《空间和时间》的著名讲演，将狭义相对论表述为四维时空的几何理论。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1912年</div>
+                                    <p>爱因斯坦从布拉格回到苏黎世，在格罗斯曼的帮助下开始系统学习黎曼几何，认识到这是描述弯曲时空的正确数学工具。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1915年11月</div>
+                                    <p>这是广义相对论发展史上最关键的一个月。爱因斯坦在11月4日、11日、18日和25日接连向普鲁士科学院提交了四篇论文，逐步完善了引力场方程。11月25日，他最终建立了普遍协变的爱因斯坦场方程。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1916年</div>
+                                    <p>爱因斯坦发表了《广义相对论的基础》，这是广义相对论的总结性论文，标志着这个崭新理论更趋完美、更具划时代意义。同年，史瓦西在俄国前线求解出了爱因斯坦场方程的第一个精确解，即史瓦西解，描述了球对称黑洞的时空结构。</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-year">1919年</div>
+                                    <p>在英国天文学家爱丁顿的组织下，英国派出了两支远征队分赴巴西和非洲观察日全食，证实了爱因斯坦关于星光在太阳引力场中偏折的预言，这成为广义相对论的第一个重要实验验证。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div id="principles" class="tab-content">
+            <section class="section">
+                <h2 class="section-title">二、相对论的核心物理原理</h2>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>2.1 光速不变原理的深入阐释</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>光速不变原理是狭义相对论的两个基本假设之一，由爱因斯坦于1905年提出。其内容是：在真空中，光相对任何惯性观察者的传播速度都是一个物理常量c，它与观察者和光源的运动速度无关，也与光的传播方向无关。这一原理不仅是一个假设，更有深刻的理论基础和坚实的实验支撑。</p>
+                        
+                        <div class="formula">c = 299,792,458 m/s</div>
+                        
+                        <p>从理论基础来看，光速不变原理可以从麦克斯韦方程组直接推导出来。在自由空间（真空）中，既没有自由电荷、也没有传导电流，电荷密度ρ=0，电流密度J=0。将这些条件代入麦克斯韦方程组，可以得到真空中的波动方程。通过对比经典波动方程，可以得出电磁波在真空中的传播速度为c=1/√(ε₀μ₀)，其中ε₀是真空介电常数，μ₀是真空磁导率。这个推导过程不依赖于任何参考系，而麦克斯韦方程组在任何惯性参考系下都成立，因此光速在任何惯性参考系下都是一个定值。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="300" viewBox="0 0 600 300">
+                                <defs>
+                                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+                                    </marker>
+                                </defs>
+                                
+                                <rect x="0" y="0" width="600" height="300" fill="#f8f9fa" />
+                                
+                                <!-- 光源 -->
+                                <circle cx="100" cy="150" r="20" fill="#e74c3c" />
+                                <text x="100" y="145" text-anchor="middle" fill="white" font-size="14">光源</text>
+                                
+                                <!-- 观察者1 -->
+                                <circle cx="300" cy="80" r="15" fill="#3498db" />
+                                <text x="300" y="77" text-anchor="middle" fill="white" font-size="12">观察者A</text>
+                                
+                                <!-- 观察者2 -->
+                                <circle cx="300" cy="220" r="15" fill="#2ecc71" />
+                                <text x="300" y="217" text-anchor="middle" fill="white" font-size="12">观察者B</text>
+                                
+                                <!-- 光传播路径 -->
+                                <line x1="120" y1="150" x2="285" y2="80" stroke="#e74c3c" stroke-width="2" marker-end="url(#arrowhead)" />
+                                <line x1="120" y1="150" x2="285" y2="220" stroke="#e74c3c" stroke-width="2" marker-end="url(#arrowhead)" />
+                                
+                                <!-- 标注光速 -->
+                                <text x="200" y="100" text-anchor="middle" font-size="14" fill="#2c3e50">c = 299,792,458 m/s</text>
+                                <text x="200" y="200" text-anchor="middle" font-size="14" fill="#2c3e50">c = 299,792,458 m/s</text>
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">光速不变原理示意图</text>
+                                <text x="300" y="280" text-anchor="middle" font-size="14" fill="#666">无论观察者如何运动，测量的光速始终为c</text>
+                            </svg>
+                        </div>
+                        
+                        <p>从实验验证来看，光速不变原理得到了大量高精度实验的支持。最著名的是1887年的迈克尔逊-莫雷实验，虽然这个实验最初是为了寻找以太而设计的，但它的零结果却意外地证实了光速在不同方向上都相同。后来的实验进一步提高了精度，例如1971年的飞机携带原子钟实验，以及德国马普协会核物理研究所进行的高精度实验，都以极高的精度验证了光速不变原理。</p>
+                        
+                        <p>光速不变原理的物理意义是深远的。它意味着不存在绝对静止的参考系，所有惯性系都是平权的。这彻底颠覆了牛顿的绝对时空观，在牛顿力学中，时间和空间是绝对的、独立的，而在相对论中，时间和空间都与观察者的运动状态有关。</p>
+                        
+                        <div class="highlight">
+                            <p><strong>注意：</strong>光速不变原理只在真空中成立。在介质中，光的传播速度会降低，且可能表现出各向异性。此外，光速不变原理并不意味着光在所有情况下都是最快的信号。在某些特殊情况下，如在波导中或在特定介质中，其他信号可能以超过真空中光速的速度传播，但这并不违反相对论，因为相对论禁止的是信息或能量以超过真空中光速的速度传播。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>2.2 事件相对性与因果原理</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>在相对论中，<strong>事件</strong>是指在特定时空点发生的物理现象，它由四个坐标（x,y,z,t）唯一确定。事件的相对性是指，不同惯性参考系中的观察者对同一事件的时空坐标会有不同的测量结果。这种相对性不是主观的，而是时空的客观性质。</p>
+                        
+                        <p><strong>同时性的相对性</strong>是事件相对性中最深刻的概念之一。爱因斯坦是从"同时"的相对性开始他的相对论时空观讨论的，这是重要的基础性概念。同时性概念是因参考系而异的，在一个惯性系中认为同时发生的两个事件，在另一惯性系中看来，不一定同时发生。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <defs>
+                                    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                                    </marker>
+                                </defs>
+                                
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">同时性的相对性思想实验</text>
+                                
+                                <!-- 路基 -->
+                                <rect x="50" y="200" width="500" height="5" fill="#7f8c8d" />
+                                <text x="300" y="195" text-anchor="middle" font-size="14" fill="#2c3e50">路基</text>
+                                
+                                <!-- 火车 -->
+                                <rect x="150" y="170" width="200" height="60" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2" />
+                                <text x="250" y="200" text-anchor="middle" font-size="14" fill="#2c3e50">火车</text>
+                                
+                                <!-- 闪电击中点 -->
+                                <line x1="200" y1="200" x2="200" y2="100" stroke="#e74c3c" stroke-width="2" />
+                                <circle cx="200" cy="100" r="8" fill="#e74c3c" />
+                                <text x="200" y="90" text-anchor="middle" font-size="12" fill="#2c3e50">闪电A</text>
+                                
+                                <line x1="300" y1="200" x2="300" y2="100" stroke="#e74c3c" stroke-width="2" />
+                                <circle cx="300" cy="100" r="8" fill="#e74c3c" />
+                                <text x="300" y="90" text-anchor="middle" font-size="12" fill="#2c3e50">闪电B</text>
+                                
+                                <!-- 中点 -->
+                                <circle cx="250" cy="200" r="6" fill="#3498db" />
+                                <text x="250" y="190" text-anchor="middle" font-size="12" fill="#2c3e50">M</text>
+                                
+                                <circle cx="250" cy="170" r="6" fill="#2ecc71" />
+                                <text x="250" y="160" text-anchor="middle" font-size="12" fill="#2c3e50">M'</text>
+                                
+                                <!-- 光传播路径 -->
+                                <line x1="200" y1="100" x2="250" y2="200" stroke="#e74c3c" stroke-width="1" stroke-dasharray="5,5" marker-end="url(#arrowhead2)" />
+                                <line x1="300" y1="100" x2="250" y2="200" stroke="#e74c3c" stroke-width="1" stroke-dasharray="5,5" marker-end="url(#arrowhead2)" />
+                                
+                                <line x1="200" y1="100" x2="250" y2="170" stroke="#2ecc71" stroke-width="1" stroke-dasharray="5,5" marker-end="url(#arrowhead2)" />
+                                <line x1="300" y1="100" x2="250" y2="170" stroke="#2ecc71" stroke-width="1" stroke-dasharray="5,5" marker-end="url(#arrowhead2)" />
+                                
+                                <!-- 说明 -->
+                                <text x="300" y="250" text-anchor="middle" font-size="14" fill="#2c3e50">路基观察者M：同时看到A和B的闪光</text>
+                                <text x="300" y="270" text-anchor="middle" font-size="14" fill="#2c3e50">火车观察者M'：先看到B的闪光，后看到A的闪光</text>
+                                
+                                <text x="300" y="350" text-anchor="middle" font-size="14" fill="#666">同时性是相对的，取决于观察者的运动状态</text>
+                            </svg>
+                        </div>
+                        
+                        <p><strong>因果原理</strong>在相对论中占据特殊地位。相对论规定，任何物理效应都不可能以大于光速的速度传递，这就是定域因果原则。光速c不仅是光的传播速度，更代表着因果关系的传递速度，是宇宙中两点间传递信息的速度上限。</p>
+                        
+                        <p>因果原理的重要性在于它保证了物理世界的逻辑一致性。如果信息可以超光速传递，就会导致因果悖论。例如，考虑一个观察者A向观察者B发送一个超光速信号，在B接收到信号后，立即向A发送一个超光速回复。由于相对论的时间膨胀效应，在某些参考系中，A可能在发送原信号之前就收到了回复，这就违反了因果律——结果出现在原因之前。</p>
+                        
+                        <p>光速作为信息传递的极限速度，确保了因果关系的正常顺序。在相对论中，如果两个事件之间可以通过光信号联系，它们的时间顺序在所有惯性系中都是相同的。只有类空间隔（即距离超过光速乘以时间差）的事件才可能在不同参考系中有不同的时间顺序，但这类事件之间不可能有因果联系，因此不会产生逻辑矛盾。</p>
+                        
+                        <p>因果原理还解释了为什么任何有质量的物体都不能加速到光速。根据相对论，加速一个物体需要能量，随着物体速度接近光速，所需的能量趋向无穷大。这不是技术限制，而是因果律的必然结果——如果物体可以达到或超过光速，就可以传递超光速信息，从而违反因果律。</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>2.3 洛伦兹因子的概念及作用</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>洛伦兹因子γ是狭义相对论中最核心的数学量，它定量地描述了相对论效应的强度。其定义为：</p>
+                        
+                        <div class="formula">γ = 1/√(1 - v²/c²)</div>
+                        
+                        <p>其中v是物体或参考系的相对速度，c是真空中的光速。</p>
+                        
+                        <p>洛伦兹因子最初由洛伦兹为了解释迈克尔逊-莫雷实验的光速不变结论而提出。他设想观察者相对于以太以一定速度运动时，长度在运动方向上发生收缩，并推导出了静系长度与动系长度之比的因子。然而，洛伦兹认为这个因子没有物理意义，只是把它当作纯数学处理。直到爱因斯坦提出狭义相对论，才赋予了洛伦兹因子深刻的物理内涵。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#3498db" />
+                                        <stop offset="100%" stop-color="#e74c3c" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 坐标轴 -->
+                                <line x1="50" y1="350" x2="550" y2="350" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="50" y1="350" x2="50" y2="50" stroke="#2c3e50" stroke-width="2" />
+                                
+                                <!-- 坐标轴标签 -->
+                                <text x="300" y="390" text-anchor="middle" font-size="14" fill="#2c3e50">速度 v (c的分数)</text>
+                                <text x="20" y="200" text-anchor="middle" font-size="14" fill="#2c3e50" transform="rotate(-90, 20, 200)">洛伦兹因子 γ</text>
+                                
+                                <!-- 刻度 -->
+                                <line x1="50" y1="350" x2="50" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="50" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0</text>
+                                
+                                <line x1="150" y1="350" x2="150" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="150" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.2</text>
+                                
+                                <line x1="250" y1="350" x2="250" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="250" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.4</text>
+                                
+                                <line x1="350" y1="350" x2="350" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="350" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.6</text>
+                                
+                                <line x1="450" y1="350" x2="450" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="450" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.8</text>
+                                
+                                <line x1="550" y1="350" x2="550" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="550" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">1.0</text>
+                                
+                                <!-- γ刻度 -->
+                                <line x1="50" y1="350" x2="40" y2="350" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="355" text-anchor="middle" font-size="12" fill="#2c3e50">1</text>
+                                
+                                <line x1="50" y1="250" x2="40" y2="250" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="255" text-anchor="middle" font-size="12" fill="#2c3e50">2</text>
+                                
+                                <line x1="50" y1="150" x2="40" y2="150" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="155" text-anchor="middle" font-size="12" fill="#2c3e50">5</text>
+                                
+                                <line x1="50" y1="50" x2="40" y2="50" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="55" text-anchor="middle" font-size="12" fill="#2c3e50">10</text>
+                                
+                                <!-- γ曲线 -->
+                                <path d="M 50,350 
+                                         C 100,340 150,320 200,290
+                                         C 250,250 300,200 350,150
+                                         C 400,100 450,70 500,60
+                                         C 520,55 540,52 550,50" 
+                                      stroke="url(#gradient)" stroke-width="3" fill="none" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">洛伦兹因子 γ 随速度变化曲线</text>
+                                
+                                <!-- 标注点 -->
+                                <circle cx="150" cy="340" r="4" fill="#3498db" />
+                                <text x="170" y="335" text-anchor="start" font-size="12" fill="#3498db">v=0.2c, γ≈1.02</text>
+                                
+                                <circle cx="250" cy="290" r="4" fill="#3498db" />
+                                <text x="270" y="285" text-anchor="start" font-size="12" fill="#3498db">v=0.4c, γ≈1.09</text>
+                                
+                                <circle cx="350" cy="200" r="4" fill="#3498db" />
+                                <text x="370" y="195" text-anchor="start" font-size="12" fill="#3498db">v=0.6c, γ≈1.25</text>
+                                
+                                <circle cx="450" cy="100" r="4" fill="#e74c3c" />
+                                <text x="470" y="95" text-anchor="start" font-size="12" fill="#e74c3c">v=0.8c, γ≈1.67</text>
+                                
+                                <circle cx="520" cy="55" r="4" fill="#e74c3c" />
+                                <text x="540" y="50" text-anchor="start" font-size="12" fill="#e74c3c">v=0.9c, γ≈2.29</text>
+                            </svg>
+                        </div>
+                        
+                        <p>洛伦兹因子的物理意义体现在多个方面：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>时间膨胀效应：</strong>在运动参考系中的时间流逝速度是静止参考系中的1/γ倍，即运动的时钟会变慢。当v接近光速c时，γ值会显著增大，表明时间膨胀效应变得明显。例如，当v=0.99c时，γ≈7.09，这意味着运动参考系中的1秒相当于静止参考系中的7.09秒。</p>
+                        </div>
+                        
+                        <div class="highlight">
+                            <p><strong>长度收缩效应：</strong>运动物体在运动方向上的长度是静止长度的1/γ倍。这种收缩不是物体本身的物理变化，而是由于时空的相对性导致的观测效应。当物体运动速度达到0.8c时，其长度会收缩到静止长度的60%。</p>
+                        </div>
+                        
+                        <div class="highlight">
+                            <p><strong>质量增加效应：</strong>物体的相对论质量m=γm₀，其中m₀是静质量。当物体速度接近光速时，其质量趋向无穷大，这就是为什么有质量的物体无法达到光速的原因。</p>
+                        </div>
+                        
+                        <p>洛伦兹因子还出现在相对论的其他重要公式中。例如，相对论动量p=γm₀v，相对论能量E=γm₀c²，以及著名的质能关系E₀=m₀c²（当v=0时）。可以说，洛伦兹因子是连接经典力学和相对论力学的桥梁。</p>
+                        
+                        <p>从数学角度看，洛伦兹因子具有一些有趣的性质。当v≪c时，γ≈1+ v²/(2c²)，这表明在低速情况下，相对论效应可以忽略，回到经典力学。当v=c时，γ趋向无穷大，这对应于光子等无质量粒子的情况。当v>c时，γ成为虚数，这在物理上没有意义，表明超光速运动是不可能的。</p>
+                        
+                        <p>洛伦兹因子的引入彻底改变了我们对时空的理解。它表明时间和空间不是绝对的，而是与观察者的运动状态密切相关。这种相对性不是测量误差或主观感受，而是时空的客观性质。正是基于洛伦兹因子，爱因斯坦建立了完整的狭义相对论体系，包括洛伦兹变换、相对论动力学等。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div id="special" class="tab-content">
+            <section class="section">
+                <h2 class="section-title">三、狭义相对论的三大效应</h2>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>3.1 长度收缩效应</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>长度收缩，又称洛伦兹收缩或洛伦兹-费兹杰拉德收缩，是狭义相对论的核心效应之一。它指的是物体在运动方向上的长度会比静止时更短的现象。这一效应最初由洛伦兹于1892年为解释迈克尔逊-莫雷实验的否定结果而提出，他假设物体在以太中运动时，沿运动方向的长度会收缩至原长的√(1-v²/c²)倍。</p>
+                        
+                        <div class="formula">L = L₀√(1 - v²/c²) = L₀/γ</div>
+                        
+                        <p>其中L是运动物体在运动方向上的长度，L₀是该物体静止时的固有长度，v是物体相对于观察者的速度，c是光速，γ是洛伦兹因子。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="300" viewBox="0 0 600 300">
+                                <rect x="0" y="0" width="600" height="300" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">长度收缩效应示意图</text>
+                                
+                                <!-- 静止参考系 -->
+                                <text x="300" y="70" text-anchor="middle" font-size="16" fill="#2c3e50">静止参考系</text>
+                                <rect x="150" y="90" width="300" height="60" fill="#3498db" opacity="0.7" />
+                                <text x="300" y="120" text-anchor="middle" font-size="14" fill="white">长度 = L₀</text>
+                                
+                                <!-- 运动参考系 -->
+                                <text x="300" y="170" text-anchor="middle" font-size="16" fill="#2c3e50">运动参考系 (v=0.8c)</text>
+                                <rect x="210" y="190" width="180" height="60" fill="#e74c3c" opacity="0.7" />
+                                <text x="300" y="220" text-anchor="middle" font-size="14" fill="white">长度 = L₀/γ ≈ 0.6L₀</text>
+                                
+                                <!-- 箭头表示运动 -->
+                                <line x1="550" y1="220" x2="590" y2="220" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)" />
+                                <text x="570" y="240" text-anchor="middle" font-size="12" fill="#2c3e50">运动方向</text>
+                                
+                                <!-- 说明 -->
+                                <text x="300" y="280" text-anchor="middle" font-size="14" fill="#666">物体在运动方向上的长度会收缩，垂直于运动方向的长度不变</text>
+                            </svg>
+                        </div>
+                        
+                        <p>理解长度收缩效应需要注意以下几点：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>第一，长度收缩是一种相对效应。</strong>在物体自己的参考系中，它的长度是不变的。只有在相对于物体运动的参考系中，才会观测到长度收缩。例如，一艘静止时长100米的宇宙飞船，当它以0.6c的速度飞行时，地面上的观察者会测得它的长度为80米。但在飞船上的宇航员看来，飞船的长度仍然是100米。</p>
+                        </div>
+                        
+                        <div class="highlight">
+                            <p><strong>第二，长度收缩只发生在运动方向上。</strong>垂直于运动方向的长度不会发生收缩。如果一个立方体沿x轴方向运动，那么它的x轴长度会收缩，而y轴和z轴的长度保持不变。</p>
+                        </div>
+                        
+                        <div class="highlight">
+                            <p><strong>第三，长度收缩是时空几何的必然结果，</strong>而不是物体内部结构的改变。物体的原子间距并没有真正缩小，只是在不同参考系中，由于同时性的相对性，对物体两端位置的测量是在不同时刻进行的，导致测得的长度不同。</p>
+                        </div>
+                        
+                        <p>长度收缩效应在日常生活中很难观察到，因为我们接触的物体运动速度都远小于光速。例如，即使是时速3000公里的火箭，其速度也仅为光速的约0.0003%，对应的长度收缩因子约为0.9999999995，收缩量可以忽略不计。只有在粒子加速器中，当粒子速度接近光速时，长度收缩效应才变得显著。</p>
+                        
+                        <p>长度收缩与时间膨胀之间存在着深刻的联系。实际上，它们是同一时空变换的不同表现。在一个参考系中的长度收缩，对应于另一个参考系中的时间膨胀。这种联系通过洛伦兹变换得到了完美的统一。</p>
+                        
+                        <p>从物理本质上看，长度收缩反映了时空的四维性质。在狭义相对论中，时间和空间不是独立的，而是形成了一个四维时空连续统。不同参考系之间的相对运动，相当于在这个四维时空中的"旋转"，导致时间坐标和空间坐标的混合。长度收缩正是这种时空几何性质的体现。</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>3.2 时间膨胀效应</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>时间膨胀是狭义相对论预言的另一个重要效应。根据爱因斯坦1905年提出的狭义相对论，处于快速运动状态的时钟，与构造完全相同、处于静止状态的时钟相比，快动时钟的指针转动得慢，也就是时间流逝得慢，这种现象被称为"时间膨胀"效应。</p>
+                        
+                        <div class="formula">t = γt₀ = t₀/√(1 - v²/c²)</div>
+                        
+                        <p>其中t是运动参考系中的时间间隔，t₀是静止参考系中的时间间隔，也就是固有时。这个公式表明，运动的时钟走得慢，速度越快，时间流逝越慢，当v→c时，t→∞。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">时间膨胀效应：光钟思想实验</text>
+                                
+                                <!-- 静止光钟 -->
+                                <text x="150" y="70" text-anchor="middle" font-size="16" fill="#2c3e50">静止光钟</text>
+                                <line x1="150" y1="100" x2="150" y2="200" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="140" y1="100" x2="160" y1="100" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="140" y1="200" x2="160" y1="200" stroke="#2c3e50" stroke-width="2" />
+                                
+                                <!-- 光路径 -->
+                                <line x1="150" y1="100" x2="150" y2="200" stroke="#e74c3c" stroke-width="2" marker-end="url(#arrowhead2)" marker-start="url(#arrowhead2)" />
+                                
+                                <text x="150" y="230" text-anchor="middle" font-size="14" fill="#2c3e50">光程：2d</text>
+                                <text x="150" y="250" text-anchor="middle" font-size="14" fill="#2c3e50">时间：t₀ = 2d/c</text>
+                                
+                                <!-- 运动光钟 -->
+                                <text x="450" y="70" text-anchor="middle" font-size="16" fill="#2c3e50">运动光钟 (v=0.6c)</text>
+                                <line x1="350" y1="100" x2="350" y2="200" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="340" y1="100" x2="360" y1="100" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="340" y1="200" x2="360" y1="200" stroke="#2c3e50" stroke-width="2" />
+                                
+                                <line x1="550" y1="100" x2="550" y2="200" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="540" y1="100" x2="560" y1="100" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="540" y1="200" x2="560" y1="200" stroke="#2c3e50" stroke-width="2" />
+                                
+                                <!-- 光路径 -->
+                                <line x1="350" y1="100" x2="550" y2="200" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead2)" />
+                                <line x1="550" y1="200" x2="350" y2="100" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead2)" />
+                                
+                                <!-- 标注 -->
+                                <text x="450" y="150" text-anchor="middle" font-size="14" fill="#2c3e50">光程：2√(d² + (vt/2)²)</text>
+                                <text x="450" y="230" text-anchor="middle" font-size="14" fill="#2c3e50">时间：t = t₀/√(1-v²/c²)</text>
+                                <text x="450" y="250" text-anchor="middle" font-size="14" fill="#2c3e50">≈ 1.25t₀</text>
+                                
+                                <!-- 运动方向 -->
+                                <line x1="350" y1="280" x2="550" y2="280" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)" />
+                                <text x="450" y="300" text-anchor="middle" font-size="14" fill="#2c3e50">运动方向</text>
+                                
+                                <!-- 结论 -->
+                                <text x="300" y="350" text-anchor="middle" font-size="16" fill="#e74c3c">运动的光钟走得更慢！</text>
+                                <text x="300" y="380" text-anchor="middle" font-size="14" fill="#666">时间膨胀是光速不变原理的必然结果</text>
+                            </svg>
+                        </div>
+                        
+                        <p>时间膨胀是一种真实的物理现象，已经得到了大量实验的验证。最著名的实验之一涉及μ子（一种不稳定的亚原子粒子）的衰变。μ子的静止寿命约为2.2微秒，如果没有时间膨胀效应，大部分μ子在到达地面前就会衰变消失。然而，实际上科学家们在地面上发现了大量的μ子。这是因为宇宙射线产生的μ子以接近光速的速度运动，根据时间膨胀原理，它们的时间变慢了，所以在自己的"时间"里存活得更久，才有机会到达地球表面。</p>
+                        
+                        <p>1971年，科学家进行了一项更加直接的实验：将原子钟放在飞机上绕地球飞行，然后与地面上的原子钟比较。实验结果表明，高速飞行的原子钟与地面上的原子钟出现了时间差异，并且这种差异与狭义相对论所预测的时间膨胀效应相符。</p>
+                        
+                        <p>时间膨胀的物理机制可以通过光钟实验来理解。想象一个由两面平行镜子组成的光钟，光在两面镜子之间来回反射，每次反射的时间间隔就是一个"滴答"。当光钟静止时，光垂直上下运动。但当光钟运动时，光的路径变成了斜线，因此需要更长的时间来完成一次往返。由于光速不变，运动的光钟确实走得更慢了。</p>
+                        
+                        <div class="highlight">
+                            <p><strong>需要特别强调的是，时间膨胀是相互的。</strong>从任一个时钟观测，都是对方的时钟走慢了。假设两个观察者A和B分别以高速相对运动，A会认为B的时钟走慢了，同时B也会认为A的时钟走慢了。这种看似矛盾的现象其实并不矛盾，因为他们是在不同的参考系中进行观测的。</p>
+                        </div>
+                        
+                        <p>时间膨胀效应在现代科技中有着重要应用。例如，全球定位系统（GPS）必须考虑卫星上时钟的时间膨胀效应。GPS卫星以约14000公里/小时的速度运行，根据狭义相对论，卫星上的时钟每天会比地面时钟慢约7微秒。同时，由于卫星处于地球引力场的不同位置，还需要考虑广义相对论的引力时间膨胀效应。综合考虑这两种效应，卫星时钟每天会比地面时钟快约45微秒。如果不进行修正，GPS系统的定位误差将每天累积约10公里，很快就会失去实用价值。</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>3.3 质量膨胀效应</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>质量膨胀，又称质速关系或质增效应，是狭义相对论的第三个重要效应。在相对论力学中，物体的惯性质量分为静质量m₀和相对论质量m，两者的关系式即质速关系。</p>
+                        
+                        <div class="formula">m = m₀/√(1 - v²/c²) = γm₀</div>
+                        
+                        <p>其中m₀是物体的静质量，即物体在静止参考系中的质量，m是物体运动时的相对论质量。这个公式表明，物体的质量不是恒定的，而是随着物体速度的增加而增加。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">质量膨胀效应示意图</text>
+                                
+                                <!-- 坐标轴 -->
+                                <line x1="50" y1="350" x2="550" y2="350" stroke="#2c3e50" stroke-width="2" />
+                                <line x1="50" y1="350" x2="50" y2="50" stroke="#2c3e50" stroke-width="2" />
+                                
+                                <!-- 坐标轴标签 -->
+                                <text x="300" y="390" text-anchor="middle" font-size="14" fill="#2c3e50">速度 v (c的分数)</text>
+                                <text x="20" y="200" text-anchor="middle" font-size="14" fill="#2c3e50" transform="rotate(-90, 20, 200)">质量 m/m₀</text>
+                                
+                                <!-- 刻度 -->
+                                <line x1="50" y1="350" x2="50" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="50" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0</text>
+                                
+                                <line x1="150" y1="350" x2="150" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="150" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.2</text>
+                                
+                                <line x1="250" y1="350" x2="250" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="250" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.4</text>
+                                
+                                <line x1="350" y1="350" x2="350" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="350" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.6</text>
+                                
+                                <line x1="450" y1="350" x2="450" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="450" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">0.8</text>
+                                
+                                <line x1="550" y1="350" x2="550" y2="340" stroke="#2c3e50" stroke-width="2" />
+                                <text x="550" y="370" text-anchor="middle" font-size="12" fill="#2c3e50">1.0</text>
+                                
+                                <!-- m/m₀刻度 -->
+                                <line x1="50" y1="350" x2="40" y2="350" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="355" text-anchor="middle" font-size="12" fill="#2c3e50">1</text>
+                                
+                                <line x1="50" y1="250" x2="40" y2="250" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="255" text-anchor="middle" font-size="12" fill="#2c3e50">2</text>
+                                
+                                <line x1="50" y1="150" x2="40" y2="150" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="155" text-anchor="middle" font-size="12" fill="#2c3e50">5</text>
+                                
+                                <line x1="50" y1="50" x2="40" y2="50" stroke="#2c3e50" stroke-width="2" />
+                                <text x="30" y="55" text-anchor="middle" font-size="12" fill="#2c3e50">10</text>
+                                
+                                <!-- 质量曲线 -->
+                                <path d="M 50,350 
+                                         C 100,345 150,335 200,315
+                                         C 250,290 300,250 350,200
+                                         C 400,150 450,100 500,70
+                                         C 520,60 540,55 550,52" 
+                                      stroke="#e74c3c" stroke-width="3" fill="none" />
+                                
+                                <!-- 标注点 -->
+                                <circle cx="150" cy="345" r="4" fill="#3498db" />
+                                <text x="170" y="340" text-anchor="start" font-size="12" fill="#3498db">v=0.2c, m≈1.02m₀</text>
+                                
+                                <circle cx="250" cy="315" r="4" fill="#3498db" />
+                                <text x="270" y="310" text-anchor="start" font-size="12" fill="#3498db">v=0.4c, m≈1.09m₀</text>
+                                
+                                <circle cx="350" cy="250" r="4" fill="#3498db" />
+                                <text x="370" y="245" text-anchor="start" font-size="12" fill="#3498db">v=0.6c, m≈1.25m₀</text>
+                                
+                                <circle cx="450" cy="150" r="4" fill="#e74c3c" />
+                                <text x="470" y="145" text-anchor="start" font-size="12" fill="#e74c3c">v=0.8c, m≈1.67m₀</text>
+                                
+                                <circle cx="520" cy="60" r="4" fill="#e74c3c" />
+                                <text x="540" y="55" text-anchor="start" font-size="12" fill="#e74c3c">v=0.9c, m≈2.29m₀</text>
+                                
+                                <!-- 结论 -->
+                                <text x="300" y="320" text-anchor="middle" font-size="16" fill="#e74c3c">当v→c时，m→∞</text>
+                                <text x="300" y="340" text-anchor="middle" font-size="14" fill="#666">有质量物体无法达到光速</text>
+                            </svg>
+                        </div>
+                        
+                        <p>质量膨胀效应的物理意义是深刻的。在经典力学中，质量被认为是物体的固有属性，与物体的运动状态无关。但在相对论中，物体的惯性随速度增加而增大，表现为质量的增加。当物体速度接近光速时，其质量趋向无穷大，这意味着需要无穷大的能量才能将物体加速到光速，因此有质量的物体永远无法达到光速。</p>
+                        
+                        <p>质量膨胀效应在粒子加速器中得到了直接验证。当带电粒子在加速器中被加速时，随着速度的增加，它们的质量也在增加。根据相对论，粒子做圆周运动的周期T=2πr/v会因为质量增加而变大，导致粒子的运动与加在D形盒上的交变电压不再同步。这就是为什么传统的回旋加速器对粒子能量有限制的原因。现代的同步加速器必须不断调整磁场强度，以补偿粒子质量的增加。</p>
+                        
+                        <p>从相对论能量的角度看，质量膨胀与能量密切相关。物体的总能量E=γm₀c²，其中包括静能E₀=m₀c²和动能K=(γ-1)m₀c²。当物体静止时，总能量就是静能，这就是著名的质能关系E=mc²的来源。质量和能量是同一物理实体的不同表现形式，可以相互转化。</p>
+                        
+                        <p>质量膨胀效应还解释了为什么光子（光的粒子）可以以光速运动——因为光子的静质量为零。对于静质量为零的粒子，公式m = m₀/√(1-v²/c²)在v=c时给出0/0的不定式，需要通过其他方式确定其质量。实际上，光子具有动量p=E/c=h/λ（其中h是普朗克常数，λ是波长），这表明光子虽然静质量为零，但具有相对论质量m=E/c²。</p>
+                        
+                        <div class="highlight">
+                            <p><strong>注意：</strong>现代物理学中对"相对论质量"这一概念的使用存在争议。一些物理学家认为，将质量视为速度的函数会带来不必要的复杂性，更倾向于只使用静质量，而将质量增加的效应体现在能量和动量的表达式中。但无论采用哪种表述方式，物理结果都是相同的。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <div id="general" class="tab-content">
+            <section class="section">
+                <h2 class="section-title">四、广义相对论的基本原理</h2>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>4.1 等效原理</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>等效原理是广义相对论的第一个基本原理，也是整个广义相对论的核心。其基本含义是指<strong>重力场与以适当加速度运动的参考系是等价的</strong>。这一原理的提出源于爱因斯坦对一个古老实验事实的深刻洞察：在引力场中一切物体都具有同一加速度。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">等效原理：电梯思想实验</text>
+                                
+                                <!-- 情况1：地球引力场 -->
+                                <text x="150" y="70" text-anchor="middle" font-size="16" fill="#2c3e50">情况1：地球引力场</text>
+                                <rect x="50" y="100" width="200" height="250" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2" />
+                                <text x="150" y="130" text-anchor="middle" font-size="14" fill="white">电梯</text>
+                                
+                                <!-- 地球 -->
+                                <ellipse cx="150" cy="380" rx="120" ry="30" fill="#8e44ad" />
+                                <text x="150" y="380" text-anchor="middle" font-size="14" fill="white">地球</text>
+                                
+                                <!-- 观察者 -->
+                                <circle cx="150" cy="200" r="15" fill="#3498db" />
+                                <text x="150" y="200" text-anchor="middle" font-size="12" fill="white">观察者</text>
+                                
+                                <!-- 重力箭头 -->
+                                <line x1="150" y1="220" x2="150" y2="270" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrowhead2)" />
+                                <text x="170" y="245" text-anchor="start" font-size="12" fill="#e74c3c">重力加速度 g</text>
+                                
+                                <!-- 情况2：加速参考系 -->
+                                <text x="450" y="70" text-anchor="middle" font-size="16" fill="#2c3e50">情况2：加速参考系</text>
+                                <rect x="350" y="100" width="200" height="250" fill="#95a5a6" stroke="#7f8c8d" stroke-width="2" />
+                                <text x="450" y="130" text-anchor="middle" font-size="14" fill="white">电梯</text>
+                                
+                                <!-- 太空背景 -->
+                                <rect x="350" y="100" width="200" height="250" fill="#2c3e50" opacity="0.1" />
+                                <circle cx="400" cy="150" r="3" fill="white" />
+                                <circle cx="500" cy="180" r="2" fill="white" />
+                                <circle cx="380" cy="250" r="2" fill="white" />
+                                <circle cx="520" cy="300" r="3" fill="white" />
+                                
+                                <!-- 观察者 -->
+                                <circle cx="450" cy="200" r="15" fill="#3498db" />
+                                <text x="450" y="200" text-anchor="middle" font-size="12" fill="white">观察者</text>
+                                
+                                <!-- 加速度箭头 -->
+                                <line x1="450" y1="220" x2="450" y2="270" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrowhead2)" />
+                                <text x="470" y="245" text-anchor="start" font-size="12" fill="#e74c3c">加速度 a = g</text>
+                                
+                                <!-- 结论 -->
+                                <text x="300" y="360" text-anchor="middle" font-size="16" fill="#e74c3c">观察者无法区分这两种情况！</text>
+                                <text x="300" y="385" text-anchor="middle" font-size="14" fill="#666">等效原理：引力与加速度不可区分</text>
+                            </svg>
+                        </div>
+                        
+                        <p>等效原理可以表述为：在任何一个时空点上都可以选取适当的参考系，使一切物质的运动方程中不再含有引力项，即引力可以局部地消除。如果认为这种消除了引力的参考系是惯性系，那么等效原理告诉我们，在任何一个时空点，一定存在局部惯性系。</p>
+                        
+                        <p>爱因斯坦用著名的"电梯实验"来说明等效原理。想象一个密闭的电梯，里面的观察者无法通过任何实验区分以下两种情况：</p>
+                        
+                        <div class="highlight">
+                            <p>1. 电梯静止在地球表面，观察者感受到地球的引力场，加速度为g。</p>
+                            <p>2. 电梯在没有引力场的太空中，以加速度g向上运动，观察者感受到惯性力。</p>
+                        </div>
+                        
+                        <p>在这两种情况下，观察者所做的任何力学实验都无法区分他究竟是在引力场中还是在加速参考系中。这就是等效原理的精髓：<strong>惯性力场与引力场的动力学效应是局部不可分辨的</strong>。</p>
+                        
+                        <p>等效原理有强弱两种形式。弱等效原理（又称伽利略等效原理）是伽利略从宏观物体的机械运动现象提出的运动规律，表述为一个检验物体在引力场中所受的力由牛顿万有引力定律给出。强等效原理则更进一步，认为在引力场中任一时空点，采用局部惯性系时，除引力外的一切物理规律都是洛伦兹协变的。</p>
+                        
+                        <p>等效原理的深刻意义在于，它揭示了引力的本质——<strong>引力不是一种力，而是时空弯曲的表现</strong>。在弯曲时空中，自由下落的物体实际上是在做"惯性运动"，即沿着测地线（时空中的最短路径）运动。我们感受到的"重力"，实际上是因为我们的参考系（如地面）在加速运动，而非物体真的受到了力的作用。</p>
+                        
+                        <p>从等效原理出发，可以得出许多重要结论。例如，光在引力场中会发生弯曲。根据等效原理，一个在引力场中自由下落的参考系是局部惯性系，在这个参考系中光沿直线传播。但在静止的参考系中看来，光的路径是弯曲的。爱因斯坦据此预言，星光经过太阳附近时会发生偏折，这一预言在1919年的日全食观测中得到了证实。</p>
+                        
+                        <p>等效原理还预言了引力时间膨胀效应。在强引力场中，时间会变慢。这可以通过电梯实验来理解：假设电梯顶部和底部各有一个时钟，当电梯加速上升时，顶部的时钟会比底部的时钟走得快（因为顶部的速度更大，根据狭义相对论，时间膨胀更多）。根据等效原理，在引力场中也会有类似效应，引力场越强的地方，时间流逝越慢。</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>4.2 广义相对性原理</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>广义相对性原理是物理学最基本的原理之一，其表述为：<strong>物理定律在一切参考系中都具有相同的数学形式</strong>。这一原理指出不存在"绝对参考系"，没有一个参考系具有优越地位，所有的参考系都是等价（平权）的。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="300" viewBox="0 0 600 300">
+                                <rect x="0" y="0" width="600" height="300" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">广义相对性原理：所有参考系平权</text>
+                                
+                                <!-- 惯性参考系 -->
+                                <g transform="translate(150, 100)">
+                                    <rect x="-40" y="-40" width="80" height="80" fill="#3498db" opacity="0.7" />
+                                    <text x="0" y="-50" text-anchor="middle" font-size="14" fill="#2c3e50">惯性参考系</text>
+                                    <text x="0" y="0" text-anchor="middle" font-size="12" fill="white">匀速运动</text>
+                                </g>
+                                
+                                <!-- 加速参考系 -->
+                                <g transform="translate(300, 100)">
+                                    <rect x="-40" y="-40" width="80" height="80" fill="#e74c3c" opacity="0.7" />
+                                    <text x="0" y="-50" text-anchor="middle" font-size="14" fill="#2c3e50">加速参考系</text>
+                                    <text x="0" y="0" text-anchor="middle" font-size="12" fill="white">加速运动</text>
+                                </g>
+                                
+                                <!-- 旋转参考系 -->
+                                <g transform="translate(450, 100)">
+                                    <rect x="-40" y="-40" width="80" height="80" fill="#2ecc71" opacity="0.7" />
+                                    <text x="0" y="-50" text-anchor="middle" font-size="14" fill="#2c3e50">旋转参考系</text>
+                                    <text x="0" y="0" text-anchor="middle" font-size="12" fill="white">旋转运动</text>
+                                </g>
+                                
+                                <!-- 等号 -->
+                                <text x="225" y="100" text-anchor="middle" font-size="24" fill="#2c3e50">=</text>
+                                <text x="375" y="100" text-anchor="middle" font-size="24" fill="#2c3e50">=</text>
+                                
+                                <!-- 结论 -->
+                                <text x="300" y="200" text-anchor="middle" font-size="16" fill="#e74c3c">所有参考系中的物理定律形式相同</text>
+                                <text x="300" y="230" text-anchor="middle" font-size="14" fill="#666">不存在特殊的绝对参考系</text>
+                                
+                                <text x="300" y="270" text-anchor="middle" font-size="14" fill="#2c3e50">物理定律必须用张量形式表达，满足广义协变性</text>
+                            </svg>
+                        </div>
+                        
+                        <p>广义相对性原理是狭义相对性原理的推广。狭义相对性原理虽然把伽利略相对性原理推广到了整个物理领域，但只适用于惯性参考系。爱因斯坦把相对性原理推广到一切参考系，指出物理定律在一切参考系中都具有相同的数学形式，即它们必须在任意坐标变换下是协变的，因此也称为广义协变性原理。</p>
+                        
+                        <p>用几何语言描述，广义相对性原理要求：任何物理规律都应该用与参考系无关的物理量表示出来，任何在物理规律中出现的时空量都应当为该时空的度规或者由其导出的物理量。这意味着物理定律的形式不依赖于我们选择的坐标系，无论我们用笛卡尔坐标、球坐标还是其他任意曲线坐标，物理定律都应该保持相同的形式。</p>
+                        
+                        <p>广义相对性原理的物理意义是深远的。它表明自然界不存在特殊的、绝对的参考系，所有的运动都是相对的。这不仅适用于匀速运动，也适用于加速运动和旋转运动。在广义相对论中，惯性系失去了特殊地位，所有参考系都可以用来描述物理现象。</p>
+                        
+                        <p>从数学角度看，广义相对性原理要求物理定律必须用张量形式表达。张量是一种在坐标变换下具有特定变换规律的数学对象，它的分量会随着坐标系的改变而改变，但张量本身代表的物理量是不变的。例如，爱因斯坦场方程就是一个张量方程，它在任意坐标变换下都保持相同的形式。</p>
+                        
+                        <p>广义相对性原理还要求物理定律必须满足微分同胚不变性，即在任意光滑的坐标变换下保持不变。这是一个很强的要求，它不仅约束了物理定律的形式，还影响了我们对时空本质的理解。在广义相对论中，时空的微分同胚不变性意味着不存在固定的时空背景，时空本身就是动力学的。</p>
+                        
+                        <div class="highlight">
+                            <p><strong>注意：</strong>广义相对性原理并不意味着所有参考系中的观测者都会看到相同的现象。由于不同参考系中的时空几何不同，观测者会测量到不同的物理量（如时间间隔、空间距离等）。但物理定律本身，即这些物理量之间的关系，在所有参考系中都是相同的。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>4.3 弯曲时空与爱因斯坦场方程</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>在广义相对论中，<strong>引力被描述为时空的一种几何属性（曲率）</strong>，而这种时空曲率与处于时空中的物质与辐射的能量-动量张量直接相联系，其联系方式即是爱因斯坦的引力场方程。这一革命性的观点彻底改变了我们对引力的理解——引力不再是一种力，而是时空弯曲的表现。</p>
+                        
+                        <div class="formula">Rμν - ½Rgμν = 8πGTμν</div>
+                        
+                        <p>其中Rμν是里奇张量，描述时空的曲率；R是里奇标量，是里奇张量的迹；gμν是度规张量，描述时空的几何性质；Tμν是能量-动量张量，描述物质和能量的分布；G是万有引力常数；c是光速。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <defs>
+                                    <radialGradient id="sphereGradient" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#8e44ad" />
+                                        <stop offset="100%" stop-color="#2c3e50" />
+                                    </radialGradient>
+                                </defs>
+                                
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">弯曲时空：物质告诉时空如何弯曲</text>
+                                
+                                <!-- 弯曲时空网格 -->
+                                <path d="M 100,100 Q 200,50 300,100 Q 400,150 500,100" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 100,150 Q 200,100 300,150 Q 400,200 500,150" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 100,200 Q 200,150 300,200 Q 400,250 500,200" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 100,250 Q 200,200 300,250 Q 400,300 500,250" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 100,300 Q 200,250 300,300 Q 400,350 500,300" stroke="#3498db" stroke-width="1" fill="none" />
+                                
+                                <path d="M 100,100 Q 150,200 100,300" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 200,100 Q 250,200 200,300" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 300,100 Q 350,200 300,300" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 400,100 Q 450,200 400,300" stroke="#3498db" stroke-width="1" fill="none" />
+                                <path d="M 500,100 Q 550,200 500,300" stroke="#3498db" stroke-width="1" fill="none" />
+                                
+                                <!-- 大质量物体 -->
+                                <circle cx="300" cy="200" r="40" fill="url(#sphereGradient)" />
+                                <text x="300" y="200" text-anchor="middle" font-size="12" fill="white">大质量物体</text>
+                                
+                                <!-- 测地线 -->
+                                <path d="M 100,100 Q 200,150 250,200 Q 300,250 400,300" stroke="#e74c3c" stroke-width="3" fill="none" marker-end="url(#arrowhead2)" />
+                                <text x="250" y="120" text-anchor="middle" font-size="12" fill="#e74c3c">测地线</text>
+                                
+                                <!-- 说明 -->
+                                <text x="300" y="350" text-anchor="middle" font-size="16" fill="#e74c3c">物质使时空弯曲，弯曲的时空决定物质运动</text>
+                                <text x="300" y="375" text-anchor="middle" font-size="14" fill="#666">"物质告诉时空如何弯曲，时空告诉物质如何运动" - 约翰·惠勒</text>
+                            </svg>
+                        </div>
+                        
+                        <p>方程的左侧完全由时空的几何性质决定，描述了时空的弯曲程度。右侧则代表物质和能量的分布。这个方程表明，物质和能量的存在会使时空发生弯曲，而弯曲的时空又决定了物质的运动轨迹。正如惠勒所说："物质告诉时空如何弯曲，时空告诉物质如何运动"。</p>
+                        
+                        <p>时空曲率的产生机制可以用一个简单的类比来理解。想象一张绷紧的橡皮膜代表平直的时空，当在膜上放置一个重物（代表大质量物体）时，膜会向下凹陷，形成弯曲的表面。其他小物体在这个弯曲的膜上运动时，会沿着弯曲的路径运动，就好像受到了"引力"的作用。类似地，在宇宙中，大质量物体（如恒星、行星）会使周围的时空发生弯曲，其他物体在这个弯曲的时空中运动时，其轨迹会发生弯曲，我们就把这种现象解释为引力作用。</p>
+                        
+                        <p>爱因斯坦场方程是一个二阶非线性偏微分方程组，求解起来非常困难。目前已知的精确解很少，其中最重要的是史瓦西解，它描述了球对称质量分布外部的时空几何，预言了黑洞的存在。其他重要的解包括描述旋转黑洞的克尔解、描述带电黑洞的雷斯勒-诺斯特朗姆解等。</p>
+                        
+                        <p>在弱场近似下，爱因斯坦场方程可以简化为牛顿引力方程。当引力场很弱、物体运动速度远小于光速时，时空的弯曲程度很小，广义相对论的预言与牛顿万有引力定律的预言非常接近。这表明牛顿引力理论是广义相对论在低速、弱场条件下的良好近似。</p>
+                        
+                        <p>爱因斯坦场方程还预言了许多牛顿理论无法解释的现象，如水星近日点的进动、光线在引力场中的偏折、引力红移等。这些预言都已经被高精度的实验所证实，成为广义相对论正确性的有力证据。</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2 class="section-title">五、广义相对论的重要预言现象</h2>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>5.1 引力透镜效应</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>引力透镜效应是广义相对论预言的最壮观的天文现象之一。当光在星系、星系团及黑洞等具有巨大引力的天体附近经过时，就会像通过凸透镜一样发生弯曲。这是因为这些大质量天体的引力太强大了，它们把周围的时空都扭曲了。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">引力透镜效应示意图</text>
+                                
+                                <!-- 背景星系 -->
+                                <circle cx="100" cy="200" r="15" fill="#3498db" />
+                                <text x="100" y="180" text-anchor="middle" font-size="12" fill="#2c3e50">背景星系</text>
+                                
+                                <!-- 前景星系（引力透镜） -->
+                                <circle cx="300" cy="200" r="30" fill="#e74c3c" />
+                                <text x="300" y="170" text-anchor="middle" font-size="12" fill="#2c3e50">前景星系</text>
+                                <text x="300" y="185" text-anchor="middle" font-size="10" fill="#2c3e50">(引力透镜)</text>
+                                
+                                <!-- 观察者 -->
+                                <circle cx="500" cy="200" r="10" fill="#2ecc71" />
+                                <text x="500" y="180" text-anchor="middle" font-size="12" fill="#2c3e50">观察者</text>
+                                
+                                <!-- 光线路径 -->
+                                <path d="M 115,200 Q 200,150 285,200 Q 350,250 415,200 Q 450,180 490,200" stroke="#3498db" stroke-width="2" fill="none" marker-end="url(#arrowhead2)" />
+                                <path d="M 115,200 Q 200,250 285,200 Q 350,150 415,200 Q 450,220 490,200" stroke="#3498db" stroke-width="2" fill="none" marker-end="url(#arrowhead2)" />
+                                
+                                <!-- 爱因斯坦环 -->
+                                <circle cx="300" cy="200" r="80" stroke="#e74c3c" stroke-width="1" stroke-dasharray="5,5" fill="none" />
+                                <text x="300" y="290" text-anchor="middle" font-size="12" fill="#e74c3c">爱因斯坦环</text>
+                                
+                                <!-- 虚像 -->
+                                <circle cx="340" cy="160" r="8" fill="#3498db" opacity="0.5" />
+                                <circle cx="340" cy="240" r="8" fill="#3498db" opacity="0.5" />
+                                <circle cx="260" cy="160" r="8" fill="#3498db" opacity="0.5" />
+                                <circle cx="260" cy="240" r="8" fill="#3498db" opacity="0.5" />
+                                
+                                <text x="340" y="140" text-anchor="middle" font-size="10" fill="#3498db" opacity="0.7">虚像</text>
+                                <text x="340" y="260" text-anchor="middle" font-size="10" fill="#3498db" opacity="0.7">虚像</text>
+                                <text x="260" y="140" text-anchor="middle" font-size="10" fill="#3498db" opacity="0.7">虚像</text>
+                                <text x="260" y="260" text-anchor="middle" font-size="10" fill="#3498db" opacity="0.7">虚像</text>
+                                
+                                <!-- 说明 -->
+                                <text x="300" y="350" text-anchor="middle" font-size="14" fill="#2c3e50">大质量天体弯曲周围时空，使背景光源的光线发生偏折</text>
+                                <text x="300" y="370" text-anchor="middle" font-size="14" fill="#2c3e50">观察者看到多个虚像或变形的图像</text>
+                            </svg>
+                        </div>
+                        
+                        <p>引力透镜效应的物理机制基于广义相对论的核心思想：<strong>光在弯曲的时空中沿测地线（最短路径）传播</strong>。在平直时空中，光沿直线传播；但在弯曲时空中，光的路径会随着时空的弯曲而弯曲。当遥远星体发出的光经过大质量天体附近时，会沿着弯曲的时空路径"走弯路"，形成我们观测到的引力透镜现象。</p>
+                        
+                        <p>引力透镜现象的一个特殊表现是<strong>爱因斯坦环</strong>。当遥远星体、作为引力透镜的天体（如星系、黑洞等）以及观测者在一条直线上时，由于引力透镜天体的引力场使星光发生偏折，从而形成一个环形的图像。爱因斯坦环是引力透镜效应的一个完美对称的特殊情况，只有当光源、透镜天体和观测者精确排列成一条直线时才会出现。</p>
+                        
+                        <p>与光学透镜不同，引力透镜具有一些独特的性质。首先，引力透镜产生的光线偏折大小与光源的波长无关，这意味着不同颜色的光会发生相同程度的偏折，不会产生色差。其次，引力透镜没有单一焦点，而是形成一条焦线，因为当光线离大质量天体最近时偏折最大，当光远离时偏折最小。</p>
+                        
+                        <p>引力透镜效应的观测为天文学研究提供了强大的工具。通过分析引力透镜形成的多重像或变形的图像，天文学家可以：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>1. 测量暗物质分布：</strong>引力透镜效应只与质量分布有关，包括不可见的暗物质。通过分析星系团产生的引力透镜效应，可以推断出其中暗物质的分布。</p>
+                            <p><strong>2. 探测系外行星：</strong>当恒星周围有行星时，会产生微引力透镜效应，使背景恒星的亮度发生微小变化。这种方法已经成功发现了多颗系外行星。</p>
+                            <p><strong>3. 研究宇宙学参数：</strong>引力透镜的统计性质与宇宙的几何结构和物质密度有关，因此可以用来约束宇宙学参数。</p>
+                            <p><strong>4. 放大遥远天体：</strong>引力透镜可以像宇宙级的放大镜一样，将遥远星系的光线汇聚和放大，使我们能够观测到原本无法看到的细节。</p>
+                        </div>
+                        
+                        <p>第一个被观测到的引力透镜系统是1979年发现的Q0957+561A/B，它由两个椭圆星系组成，中间相距约40万光年，产生的爱因斯坦环非常清晰，成为验证广义相对论预言的典型例子。此后，天文学家发现了大量的引力透镜系统，包括星系团透镜、星系透镜和恒星透镜等。</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>5.2 引力波</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>引力波是广义相对论预言的另一个重要现象，被形象地称为"时空涟漪"。广义相对论预言下的引力波是以波形式传播的时空扰动，是加速运动的质量源在时空中产生的波动。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <rect x="0" y="0" width="600" height="400" fill="#f8f9fa" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">引力波：时空的涟漪</text>
+                                
+                                <!-- 黑洞合并 -->
+                                <g transform="translate(150, 150)">
+                                    <circle cx="-20" cy="0" r="15" fill="#2c3e50" />
+                                    <circle cx="20" cy="0" r="15" fill="#2c3e50" />
+                                    <text x="0" y="40" text-anchor="middle" font-size="12" fill="#2c3e50">黑洞合并</text>
+                                </g>
+                                
+                                <!-- 引力波传播 -->
+                                <g transform="translate(300, 150)">
+                                    <!-- 十字形网格 -->
+                                    <line x1="-50" y1="0" x2="50" y2="0" stroke="#95a5a6" stroke-width="1" />
+                                    <line x1="0" y1="-50" x2="0" y2="50" stroke="#95a5a6" stroke-width="1" />
+                                    
+                                    <!-- 引力波变形 -->
+                                    <path d="M -50,0 Q -25,10 0,0 Q 25,-10 50,0" stroke="#e74c3c" stroke-width="2" fill="none" />
+                                    <path d="M -50,0 Q -25,-10 0,0 Q 25,10 50,0" stroke="#3498db" stroke-width="2" fill="none" />
+                                    
+                                    <text x="0" y="70" text-anchor="middle" font-size="12" fill="#2c3e50">引力波传播</text>
+                                </g>
+                                
+                                <!-- LIGO探测器 -->
+                                <g transform="translate(450, 150)">
+                                    <!-- L形干涉仪 -->
+                                    <line x1="-30" y1="-30" x2="30" y2="-30" stroke="#2c3e50" stroke-width="3" />
+                                    <line x1="-30" y1="-30" x2="-30" y2="30" stroke="#2c3e50" stroke-width="3" />
+                                    
+                                    <!-- 激光 -->
+                                    <line x1="-30" y1="-30" x2="30" y2="-30" stroke="#e74c3c" stroke-width="1" marker-end="url(#arrowhead2)" marker-start="url(#arrowhead2)" />
+                                    <line x1="-30" y1="-30" x2="-30" y2="30" stroke="#e74c3c" stroke-width="1" marker-end="url(#arrowhead2)" marker-start="url(#arrowhead2)" />
+                                    
+                                    <text x="0" y="70" text-anchor="middle" font-size="12" fill="#2c3e50">LIGO探测器</text>
+                                </g>
+                                
+                                <!-- 箭头表示传播方向 -->
+                                <line x1="200" y1="150" x2="250" y2="150" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)" />
+                                <line x1="350" y1="150" x2="400" y2="150" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrowhead)" />
+                                
+                                <!-- 说明 -->
+                                <text x="300" y="250" text-anchor="middle" font-size="14" fill="#2c3e50">引力波以光速传播，携带能量和信息</text>
+                                <text x="300" y="350" text-anchor="middle" font-size="16" fill="#e74c3c">2015年首次直接探测到引力波</text>
+                                <text x="300" y="375" text-anchor="middle" font-size="14" fill="#666">GW150914：两个黑洞合并事件</text>
+                            </svg>
+                        </div>
+                        
+                        <p>引力波的产生机制与电磁波类似，但源不同。电磁波由加速运动的电荷产生，而引力波由加速运动的质量产生。根据广义相对论，任何加速运动的质量都会辐射引力波，但只有剧烈的天体事件（如黑洞合并、中子星碰撞、超新星爆发等）才能产生足够强的引力波信号。</p>
+                        
+                        <p>引力波具有以下特点：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>1. 横波性质：</strong>引力波是横波，在传播方向上没有扰动。这意味着引力波会使空间在垂直于传播方向上发生周期性的拉伸和压缩。</p>
+                            <p><strong>2. 传播速度：</strong>引力波在真空中以光速传播，这是相对论因果律的要求。</p>
+                            <p><strong>3. 偏振特性：</strong>引力波有两种偏振模式，称为"+"偏振和"×"偏振。这两种偏振会使空间发生不同方式的变形。</p>
+                            <p><strong>4. 能量损失：</strong>引力波携带能量，天体系统因辐射引力波而损失能量，导致轨道逐渐衰减。</p>
+                        </div>
+                        
+                        <p>引力波的探测极其困难，因为它们与物质的相互作用非常微弱。即使是最强的引力波，在经过地球时引起的空间变形也极其微小。LIGO（激光干涉引力波天文台）探测到的最强引力波信号，也只引起了4×10^-18米的长度变化——相当于比原子核小1000倍的尺寸。</p>
+                        
+                        <p>2015年9月14日，LIGO探测器首次直接探测到了引力波信号GW150914。这个信号来自13亿光年外两个黑洞的合并过程。两个初始质量分别为36和29倍太阳质量的黑洞，在螺旋靠近的过程中辐射引力波，最终合并成一个62倍太阳质量的黑洞，3个太阳质量的物质转化为引力波能量。这一发现不仅证实了广义相对论的预言，也开启了引力波天文学的新时代。</p>
+                        
+                        <p>LIGO的工作原理基于激光干涉测量。探测器有两个相互垂直的长臂，每个臂长4公里。当引力波经过时，会交替地压缩一个臂，拉长另一个臂，导致两束激光的光程差发生微小变化，从而在探测器中产生可观测的信号。</p>
+                        
+                        <p>引力波探测的意义是多方面的：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>1. 验证广义相对论：</strong>引力波的探测为广义相对论提供了最后一个重要的实验验证，使爱因斯坦的理论得到了全面证实。</p>
+                            <p><strong>2. 天体物理研究：</strong>引力波提供了一种全新的观测宇宙的方式，能够探测到传统电磁波观测无法看到的天体事件。</p>
+                            <p><strong>3. 宇宙学研究：</strong>引力波可以穿透宇宙中的尘埃和气体，为研究早期宇宙提供了新的窗口。</p>
+                            <p><strong>4. 基础物理研究：</strong>引力波的性质可以用来检验广义相对论在强场条件下的预言，探索可能的新物理。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>5.3 黑洞</h3>
+                        <span class="panel-icon">▼</span>
+                    </div>
+                    <div class="panel-content">
+                        <p>黑洞是广义相对论预言的最神秘、最极端的天体。广义相对论预言了一种极端的天体，其引力强大到连光都无法逃脱。黑洞的概念最初源于对引力场方程的精确解。</p>
+                        
+                        <div class="svg-container">
+                            <svg width="600" height="400" viewBox="0 0 600 400">
+                                <defs>
+                                    <radialGradient id="blackholeGradient" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#000000" />
+                                        <stop offset="70%" stop-color="#2c3e50" />
+                                        <stop offset="100%" stop-color="#34495e" />
+                                    </radialGradient>
+                                    <radialGradient id="accretionGradient" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#e74c3c" />
+                                        <stop offset="100%" stop-color="#f39c12" />
+                                    </radialGradient>
+                                </defs>
+                                
+                                <rect x="0" y="0" width="600" height="400" fill="#2c3e50" />
+                                
+                                <!-- 标题 -->
+                                <text x="300" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="white">黑洞结构示意图</text>
+                                
+                                <!-- 黑洞 -->
+                                <circle cx="300" cy="200" r="50" fill="url(#blackholeGradient)" />
+                                <text x="300" y="200" text-anchor="middle" font-size="12" fill="white">奇点</text>
+                                
+                                <!-- 事件视界 -->
+                                <circle cx="300" cy="200" r="80" stroke="#e74c3c" stroke-width="2" fill="none" />
+                                <text x="300" y="290" text-anchor="middle" font-size="12" fill="#e74c3c">事件视界</text>
+                                
+                                <!-- 吸积盘 -->
+                                <ellipse cx="300" cy="200" rx="180" ry="60" stroke="url(#accretionGradient)" stroke-width="10" fill="none" />
+                                <text x="300" y="140" text-anchor="middle" font-size="12" fill="#f39c12">吸积盘</text>
+                                
+                                <!-- 喷流 -->
+                                <line x1="300" y1="120" x2="300" y2="50" stroke="#3498db" stroke-width="5" marker-end="url(#arrowhead2)" />
+                                <line x1="300" y1="280" x2="300" y2="350" stroke="#3498db" stroke-width="5" marker-end="url(#arrowhead2)" />
+                                
+                                <text x="320" y="80" text-anchor="start" font-size="10" fill="#3498db">喷流</text>
+                                <text x="320" y="320" text-anchor="start" font-size="10" fill="#3498db">喷流</text>
+                                
+                                <!-- 光线弯曲 -->
+                                <path d="M 500,100 Q 450,150 400,200 Q 350,250 300,280" stroke="#e74c3c" stroke-width="1" stroke-dasharray="5,5" fill="none" />
+                                <path d="M 100,100 Q 150,150 200,200 Q 250,250 300,280" stroke="#e74c3c" stroke-width="1" stroke-dasharray="5,5" fill="none" />
+                                
+                                <text x="450" y="120" text-anchor="middle" font-size="10" fill="#e74c3c">光线弯曲</text>
+                                
+                                <!-- 说明 -->
+                                <text x="300" y="380" text-anchor="middle" font-size="14" fill="white">黑洞：引力强大到连光都无法逃脱的天体</text>
+                            </svg>
+                        </div>
+                        
+                        <p><strong>史瓦西黑洞</strong>是1916年由史瓦西提出的，这是爱因斯坦场方程的第一个精确解。史瓦西黑洞的设定是不带电、不自旋转的黑洞，黑洞中心为奇点，黑洞的外圈为事件视界，又称史瓦西半径。</p>
+                        
+                        <div class="formula">Rs = 2GM/c²</div>
+                        
+                        <p>其中G是万有引力常数，M是黑洞质量，c是光速。史瓦西半径定义了黑洞的事件视界边界，越过此边界的物质无法逃脱。</p>
+                        
+                        <p>黑洞的形成是宇宙中最极端的引力坍缩事件。大质量恒星（通常指质量大于太阳的数倍至数十倍的恒星）在其生命周期中通过核聚变产生能量，但这一过程在燃料耗尽后会停止。当恒星的核心燃料耗尽，核心无法再产生足够的热量和压力来抵抗自身的重力，核心开始迅速坍缩，密度急剧增加。</p>
+                        
+                        <p>黑洞形成的关键条件是核心质量超过临界值。当核心质量超过钱德拉塞卡极限（约1.4倍太阳质量）时，电子简并压无法支撑恒星，会进一步坍缩形成中子星；若核心质量超过奥本海默-沃尔科夫极限（约3倍太阳质量），则引力坍缩无法被任何已知的力所阻止，最终形成黑洞。</p>
+                        
+                        <p>黑洞具有以下重要特性：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>1. 事件视界：</strong>这是黑洞的"边界"，任何物质包括光一旦越过这个边界就无法逃脱。事件视界的半径就是史瓦西半径，它与黑洞质量成正比。</p>
+                            <p><strong>2. 奇点：</strong>黑洞的中心是一个密度无穷大、时空曲率无穷大的点，所有落入黑洞的物质最终都会汇聚到这里。</p>
+                            <p><strong>3. 无毛定理：</strong>黑洞可以用三个参数完全描述——质量、角动量和电荷。这意味着无论什么样的物质形成黑洞，最终都只剩下这三个"毛发"。</p>
+                            <p><strong>4. 霍金辐射：</strong>考虑量子效应后，黑洞并不是完全黑的，而是会以黑体辐射的形式缓慢蒸发，温度与质量成反比。这是由霍金在1974年预言的。</p>
+                        </div>
+                        
+                        <p>黑洞的质量可以有很大的差异。有恒星级黑洞，它们的质量通常在几倍到几十倍太阳质量之间，是由大质量恒星坍缩形成的。而在星系的中心，往往存在着超大质量黑洞，其质量可以达到数百万甚至数十亿倍太阳质量。这些超大质量黑洞的形成机制尚不完全清楚，可能来自很多恒星级黑洞的并合，也可能来自宇宙早期第一代恒星的坍缩，或者大质量气体云跳过恒星阶段的直接坍缩。</p>
+                        
+                        <p>虽然黑洞本身不发光，但可以通过多种方式探测到它们的存在：</p>
+                        
+                        <div class="highlight">
+                            <p><strong>1. 引力效应：</strong>通过观测围绕黑洞运行的恒星或气体的轨道运动，可以推断黑洞的质量和位置。</p>
+                            <p><strong>2. 吸积盘：</strong>当物质被黑洞吸引时，会形成高速旋转的吸积盘，摩擦产生的高温使物质发出强烈的X射线辐射。</p>
+                            <p><strong>3. 喷流：</strong>在某些情况下，吸积盘中的物质会沿着黑洞的旋转轴方向被喷射出来，形成巨大的喷流。</p>
+                            <p><strong>4. 引力透镜效应：</strong>黑洞作为大质量天体，会对背景星光产生引力透镜效应。</p>
+                        </div>
+                        
+                        <p>2019年4月10日，事件视界望远镜（EHT）合作组织发布了人类历史上第一张黑洞照片，展示了M87星系中心超大质量黑洞的阴影。这一突破性成果不仅证实了黑洞的存在，也验证了广义相对论对强引力场中时空弯曲的预言。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <section class="conclusion">
+            <h2>结语</h2>
+            <p>通过对相对论理论体系的全面梳理，我们看到了人类智慧在探索宇宙奥秘过程中的伟大成就。从1905年狭义相对论的建立到1915年广义相对论的完成，爱因斯坦用他深邃的洞察力和非凡的创造力，彻底改变了我们对时空和引力的理解。</p>
+            <p>狭义相对论揭示了时间和空间的相对性，建立了光速不变原理，预言了长度收缩、时间膨胀和质量增加等效应。这些看似违背常识的结论，都已经被无数精密实验所证实。广义相对论则更进一步，将引力解释为时空弯曲的几何效应，建立了爱因斯坦场方程，预言了引力透镜、引力波、黑洞等神奇现象。</p>
+            <p>相对论不仅是一个优美的理论体系，更在现代科技中发挥着不可替代的作用。从GPS卫星的时间修正到粒子加速器的设计，从核能的利用到宇宙学的研究，相对论的应用无处不在。特别是2015年引力波的直接探测和2019年黑洞照片的发布，标志着人类对宇宙的认识进入了一个新的时代。</p>
+            <p>然而，相对论并非物理学的终点。如何将相对论与量子力学统一起来，建立一个完整的量子引力理论，仍然是当代物理学面临的最大挑战之一。暗物质和暗能量的本质、宇宙的起源和命运等问题，也需要我们继续探索。</p>
+            <p>相对论的发展历程给我们许多启示：科学理论的突破往往需要打破常规思维，勇于质疑既有的观念；数学工具在物理学发展中起着关键作用；理论预言必须经过实验检验才能被接受；基础科学研究的成果往往具有深远的应用价值。</p>
+            <p>展望未来，随着观测技术的不断进步和理论研究的深入，我们有理由相信，相对论将会继续展现其强大的生命力，为人类认识和改造世界提供新的理论武器。同时，我们也期待着新的物理学革命的到来，能够解决当前理论面临的困境，带领人类走向更加广阔的知识领域。</p>
+        </section>
+    </div>
+
+    <script>
+        // 折叠面板交互
+        document.querySelectorAll('.panel-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const panel = header.parentElement;
+                panel.classList.toggle('active');
+            });
+        });
+        
+        // 标签页交互
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有标签的活动状态
+                document.querySelectorAll('.nav-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 隐藏所有内容
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 激活当前标签
+                tab.classList.add('active');
+                
+                // 显示对应内容
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 默认展开第一个面板
+        document.querySelector('.panel').classList.add('active');
+    </script>
+</body>
+</html>

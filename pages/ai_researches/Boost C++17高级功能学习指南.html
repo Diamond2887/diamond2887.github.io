@@ -1,0 +1,2880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boost C++17高级功能学习指南</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background-color: #f6f8fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e1e4e8;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-header:hover {
+            background-color: #edf2f7;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .section-content {
+            padding: 20px;
+            display: none;
+        }
+        
+        .section.active .section-content {
+            display: block;
+        }
+        
+        .subsection {
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .subsection-header {
+            background-color: #f7fafc;
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+        
+        .subsection-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .subsection-content {
+            padding: 15px;
+            display: none;
+        }
+        
+        .subsection.active .subsection-content {
+            display: block;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #2d3748;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin: 15px 0 10px;
+            color: #4a5568;
+        }
+        
+        h4 {
+            font-size: 1.2rem;
+            margin: 12px 0 8px;
+            color: #718096;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+        
+        pre {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .code-header {
+            background-color: #4a5568;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px 6px 0 0;
+            font-size: 0.9rem;
+        }
+        
+        .code-body {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 0 0 6px 6px;
+            overflow-x: auto;
+        }
+        
+        .note {
+            background-color: #e6fffa;
+            border-left: 4px solid #38b2ac;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background-color: #fffaf0;
+            border-left: 4px solid #ed8936;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .toggle-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+        
+        .active .toggle-icon {
+            transform: rotate(90deg);
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .component-card {
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+        
+        .component-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .component-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+        
+        .component-desc {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+            text-align: left;
+        }
+        
+        .table th {
+            background-color: #f7fafc;
+            font-weight: 600;
+        }
+        
+        .table tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+        
+        .tag {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #4a5568;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tag-primary {
+            background-color: #bee3f8;
+            color: #2b6cb0;
+        }
+        
+        .tag-success {
+            background-color: #c6f6d5;
+            color: #276749;
+        }
+        
+        .tag-warning {
+            background-color: #feebc8;
+            color: #c05621;
+        }
+        
+        .tag-danger {
+            background-color: #fed7d7;
+            color: #c53030;
+        }
+        
+        .component-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .component-item {
+            flex: 1 0 200px;
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .component-item h4 {
+            margin-top: 0;
+            color: #2d3748;
+        }
+        
+        .component-item ul {
+            margin-bottom: 0;
+        }
+        
+        .component-item li {
+            margin-bottom: 5px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        .comparison-table th {
+            background-color: #f7fafc;
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+        
+        .comparison-table .highlight-cell {
+            background-color: #fffacd;
+        }
+        
+        .compiler-support {
+            margin: 20px 0;
+        }
+        
+        .compiler-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f7fafc;
+            border-radius: 6px;
+        }
+        
+        .compiler-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2d3748;
+        }
+        
+        .compiler-desc {
+            color: #718096;
+        }
+        
+        .version-recommendation {
+            background-color: #e6fffa;
+            border-left: 4px solid #38b2ac;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .quick-nav {
+            position: sticky;
+            top: 20px;
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .quick-nav h3 {
+            margin-top: 0;
+            color: #2d3748;
+        }
+        
+        .quick-nav ul {
+            list-style-type: none;
+            margin-left: 0;
+        }
+        
+        .quick-nav li {
+            margin-bottom: 8px;
+        }
+        
+        .quick-nav a {
+            color: #4a5568;
+            text-decoration: none;
+        }
+        
+        .quick-nav a:hover {
+            color: #2b6cb0;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Boost C++17高级功能学习指南</h1>
+            <p class="subtitle">基于Boost库在C++17环境下的高级功能深入学习</p>
+        </header>
+        
+        <div class="content">
+            <div class="quick-nav">
+                <h3>快速导航</h3>
+                <ul>
+                    <li><a href="#section-1">一、学习路径规划</a></li>
+                    <li><a href="#section-2">二、网络与异步编程</a></li>
+                    <li><a href="#section-3">三、数据结构与算法</a></li>
+                    <li><a href="#section-4">四、系统与工具</a></li>
+                    <li><a href="#section-5">五、应用与集成</a></li>
+                </ul>
+            </div>
+            
+            <div class="section active" id="section-1">
+                <div class="section-header">
+                    <h2 class="section-title">一、Boost C++17高级功能学习路径规划</h2>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="section-content">
+                    <h3>1.1 组件学习板块划分</h3>
+                    <p>根据功能特性和应用场景，将21个Boost组件划分为四个学习板块，按照从基础到高级、从独立到集成的顺序进行安排：</p>
+                    
+                    <div class="component-list">
+                        <div class="component-item">
+                            <h4>网络与异步编程板块（建议优先学习）</h4>
+                            <ul>
+                                <li>Boost.Asio - 网络编程和异步I/O</li>
+                                <li>Boost.Context - 上下文切换和协程支持</li>
+                                <li>Boost.Coroutine - 协程库</li>
+                                <li>Boost.Timer - 定时器和计时器</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-item">
+                            <h4>数据结构与算法板块（核心基础）</h4>
+                            <ul>
+                                <li>Boost.Bimap - 双向映射容器</li>
+                                <li>Boost.MultiArray - 多维数组容器</li>
+                                <li>Boost.MultiIndex - 多索引容器</li>
+                                <li>Boost.Polygon - 多边形和几何算法</li>
+                                <li>Boost.Range - 范围处理库</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-item">
+                            <h4>系统与工具板块（通用基础）</h4>
+                            <ul>
+                                <li>Boost.Contract - 契约编程</li>
+                                <li>Boost.Describe - 类型反射和描述</li>
+                                <li>Boost.Geometry - 几何算法库</li>
+                                <li>Boost.GIL - 通用图像库</li>
+                                <li>Boost.ProgramOptions - 程序选项解析</li>
+                                <li>Boost.Pool - 内存池</li>
+                                <li>Boost.System - 系统错误处理</li>
+                                <li>Boost.Thread - 线程库</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-item">
+                            <h4>应用与集成板块（实战应用）</h4>
+                            <ul>
+                                <li>Boost.JSON - JSON解析和生成</li>
+                                <li>Boost.Log - 日志系统</li>
+                                <li>Boost.Serialization - 序列化库</li>
+                                <li>Boost.Signals2 - 信号槽机制</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>1.2 C++17版本要求与编译器支持</h3>
+                    <p>根据Boost官方文档，不同组件对C++17的支持程度有所不同：</p>
+                    
+                    <div class="component-list">
+                        <div class="component-item">
+                            <h4>最低C++17要求的组件：</h4>
+                            <ul>
+                                <li>Boost.Asio（部分特性）</li>
+                                <li>Boost.Context</li>
+                                <li>Boost.Coroutine</li>
+                                <li>Boost.Describe</li>
+                                <li>Boost.JSON（独立模式）</li>
+                                <li>Boost.Parser</li>
+                                <li>Boost.Serialization（部分特性）</li>
+                                <li>Boost.System（部分特性）</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-item">
+                            <h4>建议使用C++17或更高版本的组件：</h4>
+                            <ul>
+                                <li>Boost.Bimap</li>
+                                <li>Boost.Contract</li>
+                                <li>Boost.Geometry</li>
+                                <li>Boost.MultiIndex</li>
+                                <li>Boost.Pool</li>
+                                <li>Boost.Signals2</li>
+                                <li>Boost.Thread</li>
+                                <li>Boost.Timer</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h4>编译器版本要求：</h4>
+                    <div class="compiler-support">
+                        <div class="compiler-item">
+                            <div class="compiler-name">GCC</div>
+                            <div class="compiler-desc">最低7.0版本，推荐8.0+版本以获得完整C++17支持</div>
+                        </div>
+                        
+                        <div class="compiler-item">
+                            <div class="compiler-name">Clang</div>
+                            <div class="compiler-desc">最低5.0版本，推荐6.0+版本</div>
+                        </div>
+                        
+                        <div class="compiler-item">
+                            <div class="compiler-name">MSVC</div>
+                            <div class="compiler-desc">最低Visual Studio 2017（15.3版本），推荐Visual Studio 2019（15.9版本）或更新版本</div>
+                        </div>
+                    </div>
+                    
+                    <h3>1.3 Boost版本选择建议</h3>
+                    <div class="version-recommendation">
+                        <p>根据Boost官方发布历史和C++17兼容性要求，<span class="highlight">推荐使用Boost 1.75.0或更高版本</span>来获得对C++17的良好支持。特别是Boost 1.71.0版本对C++17支持进行了显著增强，包括折叠表达式、结构化绑定、if初始化器等特性。</p>
+                        <p>最新版本Boost 1.84.0已经完全移除了对C++03的支持，要求C++11或更高版本，这进一步推动了现代C++的使用。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="section-2">
+                <div class="section-header">
+                    <h2 class="section-title">二、网络与异步编程板块深度解析</h2>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">2.1 Boost.Asio - 网络编程和异步I/O</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Asio在C++17环境下引入了多项重要改进。最显著的是对<span class="highlight">协程TS（Coroutines TS）</span>的支持，通过<code>boost::asio::awaitable</code>类模板、<code>use_awaitable</code>完成令牌和<code>co_spawn()</code>函数实现。C++17的结构化绑定特性也被广泛应用于Asio的异步操作中，使代码更加简洁清晰。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>协程支持的异步编程</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-header">协程支持的异步编程示例</div>
+                                <div class="code-body">
+<pre>boost::asio::awaitable&lt;void&gt; echo(tcp::socket socket) {
+    try {
+        char data[1024];
+        for (;;) {
+            std::size_t n = co_await socket.async_read_some(
+                boost::asio::buffer(data), 
+                boost::asio::use_awaitable
+            );
+            co_await async_write(socket, boost::asio::buffer(data, n), boost::asio::use_awaitable);
+        }
+    } catch (std::exception& e) {
+        std::printf("echo Exception: %s\n", e.what());
+    }
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>使用<code>co_spawn</code>启动协程：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::asio::co_spawn(executor,
+    [socket = std::move(socket)]() mutable {
+        return echo(std::move(socket));
+    },
+    boost::asio::detached
+);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>异步操作的高级模式</strong>：</p>
+                            <ul>
+                                <li>使用<code>async_compose</code>进行自定义异步操作包装</li>
+                                <li><code>async_generator</code>用于生成异步数据流</li>
+                                <li><code>strand</code>保证异步操作的序列化执行</li>
+                                <li><code>executor</code>模型支持自定义执行策略</li>
+                            </ul>
+                            
+                            <p>3. <strong>C++17结构化绑定的应用</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>auto [ec, n] = co_await async_operation(..., boost::asio::use_awaitable);</pre>
+                                </div>
+                            </div>
+                            
+                            <h4>性能优化策略：</h4>
+                            <ul>
+                                <li>使用<code>io_context</code>的线程池模式，充分利用多核CPU</li>
+                                <li>采用无锁数据结构减少线程竞争</li>
+                                <li>使用<code>const_buffer</code>和<code>mutable_buffer</code>避免不必要的数据拷贝</li>
+                                <li>优化内存分配策略，使用预分配缓冲区</li>
+                            </ul>
+                            
+                            <h4>实际应用场景：</h4>
+                            <p>1. <strong>高性能HTTP服务器</strong>：</p>
+                            <p>基于Boost.Asio和Boost.Beast构建的异步HTTP服务器具有以下特性：</p>
+                            <ul>
+                                <li>支持GET和POST请求的路由与回调处理</li>
+                                <li>单例模式管理核心业务逻辑</li>
+                                <li>异步I/O技术和定时器控制超时</li>
+                                <li>高并发处理能力，通过异步I/O避免阻塞</li>
+                            </ul>
+                            
+                            <p>2. <strong>WebSocket服务器</strong>：</p>
+                            <p>基于Boost.Beast的WebSocket服务器实现：</p>
+                            <ul>
+                                <li>异步实现，支持客户端和服务器在单一WebSocket会话API中</li>
+                                <li>多线程架构</li>
+                                <li>使用Boost 1.69.0</li>
+                                <li>支持syslog日志</li>
+                                <li>包含Catch2单元测试框架</li>
+                            </ul>
+                            
+                            <p>3. <strong>TCP代理服务器</strong>：</p>
+                            <p>C++ TCP代理服务器实现：</p>
+                            <ul>
+                                <li>轻量级、高效且可扩展</li>
+                                <li>支持连接数限制、负载均衡</li>
+                                <li>基于IP和连接时间的访问控制</li>
+                                <li>支持500+客户端并发测试</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">2.2 Boost.Context - 上下文切换和协程支持</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Context在C++17环境下提供了更高效的上下文切换机制，利用C++17的<code>constexpr</code>和<code>if constexpr</code>特性进行编译期优化。同时支持C++17的结构化绑定用于协程状态的保存和恢复。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>基于栈的协程（Stackful Coroutines）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>void my_coroutine(boost::context::coroutine_t& ctx) {
+    // 协程逻辑
+}
+
+boost::context::coroutine_t coro(my_coroutine);
+coro(); // 启动协程</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>基于堆的协程（Stackless Coroutines）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::context::fcontext_t ctx = boost::context::make_fcontext(
+    stack + stack_size, 
+    stack_size, 
+    &my_function
+);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>协程的嵌套和组合</strong>：</p>
+                            <p>支持协程的链式调用和嵌套执行，实现复杂的异步逻辑</p>
+                            
+                            <h4>性能优化策略：</h4>
+                            <ul>
+                                <li>使用<code>protected_fixedsize</code>和<code>pooled_fixedsize</code>栈策略</li>
+                                <li>支持FPU寄存器的选择性保存以提高性能</li>
+                                <li>针对不同架构的优化实现（x86、x64、ARM等）</li>
+                                <li>与Valgrind和内存sanitizers的兼容性支持</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">2.3 Boost.Coroutine - 协程库</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Coroutine在C++17环境下与Asio深度集成，提供了对协程TS的支持。C++17的<code>std::optional</code>被用于协程的状态管理。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>生成器（Generator）模式</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::coroutines::coroutine&lt;int&gt;::pull_type gen([] (boost::coroutines::coroutine&lt;int&gt;::push_type& sink) {
+    for (int i = 0; i < 10; ++i) {
+        sink(i); // 生成值
+    }
+});
+
+for (int value : gen) {
+    std::cout << value << std::endl;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>对称协程（Symmetric Coroutines）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>void symmetric_coroutine(boost::coroutines::symmetric_coroutine&lt;void&gt;::yield_type yield) {
+    // 协程逻辑
+    yield(); // 让出控制权
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>与Asio的集成使用</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::asio::awaitable&lt;void&gt; async_operation() {
+    // 异步操作逻辑
+    co_await some_async_work();
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">2.4 Boost.Timer - 定时器和计时器</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Timer在C++17环境下利用<code>std::chrono</code>的高精度时钟，提供了更精确的计时功能。支持C++17的<code>constexpr</code>用于编译期时间计算。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>高精度定时器</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::timer::high_resolution_timer t;
+// 执行需要计时的代码
+std::cout << "Time elapsed: " << t.elapsed() << " seconds" << std::endl;</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>CPU时间测量</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::timer::cpu_timer cpu_t;
+// 执行CPU密集型任务
+cpu_t.stop();
+std::cout << "User time: " << cpu_t.user_time() << std::endl;
+std::cout << "System time: " << cpu_t.system_time() << std::endl;</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>定时器回调</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::asio::steady_timer timer(io_context, std::chrono::seconds(5));
+timer.async_wait([](const boost::system::error_code& ec) {
+    if (!ec) {
+        // 定时器触发
+    }
+});</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="section-3">
+                <div class="section-header">
+                    <h2 class="section-title">三、数据结构与算法板块深度解析</h2>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">3.1 Boost.Bimap - 双向映射容器</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Bimap支持C++17的<code>constexpr</code>用于编译期容器初始化。C++17的结构化绑定特性可用于同时访问键和值。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>双向映射的高级操作</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::bimap&lt;int, std::string&gt; bimap;
+
+// 插入元素
+bimap.insert(boost::bimap&lt;int, std::string&gt;::value_type(1, "one"));
+
+// 通过左映射访问（key->value）
+auto it = bimap.left.find(1);
+
+// 通过右映射访问（value->key）
+auto rit = bimap.right.find("one");
+
+// 使用C++17结构化绑定
+auto [key, value] = *it;</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>视图（View）的使用</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 获取左视图（类似std::map&lt;int, std::string&gt;）
+auto& left_view = bimap.left;
+
+// 获取右视图（类似std::map&lt;std::string, int&gt;）
+auto& right_view = bimap.right;
+
+// 使用视图进行范围查找
+auto range = left_view.equal_range(1);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>自定义比较器</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>struct case_insensitive_less {
+    bool operator()(const std::string& a, const std::string& b) const {
+        return std::lexicographical_compare(
+            a.begin(), a.end(),
+            b.begin(), b.end(),
+            [](char c1, char c2) {
+                return std::tolower(c1) < std::tolower(c2);
+            }
+        );
+    }
+};
+
+boost::bimap&lt;int, std::string, 
+    boost::bimaps::list_of&lt;boost::bimaps::with_right_compare&lt;case_insensitive_less&gt;&gt;&gt; bimap;</pre>
+                                </div>
+                            </div>
+                            
+                            <h4>性能优化策略：</h4>
+                            <ul>
+                                <li>使用<code>unordered_set_of</code>代替<code>set_of</code>以获得更好的查找性能</li>
+                                <li>预分配足够的内存以减少重新分配</li>
+                                <li>使用移动语义避免不必要的拷贝</li>
+                                <li>对于频繁插入和删除的场景，考虑使用链表实现</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">3.2 Boost.MultiArray - 多维数组容器</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.MultiArray支持C++17的<code>constexpr</code>用于编译期维度定义。利用C++17的<code>std::array</code>和<code>std::tuple</code>进行维度管理。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>多维数组的创建和访问</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义一个3x4x5的三维数组
+using array_type = boost::multi_array&lt;double, 3&gt;;
+array_type::extent_gen extents;
+
+array_type arr(extents[3][4][5]);
+
+// 访问元素
+arr[0][1][2] = 42.0;
+
+// 使用迭代器遍历
+for (auto it = arr.begin(); it != arr.end(); ++it) {
+    *it = 0.0;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>子数组和切片操作</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 获取子数组视图
+auto sub_array = arr[boost::indices[0][boost::range(1,3)][boost::range(2,4)]];
+
+// 调整子数组大小
+sub_array.resize(boost::extents[2][2]);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>与STL算法的结合</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用STL算法处理多维数组
+std::fill(arr.data(), arr.data() + arr.num_elements(), 0.0);
+
+// 使用C++17的std::for_each_n
+std::for_each_n(arr.begin(), arr.num_elements(), [](double& x) { x *= 2; });</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">3.3 Boost.MultiIndex - 多索引容器</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.MultiIndex在C++17环境下使用<code>std::size_t</code>代替<code>unsigned long</code>以支持更大的数据模型。C++17的<code>constexpr</code>用于编译期索引定义。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>多索引容器的定义</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/multi_index_container.hpp&gt;
+#include &lt;boost/multi_index/ordered_index.hpp&gt;
+#include &lt;boost/multi_index/identity.hpp&gt;
+#include &lt;boost/multi_index/member.hpp&gt;
+
+struct employee {
+    int id;
+    std::string name;
+    int age;
+    double salary;
+    
+    employee(int id, const std::string& name, int age, double salary)
+        : id(id), name(name), age(age), salary(salary) {}
+};
+
+// 定义多索引容器
+using employee_set = boost::multi_index_container&lt;
+    employee,
+    boost::multi_index::indexed_by&lt;
+        boost::multi_index::ordered_unique&lt;boost::multi_index::identity&lt;employee&gt;&gt;,
+        boost::multi_index::ordered_non_unique&lt;boost::multi_index::member&lt;employee, std::string, &employee::name&gt;&gt;,
+        boost::multi_index::ordered_non_unique&lt;boost::multi_index::member&lt;employee, int, &employee::age&gt;&gt;,
+        boost::multi_index::ordered_non_unique&lt;boost::multi_index::member&lt;employee, double, &employee::salary&gt;&gt;
+    &gt;
+&gt;;</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>使用标签访问索引</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>struct by_id {};
+struct by_name {};
+struct by_age {};
+struct by_salary {};
+
+using employee_set = boost::multi_index_container&lt;
+    employee,
+    boost::multi_index::indexed_by&lt;
+        boost::multi_index::ordered_unique&lt;boost::multi_index::tag&lt;by_id&gt;, boost::multi_index::identity&lt;employee&gt;&gt;,
+        boost::multi_index::ordered_non_unique&lt;boost::multi_index::tag&lt;by_name&gt;, boost::multi_index::member&lt;employee, std::string, &employee::name&gt;&gt;,
+        boost::multi_index::ordered_non_unique&lt;boost::multi_index::tag&lt;by_age&gt;, boost::multi_index::member&lt;employee, int, &employee::age&gt;&gt;,
+        boost::multi_index::ordered_non_unique&lt;boost::multi_index::tag&lt;by_salary&gt;, boost::multi_index::member&lt;employee, double, &employee::salary&gt;&gt;
+    &gt;
+&gt;;
+
+// 通过标签访问索引
+auto& id_index = employee_set::get&lt;by_id&gt;();
+auto& name_index = employee_set::get&lt;by_name&gt;();</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>元素修改和更新</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 查找并修改元素
+auto it = name_index.find("Alice");
+
+if (it != name_index.end()) {
+    // 使用modify方法修改元素
+    name_index.modify(it, [](employee& emp) {
+        emp.salary *= 1.1; // 加薪10%
+    });
+}
+
+// 或者使用replace方法
+employee new_emp = *it;
+new_emp.salary *= 1.1;
+name_index.replace(it, new_emp);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>范围查询和统计</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 查询年龄在30-40岁之间的员工
+auto range = age_index.equal_range(boost::make_tuple(30), boost::make_tuple(40));
+
+// 统计符合条件的员工数量
+size_t count = std::distance(range.first, range.second);
+
+// 计算平均工资
+double total_salary = 0.0;
+for (auto it = range.first; it != range.second; ++it) {
+    total_salary += it->salary;
+}
+double average_salary = total_salary / count;</pre>
+                                </div>
+                            </div>
+                            
+                            <h4>实际应用案例：</h4>
+                            <p>在区块链应用中，使用Boost.MultiIndex实现交易索引：</p>
+                            <ul>
+                                <li>通过交易哈希（ticket_tx_hash）进行唯一索引</li>
+                                <li>通过区块高度（ticket_height）进行非唯一索引</li>
+                                <li>支持快速查找和范围查询</li>
+                                <li>高效的插入、查找、修改和删除操作</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">3.4 Boost.Polygon - 多边形和几何算法</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Polygon支持C++17的<code>constexpr</code>用于编译期几何计算。利用C++17的结构化绑定处理几何点和向量。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>多边形的创建和操作</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建多边形
+using polygon_type = boost::polygon::polygon_data&lt;int&gt;;
+
+polygon_type polygon;
+
+// 添加顶点
+polygon_type::point_type points[] = {
+    {0, 0}, {10, 0}, {10, 10}, {0, 10}
+};
+
+for (const auto& point : points) {
+    polygon.add(point);
+}
+
+// 闭合多边形
+polygon.close();</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>几何算法操作</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 计算面积
+double area = boost::polygon::area(polygon);
+
+// 计算周长
+double perimeter = boost::polygon::perimeter(polygon);
+
+// 计算重心
+auto centroid = boost::polygon::centroid(polygon);
+
+// 使用C++17结构化绑定
+auto [x, y] = centroid;</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>多边形的布尔运算</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 多边形相交
+polygon_type result;
+boost::polygon::polygon_intersection(polygon1, polygon2, &result);
+
+// 多边形并集
+boost::polygon::polygon_union(polygon1, polygon2, &result);
+
+// 多边形差集
+boost::polygon::polygon_difference(polygon1, polygon2, &result);
+
+// 多边形异或
+boost::polygon::polygon_xor(polygon1, polygon2, &result);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>点与多边形的关系</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 判断点是否在多边形内
+bool is_inside = boost::polygon::contains(polygon, point);
+
+// 判断点是否在多边形边界上
+bool is_on_boundary = boost::polygon::on_boundary(polygon, point);
+
+// 计算点到多边形的距离
+double distance = boost::polygon::distance(polygon, point);</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">3.5 Boost.Range - 范围处理库</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Range在C++17环境下与<code>std::ranges</code>标准库配合使用，提供了更强大的范围处理能力。利用C++17的模板参数推导简化使用。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>范围适配器</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用range适配器
+std::vector&lt;int&gt; vec = {1, 2, 3, 4, 5};
+
+// 过滤偶数
+auto even_range = boost::adaptors::filter(vec, [](int x) { return x % 2 == 0; });
+
+// 转换为字符串
+auto str_range = boost::adaptors::transform(even_range, [](int x) {
+    return std::to_string(x);
+});
+
+// 连接成字符串
+std::string result = boost::algorithm::join(str_range, ", ");</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>范围视图</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建视图
+auto view = boost::make_iterator_range(vec.begin() + 1, vec.end() - 1);
+
+// 使用视图进行算法操作
+int sum = boost::accumulate(view, 0);
+
+// 使用C++17的折叠表达式
+int product = (view.begin()->operator*() * ... * view.end());</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>与STL算法的集成</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用Boost.Range包装C数组
+int arr[5] = {1, 2, 3, 4, 5};
+
+// 使用STL算法
+std::reverse(boost::begin(arr), boost::end(arr));
+
+// 使用C++17的std::for_each
+std::for_each(boost::begin(arr), boost::end(arr), [](int& x) { x *= 2; });</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="section-4">
+                <div class="section-header">
+                    <h2 class="section-title">四、系统与工具板块深度解析</h2>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.1 Boost.Contract - 契约编程</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Contract在C++17环境下有显著改进。C++17的<code>if constexpr</code>特性使得契约条件可以在编译期进行判断，从而简化了代码并提高了性能。<code>constexpr</code>lambda的支持使得契约检查可以在编译期执行。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>函数契约（Function Contracts）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>void withdraw(Account& account, double amount) {
+    using namespace boost::contract;
+    
+    contract_function()
+        .precondition([&] {
+            return amount > 0; // 金额必须为正
+        })
+        .precondition([&] {
+            return account.balance() >= amount; // 余额必须足够
+        })
+        .postcondition([&] {
+            return account.balance() == old_value(account.balance()) - amount;
+        })
+        .ensures([&] {
+            return account.balance() >= 0; // 余额不能为负
+        });
+    
+    // 实际业务逻辑
+    account.set_balance(account.balance() - amount);
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>类不变式（Class Invariants）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>class Account {
+public:
+    // 构造函数契约
+    Account(double initial_balance) {
+        using namespace boost::contract;
+        
+        contract_class(this)
+            .invariant([&] { return balance_ >= 0; });
+        
+        balance_ = initial_balance;
+    }
+    
+    // 存款操作
+    void deposit(double amount) {
+        using namespace boost::contract;
+        
+        contract_function()
+            .precondition([&] { return amount > 0; })
+            .postcondition([&] { return balance_ == old_value(balance_) + amount; });
+        
+        balance_ += amount;
+    }
+    
+    // 余额查询
+    double balance() const {
+        return balance_;
+    }
+    
+private:
+    double balance_;
+};</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>C++17的<code>if constexpr</code>优化</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>template &lt;typename T&gt;
+void contract_example(T value) {
+    using namespace boost::contract;
+    
+    contract_function()
+        .precondition([&] {
+            if constexpr (std::is_integral_v&lt;T&gt;) {
+                return value > 0;
+            } else {
+                return true;
+            }
+        });
+    
+    // 函数体
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>编译期契约检查</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>constexpr int factorial(int n) {
+    using namespace boost::contract;
+    
+    contract_function()
+        .precondition([&] { return n >= 0; });
+    
+    if (n == 0) return 1;
+    return n * factorial(n - 1);
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.2 Boost.Describe - 类型反射和描述</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Describe是一个C++14/17的反射库，利用C++17的<code>constexpr</code>和模板元编程实现类型信息的编译期反射。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>类型描述宏</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>BOOST_DESCRIBE_STRUCT(MyStruct,
+    (int, id),
+    (std::string, name),
+    (double, value)
+);
+
+// 获取类型信息
+const auto& struct_desc = boost::describe::describe_struct&lt;MyStruct&gt;();
+
+// 遍历成员
+for (const auto& member : struct_desc.members) {
+    std::cout << "Member: " << member.name << ", Type: " << member.type << std::endl;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>与Boost.PFR的结合使用</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/pfr.hpp&gt;
+
+MyStruct obj{42, "example", 3.14};
+
+// 使用PFR进行结构化绑定
+auto [id, name, value] = boost::pfr::structure(obj);
+
+// 使用Boost.Describe获取成员名称
+const auto& members = boost::describe::describe_struct&lt;MyStruct&gt;().members;
+
+for (size_t i = 0; i < members.size(); ++i) {
+    std::cout << members[i].name << ": " << boost::pfr::get&lt;i&gt;(obj) << std::endl;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>运行时类型信息</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 获取运行时类型名称
+std::string type_name = boost::core::demangle(typeid(MyStruct).name());
+
+// 使用Boost.Describe进行类型比较
+bool is_same = boost::describe::same_type&lt;MyStruct, OtherStruct&gt;();</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.3 Boost.Geometry - 几何算法库</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Geometry在C++17环境下充分利用了<code>constexpr</code>特性，使得许多几何计算可以在编译期完成。支持C++17的结构化绑定处理几何坐标。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>几何模型定义</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义点模型
+using point_2d = boost::geometry::model::d2::point_xy&lt;double&gt;;
+using point_3d = boost::geometry::model::d3::point_xyz&lt;double&gt;;
+
+// 定义线串
+using linestring_2d = boost::geometry::model::linestring&lt;point_2d&gt;;
+
+// 定义多边形
+using polygon_2d = boost::geometry::model::polygon&lt;point_2d&gt;;
+
+// 使用C++17结构化绑定访问坐标
+point_2d p(1.0, 2.0);
+auto [x, y] = boost::geometry::coordinates(p);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>几何算法操作</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 计算距离
+point_2d p1(0, 0), p2(3, 4);
+double distance = boost::geometry::distance(p1, p2);
+
+// 计算中点
+point_2d midpoint;
+boost::geometry::midpoint(p1, p2, midpoint);
+
+// 计算缓冲区
+polygon_2d buffer;
+boost::geometry::buffer(p1, 2.0, buffer); // 半径为2的圆形缓冲区</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>地理坐标系统</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义地理坐标（经度，纬度）
+using point_geo = boost::geometry::model::d2::point_xy&lt;boost::geometry::degree&gt;;
+
+point_geo amsterdam(52.370216, 4.895168);
+point_geo paris(48.856614, 2.352222);
+
+// 计算两点间的球面距离（地球半径6371km）
+double distance_km = boost::geometry::distance(amsterdam, paris, 
+    boost::geometry::strategy::distance::haversine&lt;double&gt;(6371));</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>R树空间索引</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建R树索引
+using rtree_t = boost::geometry::index::rtree&lt;
+    point_2d,
+    boost::geometry::index::quadratic&lt;16&gt;
+&gt;;
+
+rtree_t rtree;
+
+// 插入点
+rtree.insert(point_2d(1, 1));
+rtree.insert(point_2d(2, 3));
+rtree.insert(point_2d(4, 2));
+
+// 查询范围内的点
+std::vector&lt;point_2d&gt; results;
+rtree.query(boost::geometry::index::within(
+    boost::geometry::model::box&lt;point_2d&gt;(point_2d(0, 0), point_2d(3, 3))
+), std::back_inserter(results));</pre>
+                                </div>
+                            </div>
+                            
+                            <h4>实际应用场景：</h4>
+                            <p>Boost.Geometry广泛应用于以下领域：</p>
+                            <ul>
+                                <li>地理信息系统（GIS）和地图应用</li>
+                                <li>游戏开发中的碰撞检测和路径规划</li>
+                                <li>计算机辅助设计（CAD）软件</li>
+                                <li>机器人导航和定位系统</li>
+                                <li>天文学和天体物理学计算</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.4 Boost.GIL - 通用图像库</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.GIL在C++17环境下利用<code>constexpr</code>进行图像元数据的编译期计算。支持C++17的结构化绑定处理图像像素值。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>图像视图和算法</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建图像视图
+using namespace boost::gil;
+
+// 定义像素类型（RGB8）
+using rgb8_pixel_t = rgb8_pixel;
+using rgb8_image_t = image&lt;rgb8_pixel_t&gt;;
+using rgb8_view_t = const_view&lt;rgb8_pixel_t&gt;;
+
+// 创建图像
+rgb8_image_t image(100, 100);
+
+// 获取图像视图
+rgb8_view_t view = view(image);
+
+// 遍历像素
+for (int y = 0; y < view.height(); ++y) {
+    auto row = row_view(view, y);
+    for (int x = 0; x < view.width(); ++x) {
+        auto& pixel = row[x];
+        // 处理像素
+    }
+}
+
+// 使用lambda表达式处理像素
+for_each_pixel(view, [](rgb8_pixel_t& p) {
+    auto [r, g, b] = boost::gil::at_c&lt;0, 1, 2&gt;(p);
+    // 像素处理逻辑
+});</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>图像变换和滤镜</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 灰度转换
+using gray8_view_t = const_view&lt;gray8_pixel_t&gt;;
+
+gray8_image_t gray_image(view.width(), view.height());
+gray8_view_t gray_view = view(gray_image);
+
+// 使用颜色转换算法
+color_convert(view, gray_view);
+
+// 高斯模糊
+using namespace boost::gil::extension::filters;
+
+gaussian_blur(view, view, 2.0); // 标准差为2.0
+
+// 边缘检测
+sobel_edge_detection(view, view);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>图像操作和算法</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 图像缩放
+rgb8_image_t scaled_image(200, 200);
+
+// 使用双线性插值
+scale_view(view, view(scaled_image), bilinear);
+
+// 图像旋转
+rotate_view(view, view(rotated_image), 90_degrees);
+
+// 图像裁剪
+auto cropped_view = crop_view(view, rectangle(10, 10, 80, 80));</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.5 Boost.ProgramOptions - 程序选项解析</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.ProgramOptions在C++17环境下利用<code>std::string_view</code>提高字符串处理效率。支持C++17的结构化绑定处理选项值。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>复杂选项定义</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/program_options.hpp&gt;
+
+namespace po = boost::program_options;
+
+int main(int argc, char** argv) {
+    po::options_description desc("Allowed options");
+    
+    // 定义选项
+    desc.add_options()
+        ("help,h", "produce help message")
+        ("input,i", po::value&lt;std::string&gt;()->required(), "input file")
+        ("output,o", po::value&lt;std::string&gt;()->default_value("output.txt"), "output file")
+        ("size,s", po::value&lt;int&gt;()->composing(), "size values")
+        ("config,c", po::value&lt;std::string&gt;(), "config file")
+        ("verbose,v", po::value&lt;int&gt;()->implicit_value(1)->default_value(0), "verbosity level")
+        ("debug,d", "enable debug mode")
+        ;
+    
+    // 位置参数
+    po::positional_options_description p;
+    p.add("input", 1);
+    
+    // 解析选项
+    po::variables_map vm;
+    
+    try {
+        po::store(po::command_line_parser(argc, argv)
+            .options(desc)
+            .positional(p)
+            .run(), vm);
+        
+        po::notify(vm);
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << desc << std::endl;
+        return 1;
+    }
+    
+    // 处理选项
+    if (vm.count("help")) {
+        std::cout << desc << std::endl;
+        return 0;
+    }
+    
+    if (vm.count("input")) {
+        std::cout << "Input file: " << vm["input"].as&lt;std::string&gt;() << std::endl;
+    }
+    
+    if (vm.count("output")) {
+        std::cout << "Output file: " << vm["output"].as&lt;std::string&gt;() << std::endl;
+    }
+    
+    if (vm.count("size")) {
+        auto sizes = vm["size"].as&lt;std::vector&lt;int&gt;&gt;();
+        std::cout << "Sizes: ";
+        for (const auto& s : sizes) {
+            std::cout << s << " ";
+        }
+        std::cout << std::endl;
+    }
+    
+    return 0;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>配置文件支持</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 从配置文件读取选项
+if (vm.count("config")) {
+    std::ifstream config_file(vm["config"].as&lt;std::string&gt;());
+    
+    if (!config_file) {
+        std::cerr << "Error: cannot open config file" << std::endl;
+        return 1;
+    }
+    
+    try {
+        po::store(po::parse_config_file(config_file, desc), vm);
+        po::notify(vm);
+    } catch (const std::exception& e) {
+        std::cerr << "Error in config file: " << e.what() << std::endl;
+        return 1;
+    }
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>子命令支持</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义子命令
+po::options_description cmd_desc("Commands");
+
+cmd_desc.add_options()
+    ("command", po::value&lt;std::string&gt;()->required(), "subcommand")
+    ;
+
+po::options_description build_desc("Build options");
+build_desc.add_options()
+    ("target,t", po::value&lt;std::string&gt;(), "build target")
+    ("clean,c", "clean build")
+    ;
+
+po::options_description test_desc("Test options");
+test_desc.add_options()
+    ("suite,s", po::value&lt;std::string&gt;(), "test suite")
+    ("filter,f", po::value&lt;std::string&gt;(), "test filter")
+    ;
+
+// 解析子命令
+std::string command;
+
+try {
+    po::store(po::command_line_parser(argc, argv)
+        .options(cmd_desc)
+        .run(), vm);
+    
+    po::notify(vm);
+    
+    command = vm["command"].as&lt;std::string&gt;();
+} catch (const std::exception& e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    return 1;
+}
+
+// 处理不同的子命令
+if (command == "build") {
+    po::store(po::command_line_parser(argc, argv)
+        .options(build_desc)
+        .run(), vm);
+} else if (command == "test") {
+    po::store(po::command_line_parser(argc, argv)
+        .options(test_desc)
+        .run(), vm);
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.6 Boost.Pool - 内存池</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Pool在C++17环境下利用<code>std::size_t</code>进行内存管理。支持C++17的<code>constexpr</code>用于编译期内存池大小计算。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>对象池（Object Pool）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义对象类型
+class MyClass {
+public:
+    MyClass(int value) : m_value(value) {}
+    int value() const { return m_value; }
+
+private:
+    int m_value;
+};
+
+// 创建对象池
+boost::object_pool&lt;MyClass&gt; pool;
+
+// 分配对象
+MyClass* obj1 = pool.construct(42);
+MyClass* obj2 = pool.construct(100);
+
+// 使用对象
+std::cout << obj1->value() << std::endl;
+std::cout << obj2->value() << std::endl;
+
+// 释放对象（对象池会自动管理内存）
+pool.destroy(obj1);
+pool.destroy(obj2);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>内存池（Memory Pool）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建固定大小的内存池
+boost::pool&lt;&gt; memory_pool(1024); // 每个块1024字节
+
+// 分配内存
+void* ptr1 = memory_pool.malloc();
+void* ptr2 = memory_pool.malloc();
+
+// 释放内存
+memory_pool.free(ptr1);
+memory_pool.free(ptr2);
+
+// 一次分配多个块
+void* ptrs[10];
+for (int i = 0; i < 10; ++i) {
+    ptrs[i] = memory_pool.malloc();
+}
+
+// 批量释放
+for (int i = 0; i < 10; ++i) {
+    memory_pool.free(ptrs[i]);
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>快速内存池（Fast Pool）</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用快速内存池
+boost::fast_pool_allocator&lt;int&gt; allocator;
+
+// 创建容器
+std::vector&lt;int, boost::fast_pool_allocator&lt;int&gt;&gt; vec(allocator);
+
+// 填充数据
+for (int i = 0; i < 1000; ++i) {
+    vec.push_back(i);
+}
+
+// 性能优化：预分配内存
+vec.reserve(10000);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>池的嵌套和组合</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建嵌套池
+boost::pool&lt;&gt; outer_pool(4096); // 外层池，4KB块
+boost::pool&lt;boost::default_user_allocator_new_delete, 512&gt; inner_pool(outer_pool); // 内层池，512字节块
+
+// 从内层池分配内存
+void* ptr = inner_pool.malloc();
+
+// 释放内存
+inner_pool.free(ptr);</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.7 Boost.System - 系统错误处理</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.System在C++17环境下与<code>std::system_error</code>和<code>std::error_code</code>深度集成。使用C++17的<code>std::filesystem</code>路径和错误类型。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>错误代码和错误类别</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/system/error_code.hpp&gt;
+#include &lt;boost/system/system_error.hpp&gt;
+
+// 定义自定义错误类别
+class MyErrorCategory : public boost::system::error_category {
+public:
+    const char* name() const noexcept override { return "my_error"; }
+    
+    std::string message(int ev) const override {
+        switch (ev) {
+            case 1: return "Invalid argument";
+            case 2: return "Out of resources";
+            case 3: return "Permission denied";
+            default: return "Unknown error";
+        }
+    }
+    
+    bool equivalent(int code, const std::error_condition& condition) const noexcept override {
+        // 比较错误代码和错误条件
+        return false;
+    }
+};
+
+// 获取错误类别实例
+const MyErrorCategory& my_error_category() {
+    static MyErrorCategory instance;
+    return instance;
+}
+
+// 创建错误代码
+boost::system::error_code ec(1, my_error_category());
+
+if (ec) {
+    std::cerr << "Error: " << ec.message() << std::endl;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>系统错误异常</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>try {
+    // 执行可能抛出错误的操作
+    if (some_condition) {
+        throw boost::system::system_error(
+            boost::system::error_code(2, my_error_category()),
+            "Resource allocation failed"
+        );
+    }
+} catch (const boost::system::system_error& e) {
+    std::cerr << "System error: " << e.what() << std::endl;
+    std::cerr << "Error code: " << e.code() << std::endl;
+    std::cerr << "Error category: " << e.code().category().name() << std::endl;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>与标准库的集成</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用C++17的std::filesystem
+#include &lt;filesystem&gt;
+
+namespace fs = std::filesystem;
+
+try {
+    // 创建目录
+    fs::create_directory("test_dir", fs::perms::all);
+} catch (const fs::filesystem_error& e) {
+    // 获取Boost错误代码
+    boost::system::error_code ec = e.code();
+    
+    if (ec == boost::system::errc::permission_denied) {
+        std::cerr << "Permission denied" << std::endl;
+    } else {
+        std::cerr << "File system error: " << e.what() << std::endl;
+    }
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">4.8 Boost.Thread - 线程库</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Thread在C++17环境下与<code>std::thread</code>兼容，提供了更多高级特性。利用C++17的<code>std::shared_mutex</code>实现读写锁。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>线程管理和控制</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建线程
+boost::thread t([]() {
+    for (int i = 0; i < 10; ++i) {
+        std::cout << "Thread: " << i << std::endl;
+        boost::this_thread::sleep_for(boost::chrono::seconds(1));
+    }
+});
+
+// 等待线程结束
+t.join();
+
+// 分离线程
+t.detach();
+
+// 获取线程ID
+boost::thread::id thread_id = t.get_id();
+
+// 检查线程是否可加入
+if (t.joinable()) {
+    t.join();
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>线程同步机制</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 互斥锁
+boost::mutex mtx;
+
+// 锁的范围管理
+{
+    boost::lock_guard&lt;boost::mutex&gt; lock(mtx);
+    // 临界区代码
+}
+
+// 读写锁（C++17支持）
+boost::shared_mutex rw_mutex;
+
+// 读锁
+{
+    boost::shared_lock&lt;boost::shared_mutex&gt; lock(rw_mutex);
+    // 读操作
+}
+
+// 写锁
+{
+    boost::unique_lock&lt;boost::shared_mutex&gt; lock(rw_mutex);
+    // 写操作
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>条件变量</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>boost::condition_variable cv;
+boost::mutex mtx;
+bool ready = false;
+
+// 等待线程
+boost::thread waiter([]() {
+    boost::unique_lock&lt;boost::mutex&gt; lock(mtx);
+    cv.wait(lock, []() { return ready; });
+    std::cout << "Waiter thread woke up" << std::endl;
+});
+
+// 通知线程
+boost::thread notifier([]() {
+    boost::this_thread::sleep_for(boost::chrono::seconds(2));
+    
+    {
+        boost::lock_guard&lt;boost::mutex&gt; lock(mtx);
+        ready = true;
+    }
+    
+    cv.notify_one();
+});
+
+waiter.join();
+notifier.join();</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>线程池实现</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>class ThreadPool {
+public:
+    ThreadPool(size_t num_threads) {
+        for (size_t i = 0; i < num_threads; ++i) {
+            workers.emplace_back([this]() {
+                while (true) {
+                    std::function&lt;void()&gt; task;
+                    
+                    {
+                        boost::unique_lock&lt;boost::mutex&gt; lock(queue_mutex);
+                        cv.wait(lock, [this]() {
+                            return stop || !tasks.empty();
+                        });
+                        
+                        if (stop && tasks.empty()) {
+                            return;
+                        }
+                        
+                        task = std::move(tasks.front());
+                        tasks.pop();
+                    }
+                    
+                    task();
+                }
+            });
+        }
+    }
+    
+    ~ThreadPool() {
+        {
+            boost::unique_lock&lt;boost::mutex&gt; lock(queue_mutex);
+            stop = true;
+        }
+        
+        cv.notify_all();
+        
+        for (auto& worker : workers) {
+            worker.join();
+        }
+    }
+    
+    template &lt;typename F&gt;
+    void enqueue(F&& f) {
+        {
+            boost::unique_lock&lt;boost::mutex&gt; lock(queue_mutex);
+            tasks.emplace(std::forward&lt;F&gt;(f));
+        }
+        
+        cv.notify_one();
+    }
+    
+private:
+    std::vector&lt;boost::thread&gt; workers;
+    std::queue&lt;std::function&lt;void()&gt;&gt; tasks;
+    boost::mutex queue_mutex;
+    boost::condition_variable cv;
+    bool stop = false;
+};
+
+// 使用线程池
+ThreadPool pool(4); // 4个线程的线程池
+
+// 提交任务
+for (int i = 0; i < 10; ++i) {
+    pool.enqueue([i]() {
+        std::cout << "Task " << i << " executed by thread " << boost::this_thread::get_id() << std::endl;
+    });
+}
+
+// 等待所有任务完成
+boost::this_thread::sleep_for(boost::chrono::seconds(2));</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="section-5">
+                <div class="section-header">
+                    <h2 class="section-title">五、应用与集成板块深度解析</h2>
+                    <span class="toggle-icon">▶</span>
+                </div>
+                <div class="section-content">
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">5.1 Boost.JSON - JSON解析和生成</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.JSON是Boost库中对C++17支持最好的组件之一。独立使用时<span class="highlight">仅需C++17编译器</span>。主要特性包括：</p>
+                            <ul>
+                                <li>使用C++17的<code>std::string_view</code>进行零拷贝解析</li>
+                                <li>利用C++17的内存分配接口实现<code>storage_ptr</code>智能指针</li>
+                                <li>支持C++17的结构化绑定和折叠表达式</li>
+                                <li>使用<code>std::size_t</code>进行大小管理</li>
+                            </ul>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>JSON对象的创建和操作</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/json.hpp&gt;
+
+// 创建JSON对象
+boost::json::object obj = {
+    {"name", "John Doe"},
+    {"age", 42},
+    {"email", "john@example.com"},
+    {"is_active", true}
+};
+
+// 添加数组
+obj["phones"] = boost::json::array{
+    "555-1234",
+    "555-5678"
+};
+
+// 添加嵌套对象
+obj["address"] = boost::json::object{
+    {"street", "123 Main St"},
+    {"city", "Anytown"},
+    {"state", "CA"},
+    {"zip", "12345"}
+};
+
+// 使用C++17折叠表达式创建复杂对象
+template &lt;typename... Args&gt;
+boost::json::object create_object(Args&&... args) {
+    return {std::forward&lt;Args&gt;(args)...};
+}
+
+auto complex_obj = create_object(
+    std::make_pair("key1", "value1"),
+    std::make_pair("key2", 42),
+    std::make_pair("key3", true)
+);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>JSON解析和序列化</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 解析JSON字符串
+std::string json_str = R"(
+    {
+        "name": "John Doe",
+        "age": 42,
+        "email": "john@example.com",
+        "is_active": true,
+        "phones": ["555-1234", "555-5678"],
+        "address": {
+            "street": "123 Main St",
+            "city": "Anytown",
+            "state": "CA",
+            "zip": "12345"
+        }
+    }
+)";
+
+boost::json::value val = boost::json::parse(json_str);
+
+// 访问JSON值
+boost::json::object& obj = val.as_object();
+
+std::string name = obj.at("name").as_string();
+int age = obj.at("age").as_int64();
+bool is_active = obj.at("is_active").as_bool();
+
+// 使用C++17结构化绑定
+auto [street, city, state, zip] = std::tuple{
+    obj.at("address").as_object().at("street").as_string(),
+    obj.at("address").as_object().at("city").as_string(),
+    obj.at("address").as_object().at("state").as_string(),
+    obj.at("address").as_object().at("zip").as_string()
+};
+
+// 序列化JSON
+std::string serialized = boost::json::serialize(obj);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>流式解析和生成</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 流式解析
+std::ifstream file("data.json");
+
+boost::json::stream_parser parser;
+
+char buffer[4096];
+while (file.read(buffer, sizeof(buffer))) {
+    parser.write(buffer, file.gcount());
+}
+
+parser.finish();
+
+boost::json::value parsed_value = parser.release();
+
+// 流式生成
+std::ofstream output("output.json");
+
+boost::json::stream_serializer serializer(output);
+
+// 序列化对象
+serializer.begin_object();
+serializer.key("name");
+serializer.value("John Doe");
+serializer.key("age");
+serializer.value(42);
+serializer.end_object();
+
+serializer.flush();</pre>
+                                </div>
+                            </div>
+                            
+                            <h4>性能优化策略：</h4>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用内存池进行解析优化
+boost::json::stream_parser parser(
+    boost::json::monotonic_resource{}
+);
+
+// 重用解析器实例
+parser.reset();
+
+// 避免动态内存分配
+boost::json::object obj = boost::json::object(
+    boost::json::monotonic_resource{}
+);
+
+// 性能基准测试对比
+struct benchmark_result {
+    std::string library;
+    double parse_time;
+    double serialize_time;
+    double memory_usage;
+};
+
+std::vector&lt;benchmark_result&gt; results;
+
+// 测试不同配置
+results.push_back({
+    "boost(pool)",
+    measure_parse_time("data.json", true),
+    measure_serialize_time(obj, true),
+    measure_memory_usage()
+});
+
+results.push_back({
+    "boost",
+    measure_parse_time("data.json", false),
+    measure_serialize_time(obj, false),
+    measure_memory_usage()
+});
+
+// 输出结果
+for (const auto& result : results) {
+    std::cout << result.library << ": "
+        << "Parse: " << result.parse_time << "ms, "
+        << "Serialize: " << result.serialize_time << "ms, "
+        << "Memory: " << result.memory_usage << "MB" << std::endl;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <h4>实际应用案例：</h4>
+                            <p>1. <strong>REST API响应处理</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 处理REST API响应
+std::string response = fetch_rest_api("https://api.example.com/users/123");
+
+try {
+    auto json = boost::json::parse(response);
+    
+    // 提取用户信息
+    auto& user = json.as_object();
+    
+    std::string id = user.at("id").as_string();
+    std::string name = user.at("name").as_string();
+    int age = user.at("age").as_int64();
+    
+    // 处理嵌套数据
+    auto& address = user.at("address").as_object();
+    std::string street = address.at("street").as_string();
+    
+    // 使用结构化绑定简化代码
+    auto [city, state] = std::tuple{
+        address.at("city").as_string(),
+        address.at("state").as_string()
+    };
+    
+    std::cout << "User: " << name << ", Age: " << age << std::endl;
+    std::cout << "Address: " << street << ", " << city << ", " << state << std::endl;
+} catch (const boost::json::parse_error& e) {
+    std::cerr << "JSON parse error: " << e.what() << std::endl;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>时间戳处理</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 从JSON中提取时间戳
+std::string json_with_timestamp = R"(
+    {
+        "timestamp": "2024-10-01T12:34:56.789Z",
+        "data": "some information"
+    }
+)";
+
+auto json = boost::json::parse(json_with_timestamp);
+
+std::string timestamp_str = json.as_object().at("timestamp").as_string();
+
+// 转换为std::time_t
+std::tm tm = {};
+std::istringstream ss(timestamp_str);
+ss >> std::get_time(&tm, "%Y-%m-%dT%H:%M:%S.%fZ");
+
+std::time_t timestamp = std::mktime(&tm);
+
+std::cout << "Timestamp: " << std::ctime(&timestamp);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>配置文件读取</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 读取配置文件
+std::ifstream config_file("config.json");
+
+if (!config_file) {
+    std::cerr << "Error: config file not found" << std::endl;
+    return 1;
+}
+
+try {
+    auto config = boost::json::parse(config_file);
+    
+    // 获取数据库配置
+    auto& db_config = config.as_object().at("database").as_object();
+    
+    std::string host = db_config.at("host").as_string();
+    int port = db_config.at("port").as_int64();
+    std::string username = db_config.at("username").as_string();
+    std::string password = db_config.at("password").as_string();
+    
+    // 获取日志配置
+    auto& log_config = config.as_object().at("logging").as_object();
+    bool enable_debug = log_config.at("debug").as_bool();
+    std::string log_file = log_config.at("file").as_string();
+    
+    std::cout << "Database configuration:" << std::endl;
+    std::cout << "  Host: " << host << std::endl;
+    std::cout << "  Port: " << port << std::endl;
+    std::cout << "  Username: " << username << std::endl;
+    std::cout << "Logging configuration:" << std::endl;
+    std::cout << "  Debug: " << (enable_debug ? "Enabled" : "Disabled") << std::endl;
+    std::cout << "  Log file: " << log_file << std::endl;
+} catch (const std::exception& e) {
+    std::cerr << "Error reading config: " << e.what() << std::endl;
+    return 1;
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">5.2 Boost.Log - 日志系统</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Log在C++17环境下进行了重大改进。C++17的<code>std::string_view</code>被广泛应用于日志消息处理，提高了性能。支持C++17的<code>std::byte</code>类型用于二进制日志记录。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>日志记录基础</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/log/core.hpp&gt;
+#include &lt;boost/log/trivial.hpp&gt;
+#include &lt;boost/log/expressions.hpp&gt;
+
+// 初始化日志系统
+void init_log() {
+    boost::log::core::get()->set_filter(
+        boost::log::trivial::severity >= boost::log::trivial::info
+    );
+}
+
+int main() {
+    init_log();
+    
+    // 记录不同级别的日志
+    BOOST_LOG_TRIVIAL(trace) << "This is a trace message";
+    BOOST_LOG_TRIVIAL(debug) << "This is a debug message";
+    BOOST_LOG_TRIVIAL(info) << "This is an info message";
+    BOOST_LOG_TRIVIAL(warning) << "This is a warning message";
+    BOOST_LOG_TRIVIAL(error) << "This is an error message";
+    BOOST_LOG_TRIVIAL(fatal) << "This is a fatal message";
+    
+    return 0;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>自定义日志格式</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义自定义格式
+boost::log::formatter fmt = 
+    boost::log::expressions::format("[%TimeStamp%] [%Severity%] %Message%")
+    % boost::log::expressions::attr&lt;boost::posix_time::ptime&gt;("TimeStamp")
+    % boost::log::expressions::attr&lt;boost::log::trivial::severity_level&gt;("Severity")
+    % boost::log::expressions::smessage;
+
+// 设置格式
+boost::log::core::get()->set_formatter(fmt);
+
+// 或者使用更复杂的格式
+boost::log::formatter complex_fmt = 
+    boost::log::expressions::format(
+        "[%1%] [%2%] %3% (File: %4%, Line: %5%)"
+    ) % 
+    boost::log::expressions::attr&lt;boost::posix_time::ptime&gt;("TimeStamp") %
+    boost::log::expressions::attr&lt;boost::log::trivial::severity_level&gt;("Severity") %
+    boost::log::expressions::smessage %
+    boost::log::expressions::attr&lt;std::string&gt;("File") %
+    boost::log::expressions::attr&lt;int&gt;("Line");</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>多目标日志输出</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建控制台接收器
+auto console_sink = boost::make_shared&lt;boost::log::sinks::text_ostream_backend&gt;();
+console_sink->add_stream(boost::make_shared&lt;std::ostream&gt;(&std::cout));
+
+// 创建文件接收器
+auto file_sink = boost::make_shared&lt;boost::log::sinks::text_file_backend&gt;(
+    "app.log",
+    boost::log::sinks::file::rotation_at_time_point(0, 0, 0), // 每天0点轮换
+    boost::log::sinks::file::format_generic_log
+);
+
+// 创建syslog接收器
+auto syslog_sink = boost::make_shared&lt;boost::log::sinks::syslog_backend&gt;(
+    "my_app",
+    LOG_USER | LOG_PID
+);
+
+// 创建日志接收器包装器
+boost::log::sinks::synchronous_sink&lt;boost::log::sinks::text_ostream_backend&gt; console(console_sink);
+boost::log::sinks::synchronous_sink&lt;boost::log::sinks::text_file_backend&gt; file(file_sink);
+boost::log::sinks::synchronous_sink&lt;boost::log::sinks::syslog_backend&gt; syslog(syslog_sink);
+
+// 添加接收器
+boost::log::core::get()->add_sink(boost::make_shared&lt;decltype(console)&gt;(console));
+boost::log::core::get()->add_sink(boost::make_shared&lt;decltype(file)&gt;(file));
+boost::log::core::get()->add_sink(boost::make_shared&lt;decltype(syslog)&gt;(syslog));
+
+// 设置不同接收器的级别
+console.set_filter(boost::log::trivial::severity >= boost::log::trivial::info);
+file.set_filter(boost::log::trivial::severity >= boost::log::trivial::debug);
+syslog.set_filter(boost::log::trivial::severity >= boost::log::trivial::warning);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>日志属性和线程安全</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义线程相关属性
+boost::log::attribute::mutable_constant&lt;std::string&gt; thread_id("ThreadID", "");
+
+// 在每个线程中设置线程ID
+boost::thread t([]() {
+    thread_id.set(boost::lexical_cast&lt;std::string&gt;(boost::this_thread::get_id()));
+    
+    BOOST_LOG_TRIVIAL(info) << "Thread started";
+    
+    // 线程逻辑
+    
+    BOOST_LOG_TRIVIAL(info) << "Thread finished";
+});
+
+// 记录带属性的日志
+BOOST_LOG_STREAM(boost::log::keywords::severity = boost::log::trivial::info,
+                boost::log::keywords::file = "main.cpp",
+                boost::log::keywords::line = 42)
+    << "Important message with attributes";
+
+// 使用C++17的结构化绑定处理属性
+auto [severity, message] = std::tuple{
+    boost::log::attribute_cast&lt;boost::log::trivial::severity_level&gt;(attr),
+    boost::log::attribute_cast&lt;std::string&gt;(message_attr)
+};</pre>
+                                </div>
+                            </div>
+                            
+                            <p>5. <strong>性能优化策略</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用异步日志接收器提高性能
+auto async_sink = boost::make_shared&lt;boost::log::sinks::asynchronous_sink&lt;boost::log::sinks::text_ostream_backend&gt;&gt;(
+    console_sink,
+    1000, // 队列大小
+    boost::log::sinks::synchronized_policy::safe
+);
+
+// 设置异步线程数
+async_sink->set_number_of_threads(4);
+
+// 添加异步接收器
+boost::log::core::get()->add_sink(async_sink);
+
+// 使用内存映射文件进行高性能日志记录
+auto mmap_sink = boost::make_shared&lt;boost::log::sinks::mmap_backend&gt;(
+    "app.log",
+    boost::log::sinks::mmap::max_size(1024 * 1024 * 10) // 10MB
+);
+
+auto mmap_log_sink = boost::make_shared&lt;boost::log::sinks::text_mmap_sink&gt;(mmap_sink);
+
+// 条件日志记录（避免不必要的字符串构造）
+if (boost::log::core::get()->get_filter() >= boost::log::trivial::debug) {
+    BOOST_LOG_TRIVIAL(debug) << "This message is only logged if debug level is enabled";
+}
+
+// 批量日志记录
+boost::log::record_ostream stream;
+
+stream << "Batch log message 1" << std::endl;
+stream << "Batch log message 2" << std::endl;
+
+BOOST_LOG_STREAM_UNCOND(stream);</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">5.3 Boost.Serialization - 序列化库</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Serialization在C++17环境下支持更多类型的自动序列化。利用C++17的<code>constexpr</code>进行编译期序列化配置。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>基础序列化</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/serialization/serialization.hpp&gt;
+
+class MyClass {
+public:
+    MyClass() = default;
+    MyClass(int id, const std::string& name) : m_id(id), m_name(name) {}
+    
+    friend class boost::serialization::access;
+    
+    template &lt;typename Archive&gt;
+    void serialize(Archive& ar, const unsigned int version) {
+        ar & m_id;
+        ar & m_name;
+    }
+    
+private:
+    int m_id;
+    std::string m_name;
+};
+
+// 序列化到文件
+void save_to_file(const MyClass& obj, const std::string& filename) {
+    std::ofstream file(filename, std::ios::binary);
+    boost::archive::binary_oarchive oa(file);
+    oa << obj;
+}
+
+// 从文件反序列化
+MyClass load_from_file(const std::string& filename) {
+    std::ifstream file(filename, std::ios::binary);
+    boost::archive::binary_iarchive ia(file);
+    MyClass obj;
+    ia >> obj;
+    return obj;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>多态序列化</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>class Base {
+public:
+    virtual ~Base() = default;
+    
+    friend class boost::serialization::access;
+    
+    template &lt;typename Archive&gt;
+    void serialize(Archive& ar, const unsigned int version) {
+        ar & boost::serialization::base_object&lt;Base&gt;(*this);
+    }
+};
+
+class Derived : public Base {
+public:
+    Derived() = default;
+    Derived(int value) : m_value(value) {}
+    
+    template &lt;typename Archive&gt;
+    void serialize(Archive& ar, const unsigned int version) {
+        ar & boost::serialization::base_object&lt;Base&gt;(*this);
+        ar & m_value;
+    }
+    
+private:
+    int m_value;
+};
+
+// 注册多态类型
+BOOST_CLASS_EXPORT(Derived)
+
+// 序列化多态对象
+void save_polymorphic(const Base* obj, const std::string& filename) {
+    std::ofstream file(filename, std::ios::binary);
+    boost::archive::binary_oarchive oa(file);
+    oa << obj;
+}
+
+// 反序列化多态对象
+Base* load_polymorphic(const std::string& filename) {
+    std::ifstream file(filename, std::ios::binary);
+    boost::archive::binary_iarchive ia(file);
+    Base* obj;
+    ia >> obj;
+    return obj;
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>版本控制</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>class VersionedClass {
+public:
+    VersionedClass() = default;
+    
+    friend class boost::serialization::access;
+    
+    template &lt;typename Archive&gt;
+    void serialize(Archive& ar, const unsigned int version) {
+        ar & m_id;
+        
+        if (version >= 1) {
+            ar & m_name;
+        }
+        
+        if (version >= 2) {
+            ar & m_value;
+        }
+    }
+    
+private:
+    int m_id;
+    std::string m_name;
+    double m_value;
+};
+
+// 设置版本号
+BOOST_CLASS_VERSION(VersionedClass, 2)</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>指针和智能指针序列化</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/serialization/shared_ptr.hpp&gt;
+
+class SharedClass {
+public:
+    SharedClass() = default;
+    SharedClass(int value) : m_value(value) {}
+    
+    friend class boost::serialization::access;
+    
+    template &lt;typename Archive&gt;
+    void serialize(Archive& ar, const unsigned int version) {
+        ar & m_value;
+    }
+    
+private:
+    int m_value;
+};
+
+// 序列化shared_ptr
+void save_shared_ptr(const std::shared_ptr&lt;SharedClass&gt; obj, const std::string& filename) {
+    std::ofstream file(filename, std::ios::binary);
+    boost::archive::binary_oarchive oa(file);
+    oa << obj;
+}
+
+// 反序列化shared_ptr
+std::shared_ptr&lt;SharedClass&gt; load_shared_ptr(const std::string& filename) {
+    std::ifstream file(filename, std::ios::binary);
+    boost::archive::binary_iarchive ia(file);
+    std::shared_ptr&lt;SharedClass&gt; obj;
+    ia >> obj;
+    return obj;
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="subsection">
+                        <div class="subsection-header">
+                            <h3 class="subsection-title">5.4 Boost.Signals2 - 信号槽机制</h3>
+                        </div>
+                        <div class="subsection-content">
+                            <h4>C++17集成特性：</h4>
+                            <p>Boost.Signals2在C++17环境下利用<code>std::shared_ptr</code>和<code>std::weak_ptr</code>进行对象生命周期管理。支持C++17的<code>std::function</code>作为槽函数。</p>
+                            
+                            <h4>高级使用模式：</h4>
+                            <p>1. <strong>基础信号槽连接</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>#include &lt;boost/signals2.hpp&gt;
+
+// 定义信号
+boost::signals2::signal&lt;void(int)&gt; signal;
+
+// 连接槽函数
+signal.connect([](int value) {
+    std::cout << "Slot 1: " << value << std::endl;
+});
+
+signal.connect([](int value) {
+    std::cout << "Slot 2: " << value * 2 << std::endl;
+});
+
+// 触发信号
+signal(42);</pre>
+                                </div>
+                            </div>
+                            
+                            <p>2. <strong>带返回值的信号</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 定义带返回值的信号
+boost::signals2::signal&lt;int(int)&gt; signal_with_result;
+
+// 连接多个槽函数
+signal_with_result.connect([](int value) {
+    return value + 1;
+});
+
+signal_with_result.connect([](int value) {
+    return value * 2;
+});
+
+// 组合器：返回所有结果的向量
+struct vector_combiner {
+    typedef std::vector&lt;int&gt; result_type;
+    
+    template &lt;typename InputIterator&gt;
+    result_type operator()(InputIterator first, InputIterator last) const {
+        result_type results;
+        while (first != last) {
+            results.push_back(*first);
+            ++first;
+        }
+        return results;
+    }
+};
+
+// 使用自定义组合器
+boost::signals2::signal&lt;int(int), vector_combiner&gt; signal_with_combiner;
+
+signal_with_combiner.connect([](int value) { return value + 1; });
+signal_with_combiner.connect([](int value) { return value * 2; });
+
+auto results = signal_with_combiner(10);
+// results 包含 [11, 20]</pre>
+                                </div>
+                            </div>
+                            
+                            <p>3. <strong>连接管理和作用域</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 使用scoped_connection自动管理连接
+boost::signals2::scoped_connection connection;
+
+{
+    boost::signals2::signal&lt;void()&gt; signal;
+    
+    // 连接槽函数并获取scoped_connection
+    connection = signal.connect([]() {
+        std::cout << "Connected slot" << std::endl;
+    });
+    
+    signal(); // 输出 "Connected slot"
+} // signal被销毁，但connection仍然存在
+
+// 手动断开连接
+connection.disconnect();
+
+// 使用shared_connection_block临时阻塞连接
+boost::signals2::shared_connection_block block(connection);
+
+{
+    boost::signals2::signal&lt;void()&gt; signal;
+    signal.connect([]() { std::cout << "This won't be called" << std::endl; });
+    
+    {
+        boost::signals2::shared_connection_block block(connection);
+        signal(); // 不会调用槽函数
+    }
+    
+    signal(); // 会调用槽函数
+}</pre>
+                                </div>
+                            </div>
+                            
+                            <p>4. <strong>线程安全信号</strong>：</p>
+                            <div class="code-block">
+                                <div class="code-body">
+<pre>// 创建线程安全的信号
+boost::signals2::signal&lt;void(int)&gt; thread_safe_signal;
+
+// 在多线程环境中使用
+std::vector&lt;boost::thread&gt; threads;
+
+for (int i = 0; i < 5; ++i) {
+    threads.emplace_back([&thread_safe_signal, i]() {
+        // 连接槽函数
+        thread_safe_signal.connect([i](int value) {
+            std::cout << "Thread " << i << " received: " << value << std::endl;
+        });
+        
+        // 触发信号
+        thread_safe_signal(i * 10);
+    });
+}
+
+// 等待所有线程完成
+for (auto& thread : threads) {
+    thread.join();
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 切换章节的显示/隐藏
+        document.querySelectorAll('.section-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const section = header.parentElement;
+                section.classList.toggle('active');
+            });
+        });
+        
+        // 切换子章节的显示/隐藏
+        document.querySelectorAll('.subsection-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const subsection = header.parentElement;
+                subsection.classList.toggle('active');
+            });
+        });
+        
+        // 快速导航链接平滑滚动
+        document.querySelectorAll('.quick-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // 展开目标章节
+                    targetElement.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
