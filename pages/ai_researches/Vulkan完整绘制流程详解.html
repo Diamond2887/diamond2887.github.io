@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulkan完整绘制流程详解</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --code-bg: #f8f9fa;
+            --border-color: #bdc3c7;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #f5f7fa;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h3 {
+            color: var(--primary-color);
+            margin: 20px 0 10px;
+        }
+        
+        h4 {
+            color: var(--dark-color);
+            margin: 15px 0 8px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .toc {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .toc ul {
+            padding-left: 20px;
+        }
+        
+        .toc li {
+            margin-bottom: 8px;
+        }
+        
+        .chapter {
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .chapter summary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .chapter summary:hover {
+            background-color: #34495e;
+        }
+        
+        .chapter-content {
+            padding: 20px;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--light-color);
+        }
+        
+        .diagram {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+        }
+        
+        .note {
+            background-color: #fff9e6;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .tip {
+            background-color: #e8f6f3;
+            border-left: 4px solid #1abc9c;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background-color: #fdeaea;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .flow-number {
+            background-color: var(--secondary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .flow-content {
+            flex-grow: 1;
+        }
+        
+        .code-keyword {
+            color: #d73a49;
+            font-weight: bold;
+        }
+        
+        .code-comment {
+            color: #6a737d;
+            font-style: italic;
+        }
+        
+        .code-string {
+            color: #032f62;
+        }
+        
+        .code-function {
+            color: #6f42c1;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .sub-section {
+            margin-left: 20px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vulkan完整绘制流程详解</h1>
+        <p class="subtitle">从管线配置到绘图执行的完整指南</p>
+    </header>
+
+    <div class="container">
+        <div class="toc">
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#section1">1. Vulkan渲染管线总览</a></li>
+                <li><a href="#section2">2. 渲染管线详细解析</a>
+                    <ul>
+                        <li><a href="#section2-1">2.1 动态状态（Dynamic State）</a></li>
+                        <li><a href="#section2-2">2.2 顶点输入（Vertex Input）</a></li>
+                        <li><a href="#section2-3">2.3 输入装配（Input Assembly）</a></li>
+                        <li><a href="#section2-4">2.4 视图和裁剪（Viewport and Scissor）</a></li>
+                        <li><a href="#section2-5">2.5 光栅化器（Rasterizer）</a></li>
+                        <li><a href="#section2-6">2.6 多重采样（Multisampling）</a></li>
+                        <li><a href="#section2-7">2.7 深度和模板测试（Depth and Stencil Test）</a></li>
+                        <li><a href="#section2-8">2.8 颜色混合（Color Blending）</a></li>
+                        <li><a href="#section2-9">2.9 管线布局（Pipeline Layout）</a></li>
+                        <li><a href="#section2-10">2.10 渲染通道（Render Pass）</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section3">3. 绘图执行流程</a>
+                    <ul>
+                        <li><a href="#section3-1">3.1 帧缓冲区（Framebuffer）</a></li>
+                        <li><a href="#section3-2">3.2 命令池和命令缓冲区（Command Pool and Buffer）</a></li>
+                        <li><a href="#section3-3">3.3 启动渲染通道（Begin Render Pass）</a></li>
+                        <li><a href="#section3-4">3.4 基本绘图命令（Draw Commands）</a></li>
+                        <li><a href="#section3-5">3.5 同步机制（Synchronization）</a></li>
+                        <li><a href="#section3-6">3.6 交换链管理（Swap Chain Management）</a></li>
+                        <li><a href="#section3-7">3.7 子传递依赖项（Subpass Dependencies）</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section4">4. 完整代码示例</a>
+                    <ul>
+                        <li><a href="#section4-1">4.1 初始化Vulkan</a></li>
+                        <li><a href="#section4-2">4.2 完整渲染流程</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <section id="section1" class="chapter">
+            <details open>
+                <summary>1. Vulkan渲染管线总览</summary>
+                <div class="chapter-content">
+                    <p>Vulkan渲染管线是一个高度可配置的图形处理流程，它将输入的顶点数据经过一系列处理阶段，最终输出到帧缓冲区。整个渲染管线可以分为可编程阶段和固定功能阶段，其中顶点着色器、几何着色器、曲面细分着色器和片段着色器是可编程的，而其他阶段则是固定功能的，但可以通过各种状态参数进行配置。</p>
+                    
+                    <div class="diagram">
+                        <h3>Vulkan渲染管线流程图</h3>
+                        <svg width="100%" height="200" viewBox="0 0 800 200">
+                            <rect x="50" y="80" width="100" height="40" fill="#3498db" stroke="#2c3e50" stroke-width="2" rx="5"/>
+                            <text x="100" y="105" text-anchor="middle" fill="white" font-weight="bold">顶点输入</text>
+                            
+                            <rect x="180" y="80" width="100" height="40" fill="#3498db" stroke="#2c3e50" stroke-width="2" rx="5"/>
+                            <text x="230" y="105" text-anchor="middle" fill="white" font-weight="bold">输入装配</text>
+                            
+                            <rect x="310" y="80" width="100" height="40" fill="#3498db" stroke="#2c3e50" stroke-width="2" rx="5"/>
+                            <text x="360" y="105" text-anchor="middle" fill="white" font-weight="bold">顶点着色器</text>
+                            
+                            <rect x="440" y="80" width="100" height="40" fill="#3498db" stroke="#2c3e50" stroke-width="2" rx="5"/>
+                            <text x="490" y="105" text-anchor="middle" fill="white" font-weight="bold">光栅化</text>
+                            
+                            <rect x="570" y="80" width="100" height="40" fill="#3498db" stroke="#2c3e50" stroke-width="2" rx="5"/>
+                            <text x="620" y="105" text-anchor="middle" fill="white" font-weight="bold">片段着色器</text>
+                            
+                            <rect x="700" y="80" width="100" height="40" fill="#3498db" stroke="#2c3e50" stroke-width="2" rx="5"/>
+                            <text x="750" y="105" text-anchor="middle" fill="white" font-weight="bold">颜色混合</text>
+                            
+                            <path d="M150 100 L180 100" stroke="#2c3e50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                            <path d="M280 100 L310 100" stroke="#2c3e50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                            <path d="M410 100 L440 100" stroke="#2c3e50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                            <path d="M540 100 L570 100" stroke="#2c3e50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                            <path d="M670 100 L700 100" stroke="#2c3e50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                            
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#2c3e50"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                    
+                    <p>Vulkan渲染管线的执行顺序如下：顶点输入阶段接收来自顶点缓冲区的顶点数据，经过输入装配阶段将顶点组织成图元（点、线、三角形等），然后进行视图和裁剪变换，将顶点坐标从物体空间变换到屏幕空间。接下来进入光栅化阶段，将图元转换为片段（像素级数据），经过多重采样处理后，进行深度和模板测试，最后通过颜色混合将片段颜色写入帧缓冲区。</p>
+                    
+                    <div class="note">
+                        <p><strong>注意：</strong>在Vulkan中，渲染管线的创建是一个复杂但高效的过程。开发者需要创建VkGraphicsPipelineCreateInfo结构，其中包含了所有管线阶段的配置信息。这种显式的配置方式虽然增加了代码的复杂性，但提供了极大的灵活性和性能优化空间。</p>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section id="section2" class="chapter">
+            <details>
+                <summary>2. 渲染管线详细解析</summary>
+                <div class="chapter-content">
+                    <div id="section2-1">
+                        <h3>2.1 动态状态（Dynamic State）</h3>
+                        <p>Vulkan的动态状态机制是一项重要特性，它允许开发者将部分管线状态的设置从管线创建阶段延迟到命令缓冲区录制阶段。这种机制为图形编程提供了更大的灵活性，避免为每个微小状态变化创建独立管线。</p>
+                        
+                        <p>动态状态的核心优势体现在三个方面：</p>
+                        <ul>
+                            <li>减少管线对象数量，避免为每个微小状态变化创建独立管线</li>
+                            <li>提供运行时灵活性，可在绘制调用之间动态调整状态</li>
+                            <li>实现资源优化，降低内存占用和管线编译开销</li>
+                        </ul>
+                        
+                        <p>Vulkan支持多种动态状态类型，基本动态状态包括：</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>动态状态类型</th>
+                                    <th>设置命令</th>
+                                    <th>所属阶段</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_VIEWPORT</td>
+                                    <td>vkCmdSetViewport</td>
+                                    <td>光栅化前</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_SCISSOR</td>
+                                    <td>vkCmdSetScissor</td>
+                                    <td>光栅化前</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_LINE_WIDTH</td>
+                                    <td>vkCmdSetLineWidth</td>
+                                    <td>光栅化前</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_DEPTH_BIAS</td>
+                                    <td>vkCmdSetDepthBias</td>
+                                    <td>光栅化前</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_BLEND_CONSTANTS</td>
+                                    <td>vkCmdSetBlendConstants</td>
+                                    <td>片段输出</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_DEPTH_BOUNDS</td>
+                                    <td>vkCmdSetDepthBounds</td>
+                                    <td>片段着色器</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK</td>
+                                    <td>vkCmdSetStencilCompareMask</td>
+                                    <td>片段着色器</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_STENCIL_WRITE_MASK</td>
+                                    <td>vkCmdSetStencilWriteMask</td>
+                                    <td>片段着色器</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_DYNAMIC_STATE_STENCIL_REFERENCE</td>
+                                    <td>vkCmdSetStencilReference</td>
+                                    <td>片段着色器</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p>扩展动态状态通过多个扩展提供，包括VK_EXT_extended_dynamic_state、VK_EXT_extended_dynamic_state2、VK_EXT_extended_dynamic_state3、VK_EXT_vertex_input_dynamic_state、VK_EXT_attachment_feedback_loop_dynamic_state和VK_EXT_color_write_enable等。</p>
+                        
+                        <div class="tip">
+                            <p><strong>提示：</strong>动态状态的设置需要在管线创建时通过VkPipelineDynamicStateCreateInfo结构声明，然后在命令缓冲区录制时使用相应的vkCmdSet*系列命令进行设置。动态状态的生命周期持续到被新值覆盖或命令缓冲区结束，绑定新管线不会自动清除之前设置的动态状态值。</p>
+                        </div>
+                        
+                        <div class="warning">
+                            <p><strong>注意：</strong>虽然动态状态减少了管线对象数量，但某些硬件实现可能存在轻微性能开销。因此建议采用批量设置策略，尽可能在连续绘制调用前集中设置动态状态，并将频繁变化的状态设为动态，不常变化的保持静态。</p>
+                        </div>
+                    </div>
+                    
+                    <div id="section2-2">
+                        <h3>2.2 顶点输入（Vertex Input）</h3>
+                        <p>顶点输入阶段负责将顶点数据从内存中读取并传递给顶点着色器。这个阶段通过两个核心结构来配置：VkVertexInputBindingDescription和VkVertexInputAttributeDescription。</p>
+                        
+                        <p>VkVertexInputBindingDescription描述了顶点数据的绑定信息：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkVertexInputBindingDescription bindingDescription{};
+bindingDescription.binding = 0; // 绑定索引
+bindingDescription.stride = sizeof(Vertex); // 步长
+bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX; // 输入速率</code></pre>
+                        </div>
+                        
+                        <p>其中，<span class="highlight">binding</span>参数指定绑定索引，<span class="highlight">stride</span>参数指定两个连续顶点之间的字节距离，<span class="highlight">inputRate</span>参数可以是VK_VERTEX_INPUT_RATE_VERTEX（逐顶点）或VK_VERTEX_INPUT_RATE_INSTANCE（逐实例）。</p>
+                        
+                        <p>VkVertexInputAttributeDescription描述了如何从绑定的顶点数据中提取特定的顶点属性：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>std::array&lt;VkVertexInputAttributeDescription, 2&gt; attributeDescriptions{};
+
+// 位置属性
+attributeDescriptions[0].binding = 0;
+attributeDescriptions[0].location = 0;
+attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+// 颜色属性
+attributeDescriptions[1].binding = 0;
+attributeDescriptions[1].location = 1;
+attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+attributeDescriptions[1].offset = offsetof(Vertex, color);</code></pre>
+                        </div>
+                        
+                        <p>其中，<span class="highlight">binding</span>参数指定从哪个绑定读取数据，<span class="highlight">location</span>参数与顶点着色器中的<span class="highlight">layout(location = x)</span>装饰器对应，<span class="highlight">format</span>参数指定数据格式，<span class="highlight">offset</span>参数指定属性在顶点结构中的偏移量。</p>
+                        
+                        <p>顶点缓冲区的创建需要使用VkBufferCreateInfo结构：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkBufferCreateInfo bufferInfo{};
+bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+bufferInfo.size = sizeof(vertices[0]) * vertices.size();
+bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+vkCreateBuffer(device, &bufferInfo, nullptr, &vertexBuffer);</code></pre>
+                        </div>
+                        
+                        <p>然后需要为缓冲区分配内存并绑定：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkMemoryRequirements memRequirements;
+vkGetBufferMemoryRequirements(device, vertexBuffer, &memRequirements);
+
+VkMemoryAllocateInfo allocInfo{};
+allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+allocInfo.allocationSize = memRequirements.size;
+allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, 
+    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+vkAllocateMemory(device, &allocInfo, nullptr, &vertexBufferMemory);
+vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">findMemoryType</span>函数用于找到满足要求的内存类型。</p>
+                        
+                        <p>最后在渲染时使用vkCmdBindVertexBuffers命令绑定顶点缓冲区：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, offsets);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">offsets</span>参数通常为0，表示从缓冲区起始位置开始读取。</p>
+                    </div>
+                    
+                    <div id="section2-3">
+                        <h3>2.3 输入装配（Input Assembly）</h3>
+                        <p>输入装配阶段负责将顶点数据组织成图元。这个阶段通过VkPipelineInputAssemblyStateCreateInfo结构配置，主要包含两个参数：图元拓扑类型（topology）和图元重启启用状态（primitiveRestartEnable）。</p>
+                        
+                        <p>图元拓扑类型定义了如何将连续的顶点组织成图元：</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>拓扑类型</th>
+                                    <th>描述</th>
+                                    <th>图元组织方式</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VK_PRIMITIVE_TOPOLOGY_POINT_LIST</td>
+                                    <td>点列表</td>
+                                    <td>每个顶点定义一个独立点</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_PRIMITIVE_TOPOLOGY_LINE_LIST</td>
+                                    <td>线列表</td>
+                                    <td>每对顶点定义一条独立线</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_PRIMITIVE_TOPOLOGY_LINE_STRIP</td>
+                                    <td>线带</td>
+                                    <td>连续顶点连接成线</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST</td>
+                                    <td>三角形列表</td>
+                                    <td>每三个顶点定义一个独立三角形</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP</td>
+                                    <td>三角形带</td>
+                                    <td>连续顶点连接成三角形序列</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN</td>
+                                    <td>三角形扇</td>
+                                    <td>所有三角形共享一个公共顶点</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p>图元重启功能允许使用特殊的顶点索引值（0xFFFFFFFF对于32位索引）来重启图元装配，这在绘制不连续的几何图形时非常有用。图元重启仅适用于索引绘制命令（vkCmdDrawIndexed系列），并且不能用于"列表"拓扑类型，除非启用了相应的功能特性。</p>
+                        
+                        <p>输入装配状态的创建示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
+inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+inputAssembly.primitiveRestartEnable = VK_FALSE;</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div id="section2-4">
+                        <h3>2.4 视图和裁剪（Viewport and Scissor）</h3>
+                        <p>视图和裁剪阶段负责将顶点坐标从齐次裁剪空间变换到屏幕空间，并进行裁剪测试。这个阶段通过VkPipelineViewportStateCreateInfo结构配置。</p>
+                        
+                        <p>视口（Viewport）定义了将裁剪空间映射到帧缓冲区的矩形区域：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkViewport viewport{};
+viewport.x = 0.0f;
+viewport.y = 0.0f;
+viewport.width = (float)swapChainExtent.width;
+viewport.height = (float)swapChainExtent.height;
+viewport.minDepth = 0.0f;
+viewport.maxDepth = 1.0f;</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">x</span>和<span class="highlight">y</span>指定视口在帧缓冲区中的位置，<span class="highlight">width</span>和<span class="highlight">height</span>指定视口尺寸，<span class="highlight">minDepth</span>和<span class="highlight">maxDepth</span>指定深度范围。</p>
+                        
+                        <p>裁剪矩形（Scissor）定义了渲染操作的有效区域：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkRect2D scissor{};
+scissor.offset = {0, 0};
+scissor.extent = swapChainExtent;</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">offset</span>指定矩形左上角在视口中的位置，<span class="highlight">extent</span>指定矩形尺寸。</p>
+                        
+                        <p>视口状态创建信息的配置：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineViewportStateCreateInfo viewportState{};
+viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+viewportState.viewportCount = 1;
+viewportState.pViewports = &viewport;
+viewportState.scissorCount = 1;
+viewportState.pScissors = &scissor;</code></pre>
+                        </div>
+                        
+                        <p>Vulkan支持多视口和多裁剪矩形，允许为不同的视口设置不同的变换和裁剪区域。视口变换将齐次坐标(x, y, z, w)变换为屏幕坐标，而裁剪测试则确保只有在裁剪矩形内的片段才会被处理。</p>
+                    </div>
+                    
+                    <div id="section2-5">
+                        <h3>2.5 光栅化器（Rasterizer）</h3>
+                        <p>光栅化阶段负责将图元转换为片段（Fragment）。这个阶段通过VkPipelineRasterizationStateCreateInfo结构配置，主要参数包括：深度钳制（depthClampEnable）、剔除模式（cullMode）、多边形模式（polygonMode）、正面朝向（frontFace）、深度偏移（depthBias）和线宽（lineWidth）。</p>
+                        
+                        <p>多边形模式定义了如何生成片段：</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>模式</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VK_POLYGON_MODE_FILL</td>
+                                    <td>填充多边形</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_POLYGON_MODE_LINE</td>
+                                    <td>线框模式</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_POLYGON_MODE_POINT</td>
+                                    <td>点模式</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p>剔除模式控制是否剔除某些面：</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>模式</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VK_CULL_MODE_NONE</td>
+                                    <td>不剔除</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_CULL_MODE_FRONT_BIT</td>
+                                    <td>剔除正面</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_CULL_MODE_BACK_BIT</td>
+                                    <td>剔除背面</td>
+                                </tr>
+                                <tr>
+                                    <td>VK_CULL_MODE_FRONT_AND_BACK</td>
+                                    <td>剔除所有面</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p>正面朝向指定了顺时针（VK_FRONT_FACE_CLOCKWISE）或逆时针（VK_FRONT_FACE_COUNTERCLOCKWISE）顶点顺序的三角形被认为是正面。</p>
+                        
+                        <p>深度偏移功能用于解决Z-fighting问题，通过vkCmdSetDepthBias命令可以动态设置深度偏移参数。线宽通过vkCmdSetLineWidth命令设置，Vulkan规范要求所有实现至少支持1.0的线宽。</p>
+                        
+                        <p>光栅化状态创建示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineRasterizationStateCreateInfo rasterizer{};
+rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+rasterizer.depthClampEnable = VK_FALSE;
+rasterizer.rasterizerDiscardEnable = VK_FALSE;
+rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+rasterizer.depthBiasEnable = VK_FALSE;
+rasterizer.depthBiasConstantFactor = 0.0f;
+rasterizer.depthBiasClamp = 0.0f;
+rasterizer.depthBiasSlopeFactor = 0.0f;
+rasterizer.lineWidth = 1.0f;</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div id="section2-6">
+                        <h3>2.6 多重采样（Multisampling）</h3>
+                        <p>多重采样抗锯齿（MSAA）是一种通过在每个像素内使用多个采样点来改善图像质量的技术。在Vulkan中，多重采样通过VkPipelineMultisampleStateCreateInfo结构配置。</p>
+                        
+                        <p>VkPipelineMultisampleStateCreateInfo的主要参数：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineMultisampleStateCreateInfo multisampling{};
+multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+multisampling.sampleShadingEnable = VK_FALSE;
+multisampling.rasterizationSamples = VK_SAMPLE_COUNT_4_BIT;
+multisampling.minSampleShading = 1.0f;
+multisampling.pSampleMask = nullptr;
+multisampling.alphaToCoverageEnable = VK_FALSE;
+multisampling.alphaToOneEnable = VK_FALSE;</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">rasterizationSamples</span>指定采样数量，常见值包括VK_SAMPLE_COUNT_2_BIT、VK_SAMPLE_COUNT_4_BIT、VK_SAMPLE_COUNT_8_BIT等。</p>
+                        
+                        <p>多重采样的工作原理是在每个像素内使用多个采样点进行渲染，然后通过解析（Resolve）操作将多个采样点的结果合并为最终的像素颜色。启用多重采样需要创建支持多采样的图像，并在渲染通道中配置相应的附件。</p>
+                        
+                        <p>采样着色（Sample Shading）是一个可选特性，通过启用<span class="highlight">sampleShadingEnable</span>并设置<span class="highlight">minSampleShading</span>可以进一步改善图像质量，特别是在处理纹理锯齿时效果明显。</p>
+                    </div>
+                    
+                    <div id="section2-7">
+                        <h3>2.7 深度和模板测试（Depth and Stencil Test）</h3>
+                        <p>深度测试和模板测试用于控制片段的可见性和选择性渲染。这个阶段通过VkPipelineDepthStencilStateCreateInfo结构配置。</p>
+                        
+                        <p>深度测试相关参数：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineDepthStencilStateCreateInfo depthStencil{};
+depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+depthStencil.depthTestEnable = VK_TRUE;
+depthStencil.depthWriteEnable = VK_TRUE;
+depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+depthStencil.depthBoundsTestEnable = VK_FALSE;
+depthStencil.minDepthBounds = 0.0f;
+depthStencil.maxDepthBounds = 1.0f;</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">depthTestEnable</span>控制是否启用深度测试，<span class="highlight">depthWriteEnable</span>控制是否写入深度缓冲区，<span class="highlight">depthCompareOp</span>指定比较操作（如VK_COMPARE_OP_LESS表示新片段深度小于现有深度时通过测试）。</p>
+                        
+                        <p>模板测试相关参数通过VkStencilOpState结构配置，分为正面（front）和背面（back）两种情况：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkStencilOpState stencilOp{};
+stencilOp.failOp = VK_STENCIL_OP_KEEP;
+stencilOp.passOp = VK_STENCIL_OP_KEEP;
+stencilOp.depthFailOp = VK_STENCIL_OP_KEEP;
+stencilOp.compareOp = VK_COMPARE_OP_ALWAYS;
+stencilOp.compareMask = 0xFF;
+stencilOp.writeMask = 0xFF;
+stencilOp.reference = 0;
+
+depthStencil.front = stencilOp;
+depthStencil.back = stencilOp;</code></pre>
+                        </div>
+                        
+                        <p>模板测试使用模板缓冲区来选择性地通过或拒绝片段。<span class="highlight">compareOp</span>指定比较操作，<span class="highlight">reference</span>是参考值，<span class="highlight">compareMask</span>和<span class="highlight">writeMask</span>分别控制比较和写入的掩码。</p>
+                        
+                        <p>深度缓冲区通常使用以下格式之一：</p>
+                        <ul>
+                            <li>VK_FORMAT_D32_SFLOAT：32位浮点深度</li>
+                            <li>VK_FORMAT_D32_SFLOAT_S8_UINT：32位浮点深度加8位模板</li>
+                            <li>VK_FORMAT_D24_UNORM_S8_UINT：24位无符号规范化深度加8位模板</li>
+                        </ul>
+                        
+                        <p>深度缓冲区的创建需要使用相应的格式，并在渲染通道中配置为深度模板附件。</p>
+                    </div>
+                    
+                    <div id="section2-8">
+                        <h3>2.8 颜色混合（Color Blending）</h3>
+                        <p>颜色混合阶段负责将片段颜色与帧缓冲区中的现有颜色进行混合。这个阶段通过VkPipelineColorBlendStateCreateInfo结构配置，包括全局混合状态和每个附件的混合状态。</p>
+                        
+                        <p>颜色混合的基本公式为：</p>
+                        <p><strong>最终颜色 = (源因子 × 源颜色) 操作 (目标因子 × 目标颜色)</strong></p>
+                        
+                        <p>其中源颜色是片段着色器输出的颜色，目标颜色是帧缓冲区中已有的颜色。</p>
+                        
+                        <p>混合附件状态配置示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+colorBlendAttachment.blendEnable = VK_TRUE;
+colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | 
+    VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;</code></pre>
+                        </div>
+                        
+                        <p>常见的混合因子包括：</p>
+                        <ul>
+                            <li>VK_BLEND_FACTOR_ZERO：零</li>
+                            <li>VK_BLEND_FACTOR_ONE：一</li>
+                            <li>VK_BLEND_FACTOR_SRC_COLOR：源颜色</li>
+                            <li>VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR：一减源颜色</li>
+                            <li>VK_BLEND_FACTOR_SRC_ALPHA：源alpha</li>
+                            <li>VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA：一减源alpha</li>
+                        </ul>
+                        
+                        <p>常见的混合操作包括：</p>
+                        <ul>
+                            <li>VK_BLEND_OP_ADD：加</li>
+                            <li>VK_BLEND_OP_SUBTRACT：减</li>
+                            <li>VK_BLEND_OP_REVERSE_SUBTRACT：反向减</li>
+                            <li>VK_BLEND_OP_MIN：取最小值</li>
+                            <li>VK_BLEND_OP_MAX：取最大值</li>
+                        </ul>
+                        
+                        <p>颜色混合状态创建信息配置：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineColorBlendStateCreateInfo colorBlend{};
+colorBlend.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+colorBlend.logicOpEnable = VK_FALSE;
+colorBlend.logicOp = VK_LOGIC_OP_COPY;
+colorBlend.attachmentCount = 1;
+colorBlend.pAttachments = &colorBlendAttachment;
+colorBlend.blendConstants[0] = 0.0f;
+colorBlend.blendConstants[1] = 0.0f;
+colorBlend.blendConstants[2] = 0.0f;
+colorBlend.blendConstants[3] = 0.0f;</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">blendConstants</span>是全局混合常量，用于某些混合因子模式。</p>
+                    </div>
+                    
+                    <div id="section2-9">
+                        <h3>2.9 管线布局（Pipeline Layout）</h3>
+                        <p>管线布局定义了着色器可以访问的资源（如Uniform缓冲区、纹理、采样器等）的组织结构。管线布局通过VkPipelineLayoutCreateInfo结构创建，需要提供描述符集合布局数组和推送常量范围数组。</p>
+                        
+                        <p>创建管线布局的示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+pipelineLayoutInfo.setLayoutCount = 1; // 描述符集合布局数量
+pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout; // 描述符集合布局数组
+pipelineLayoutInfo.pushConstantRangeCount = 0; // 推送常量范围数量
+pipelineLayoutInfo.pPushConstantRanges = nullptr; // 推送常量范围数组
+
+vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout);</code></pre>
+                        </div>
+                        
+                        <p>描述符集合布局通过VkDescriptorSetLayoutCreateInfo结构创建，定义了每个描述符绑定的类型和属性：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>std::vector&lt;VkDescriptorSetLayoutBinding&gt; bindings = {
+    {
+        .binding = 0,
+        .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+        .descriptorCount = 1,
+        .stageFlags = VK_SHADER_STAGE_VERTEX_BIT,
+        .pImmutableSamplers = nullptr
+    }
+};
+
+VkDescriptorSetLayoutCreateInfo layoutInfo{};
+layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+layoutInfo.bindingCount = static_cast&lt;uint32_t&gt;(bindings.size());
+layoutInfo.pBindings = bindings.data();
+
+vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">binding</span>指定绑定索引，<span class="highlight">descriptorType</span>指定描述符类型（如VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER），<span class="highlight">stageFlags</span>指定着色器阶段，<span class="highlight">descriptorCount</span>指定描述符数量。</p>
+                        
+                        <p>推送常量（Push Constants）是一种可以直接在绘制命令中传递给着色器的数据，不需要通过描述符集合。推送常量范围通过VkPushConstantRange结构定义，指定起始偏移、大小和适用的着色器阶段。</p>
+                    </div>
+                    
+                    <div id="section2-10">
+                        <h3>2.10 渲染通道（Render Pass）</h3>
+                        <p>渲染通道定义了渲染过程中使用的附件（Attachment）、子传递（Subpass）和依赖关系（Dependency）。渲染通道通过VkRenderPassCreateInfo结构创建。</p>
+                        
+                        <p>渲染通道的核心概念包括：</p>
+                        
+                        <p><strong>附件（Attachment）：</strong></p>
+                        
+                        <div class="code-block">
+                            <pre><code>std::array&lt;VkAttachmentDescription, 3&gt; attachments = {
+    {
+        .format = swapChainImageFormat,
+        .samples = VK_SAMPLE_COUNT_1_BIT,
+        .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+        .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+        .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+        .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+        .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+    },
+    {
+        .format = depthFormat,
+        .samples = VK_SAMPLE_COUNT_1_BIT,
+        .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+        .storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+        .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+        .finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+    },
+    {
+        .format = swapChainImageFormat,
+        .samples = VK_SAMPLE_COUNT_4_BIT,
+        .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+        .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+        .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+        .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+        .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+        .finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+    }
+};</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">format</span>指定格式，<span class="highlight">samples</span>指定采样数量，<span class="highlight">loadOp</span>指定加载操作（如VK_ATTACHMENT_LOAD_OP_CLEAR表示清除），<span class="highlight">storeOp</span>指定存储操作，<span class="highlight">initialLayout</span>和<span class="highlight">finalLayout</span>指定初始和最终布局。</p>
+                        
+                        <p><strong>子传递（Subpass）：</strong></p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkSubpassDescription subpass{};
+subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+subpass.colorAttachmentCount = 1;
+subpass.pColorAttachments = &colorAttachmentRef;
+subpass.pDepthStencilAttachment = &depthAttachmentRef;
+subpass.pResolveAttachments = &resolveAttachmentRef;</code></pre>
+                        </div>
+                        
+                        <p>子传递描述了如何使用附件，包括颜色附件、深度模板附件和解析附件的引用。</p>
+                        
+                        <p><strong>依赖关系（Dependency）：</strong></p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkSubpassDependency dependency{};
+dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+dependency.dstSubpass = 0;
+dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+dependency.srcAccessMask = 0;
+dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;</code></pre>
+                        </div>
+                        
+                        <p>依赖关系确保子传递之间的正确执行顺序和内存可见性。<span class="highlight">srcSubpass</span>和<span class="highlight">dstSubpass</span>指定源子传递和目标子传递，<span class="highlight">srcStageMask</span>和<span class="highlight">dstStageMask</span>指定源阶段和目标阶段，<span class="highlight">srcAccessMask</span>和<span class="highlight">dstAccessMask</span>指定源访问掩码和目标访问掩码。</p>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section id="section3" class="chapter">
+            <details>
+                <summary>3. 绘图执行流程</summary>
+                <div class="chapter-content">
+                    <div id="section3-1">
+                        <h3>3.1 帧缓冲区（Framebuffer）</h3>
+                        <p>帧缓冲区将渲染通道的附件与实际的图像资源关联起来。每个帧缓冲区必须与渲染通道兼容，包含渲染通道中所有附件的图像视图。</p>
+                        
+                        <p>创建帧缓冲区的示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>std::vector&lt;VkFramebuffer&gt; swapChainFramebuffers(swapChainImageViews.size());
+
+for (size_t i = 0; i < swapChainImageViews.size(); i++) {
+    std::array&lt;VkImageView, 3&gt; attachments = {
+        colorImageView,    // 颜色附件
+        depthImageView,    // 深度附件
+        swapChainImageViews[i] // 交换链图像视图
+    };
+
+    VkFramebufferCreateInfo framebufferInfo{};
+    framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.renderPass = renderPass;
+    framebufferInfo.attachmentCount = static_cast&lt;uint32_t&gt;(attachments.size());
+    framebufferInfo.pAttachments = attachments.data();
+    framebufferInfo.width = swapChainExtent.width;
+    framebufferInfo.height = swapChainExtent.height;
+    framebufferInfo.layers = 1;
+
+    vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]);
+}</code></pre>
+                        </div>
+                        
+                        <p>帧缓冲区的尺寸必须与渲染通道中定义的附件尺寸匹配。在多采样渲染中，通常需要创建一个多采样颜色附件和一个解析目标附件，然后在渲染通道中配置解析操作。</p>
+                        
+                        <div class="warning">
+                            <p><strong>注意：</strong>当窗口大小改变时，需要重新创建交换链和相关的帧缓冲区。在重新创建之前，必须等待设备空闲并销毁旧的帧缓冲区和相关资源。</p>
+                        </div>
+                    </div>
+                    
+                    <div id="section3-2">
+                        <h3>3.2 命令池和命令缓冲区（Command Pool and Buffer）</h3>
+                        <p>命令池用于管理命令缓冲区的分配和重置。命令池与特定的队列族相关联，通过VkCommandPoolCreateInfo结构创建。</p>
+                        
+                        <p>创建命令池的示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkCommandPoolCreateInfo poolInfo{};
+poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+poolInfo.queueFamilyIndex = graphicsQueueFamily;
+
+vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">flags</span>可以设置为VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT（允许重置命令缓冲区）或VK_COMMAND_POOL_CREATE_TRANSIENT_BIT（暗示命令缓冲区是临时的），<span class="highlight">queueFamilyIndex</span>指定队列族索引。</p>
+                        
+                        <p>命令缓冲区通过vkAllocateCommandBuffers函数从命令池中分配：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>std::vector&lt;VkCommandBuffer&gt; commandBuffers(swapChainFramebuffers.size());
+
+VkCommandBufferAllocateInfo allocInfo{};
+allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+allocInfo.commandPool = commandPool;
+allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+allocInfo.commandBufferCount = static_cast&lt;uint32_t&gt;(commandBuffers.size());
+
+vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data());</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">level</span>可以是VK_COMMAND_BUFFER_LEVEL_PRIMARY（主命令缓冲区）或VK_COMMAND_BUFFER_LEVEL_SECONDARY（二级命令缓冲区）。主命令缓冲区可以直接提交到队列执行，二级命令缓冲区需要在主命令缓冲区中通过vkCmdExecuteCommands执行。</p>
+                        
+                        <p>命令缓冲区的录制过程包括：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkCommandBufferBeginInfo beginInfo{};
+beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+beginInfo.pInheritanceInfo = nullptr;
+
+vkBeginCommandBuffer(commandBuffers[i], &beginInfo);
+
+// 录制命令...
+
+vkEndCommandBuffer(commandBuffers[i]);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">flags</span>可以设置为VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT（单次提交）、VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT（渲染通道继续）等。</p>
+                    </div>
+                    
+                    <div id="section3-3">
+                        <h3>3.3 启动渲染通道（Begin Render Pass）</h3>
+                        <p>启动渲染通道是开始渲染过程的关键步骤，通过vkCmdBeginRenderPass命令实现。这个命令需要指定渲染通道、帧缓冲区、渲染区域和清除值。</p>
+                        
+                        <p>启动渲染通道的示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkRenderPassBeginInfo renderPassInfo{};
+renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+renderPassInfo.renderPass = renderPass;
+renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
+renderPassInfo.renderArea.offset = {0, 0};
+renderPassInfo.renderArea.extent = swapChainExtent;
+
+std::array&lt;VkClearValue, 2&gt; clearValues = {
+    {{0.0f, 0.0f, 0.0f, 1.0f}}, // 颜色清除值
+    {{1.0f, 0}} // 深度模板清除值
+};
+
+renderPassInfo.clearValueCount = static_cast&lt;uint32_t&gt;(clearValues.size());
+renderPassInfo.pClearValues = clearValues.data();
+
+vkCmdBeginRenderPass(commandBuffers[currentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">renderArea</span>指定渲染区域，<span class="highlight">clearValues</span>指定清除值数组。清除值的数量和顺序必须与渲染通道中定义的附件顺序匹配。</p>
+                        
+                        <p><span class="highlight">VK_SUBPASS_CONTENTS_INLINE</span>表示渲染命令直接记录在主命令缓冲区中，<span class="highlight">VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS</span>表示使用二级命令缓冲区。在简单场景中通常使用内联模式。</p>
+                    </div>
+                    
+                    <div id="section3-4">
+                        <h3>3.4 基本绘图命令（Draw Commands）</h3>
+                        <p>Vulkan提供了多种绘图命令，最基本的是vkCmdDraw（无索引绘制）和vkCmdDrawIndexed（索引绘制）。这些命令需要在渲染通道开始后、渲染通道结束前调用。</p>
+                        
+                        <p>无索引绘制示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">vertexCount</span>指定顶点数量，<span class="highlight">instanceCount</span>指定实例数量，<span class="highlight">firstVertex</span>指定第一个顶点的索引，<span class="highlight">firstInstance</span>指定第一个实例的索引。</p>
+                        
+                        <p>索引绘制示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">indexCount</span>指定索引数量，<span class="highlight">firstIndex</span>指定第一个索引的偏移，<span class="highlight">vertexOffset</span>指定顶点偏移量。</p>
+                        
+                        <p>其他绘图命令包括：</p>
+                        <ul>
+                            <li>vkCmdDrawIndirect：间接绘制，从缓冲区中读取绘制参数</li>
+                            <li>vkCmdDrawIndexedIndirect：间接索引绘制</li>
+                            <li>vkCmdDrawMeshTasksNV：网格着色任务绘制（需要扩展）</li>
+                            <li>vkCmdDrawMeshTasksIndirectNV：间接网格着色任务绘制</li>
+                        </ul>
+                        
+                        <p>在调用绘图命令之前，必须确保已经绑定了正确的管线、顶点缓冲区和索引缓冲区（如果使用索引绘制）。绘制命令会自动使用当前绑定的管线状态和资源。</p>
+                    </div>
+                    
+                    <div id="section3-5">
+                        <h3>3.5 同步机制（Synchronization）</h3>
+                        <p>Vulkan的同步机制包括信号量（Semaphore）、栅栏（Fence）和事件（Event）等。这些对象用于控制不同队列之间的执行顺序和内存可见性。</p>
+                        
+                        <p><strong>信号量（Semaphore）</strong>用于同步不同队列的操作，例如图像可用性信号量和渲染完成信号量：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>std::vector&lt;VkSemaphore&gt; imageAvailableSemaphores(MAX_FRAMES_IN_FLIGHT);
+std::vector&lt;VkSemaphore&gt; renderFinishedSemaphores(MAX_FRAMES_IN_FLIGHT);
+
+VkSemaphoreCreateInfo semaphoreInfo{};
+semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+    vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]);
+    vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]);
+}</code></pre>
+                        </div>
+                        
+                        <p>信号量通常在队列提交时使用，通过VkSubmitInfo结构指定等待和发出的信号量。</p>
+                        
+                        <p><strong>栅栏（Fence）</strong>用于等待特定操作完成：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>std::vector&lt;VkFence&gt; inFlightFences(MAX_FRAMES_IN_FLIGHT);
+std::vector&lt;bool&gt; framesInFlight(MAX_FRAMES_IN_FLIGHT, false);
+
+VkFenceCreateInfo fenceInfo{};
+fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+    vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]);
+}</code></pre>
+                        </div>
+                        
+                        <p>栅栏可以设置为已发出（VK_FENCE_CREATE_SIGNALED_BIT）或未发出状态。通过vkWaitForFences函数可以等待栅栏发出，通过vkResetFences函数可以重置栅栏。</p>
+                        
+                        <p><strong>等待操作</strong>通过vkCmdWaitSemaphore和vkWaitForFences等函数实现。在队列提交时，可以通过VkSubmitInfo指定等待的信号量和相关的管线阶段：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkSubmitInfo submitInfo{};
+submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+submitInfo.waitSemaphoreCount = 1;
+submitInfo.pWaitSemaphores = &imageAvailableSemaphores[currentFrame];
+submitInfo.pWaitDstStageMask = &waitStages;
+submitInfo.commandBufferCount = 1;
+submitInfo.pCommandBuffers = &commandBuffers[currentFrame];
+submitInfo.signalSemaphoreCount = 1;
+submitInfo.pSignalSemaphores = &renderFinishedSemaphores[currentFrame];
+
+vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">waitStages</span>指定等待的管线阶段（如VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT），确保在信号量等待期间相关的内存访问已经完成。</p>
+                    </div>
+                    
+                    <div id="section3-6">
+                        <h3>3.6 交换链管理（Swap Chain Management）</h3>
+                        <p>交换链用于管理窗口系统的图像呈现。交换链通过VkSwapchainCreateInfoKHR结构创建，需要指定表面、图像格式、图像数量等参数。</p>
+                        
+                        <p>创建交换链的示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkSwapchainCreateInfoKHR swapChainInfo{};
+swapChainInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+swapChainInfo.surface = surface;
+swapChainInfo.minImageCount = swapChainMinImageCount;
+swapChainInfo.imageFormat = surfaceFormat.format;
+swapChainInfo.imageColorSpace = surfaceFormat.colorSpace;
+swapChainInfo.imageExtent = swapChainExtent;
+swapChainInfo.imageArrayLayers = 1;
+swapChainInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+if (indices.graphicsFamily != indices.presentFamily) {
+    swapChainInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+    swapChainInfo.queueFamilyIndexCount = 2;
+    swapChainInfo.pQueueFamilyIndices = queueFamilyIndices;
+} else {
+    swapChainInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    swapChainInfo.queueFamilyIndexCount = 0;
+    swapChainInfo.pQueueFamilyIndices = nullptr;
+}
+
+swapChainInfo.preTransform = surfaceCapabilities.currentTransform;
+swapChainInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+swapChainInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+swapChainInfo.clipped = VK_TRUE;
+swapChainInfo.oldSwapchain = VK_NULL_HANDLE;
+
+vkCreateSwapchainKHR(device, &swapChainInfo, nullptr, &swapChain);</code></pre>
+                        </div>
+                        
+                        <p>从交换链获取图像使用vkAcquireNextImageKHR函数：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>uint32_t imageIndex;
+VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, 
+    imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">UINT64_MAX</span>表示无限等待，<span class="highlight">imageAvailableSemaphores[currentFrame]</span>用于同步图像可用性。</p>
+                        
+                        <p>呈现图像使用vkQueuePresentKHR函数：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkPresentInfoKHR presentInfo{};
+presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+presentInfo.waitSemaphoreCount = 1;
+presentInfo.pWaitSemaphores = &renderFinishedSemaphores[currentFrame];
+presentInfo.swapchainCount = 1;
+presentInfo.pSwapchains = &swapChain;
+presentInfo.pImageIndices = &imageIndex;
+presentInfo.pResults = nullptr;
+
+vkQueuePresentKHR(presentQueue, &presentInfo);</code></pre>
+                        </div>
+                        
+                        <p>呈现操作会自动处理图像所有权的转移，并在适当的时候触发屏幕更新。</p>
+                    </div>
+                    
+                    <div id="section3-7">
+                        <h3>3.7 子传递依赖项（Subpass Dependencies）</h3>
+                        <p>子传递依赖项定义了渲染通道中不同子传递之间的执行顺序和内存访问规则。正确设置子传递依赖项对于确保渲染结果的正确性至关重要。</p>
+                        
+                        <p>子传递依赖通过VkSubpassDependency结构定义：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>VkSubpassDependency dependency{};
+dependency.srcSubpass = previousSubpass;
+dependency.dstSubpass = currentSubpass;
+dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+dependency.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+dependency.dependencyFlags = 0;</code></pre>
+                        </div>
+                        
+                        <p>其中<span class="highlight">srcSubpass</span>和<span class="highlight">dstSubpass</span>指定源子传递和目标子传递，可以是VK_SUBPASS_EXTERNAL表示外部（渲染通道开始前或结束后）。</p>
+                        
+                        <p><strong>阶段掩码（Stage Mask）</strong>指定影响依赖关系的管线阶段，常用值包括：</p>
+                        <ul>
+                            <li>VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT：管线顶部</li>
+                            <li>VK_PIPELINE_STAGE_VERTEX_INPUT_BIT：顶点输入</li>
+                            <li>VK_PIPELINE_STAGE_VERTEX_SHADER_BIT：顶点着色器</li>
+                            <li>VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT：片段着色器</li>
+                            <li>VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT：颜色附件输出</li>
+                            <li>VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT：早期片段测试</li>
+                            <li>VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT：晚期片段测试</li>
+                        </ul>
+                        
+                        <p><strong>访问掩码（Access Mask）</strong>指定内存访问类型，常用值包括：</p>
+                        <ul>
+                            <li>VK_ACCESS_INDIRECT_COMMAND_READ_BIT：间接命令读取</li>
+                            <li>VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT：顶点属性读取</li>
+                            <li>VK_ACCESS_UNIFORM_READ_BIT：Uniform读取</li>
+                            <li>VK_ACCESS_STORAGE_BUFFER_READ_BIT：存储缓冲区读取</li>
+                            <li>VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT：颜色附件写入</li>
+                            <li>VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT：深度模板附件写入</li>
+                            <li>VK_ACCESS_HOST_WRITE_BIT：主机写入</li>
+                            <li>VK_ACCESS_MEMORY_READ_BIT：内存读取</li>
+                        </ul>
+                        
+                        <p>依赖关系的类型包括：</p>
+                        <ul>
+                            <li>内存依赖：控制内存访问的可见性</li>
+                            <li>执行依赖：控制子传递的执行顺序</li>
+                            <li>内容依赖：控制附件内容的可见性</li>
+                        </ul>
+                        
+                        <p>正确设置子传递依赖关系可以确保：</p>
+                        <ol>
+                            <li>前一个子传递的写入对后一个子传递可见</li>
+                            <li>后一个子传递不会覆盖前一个子传递需要读取的数据</li>
+                            <li>渲染顺序符合预期，避免竞争条件</li>
+                        </ol>
+                        
+                        <p>在多子传递渲染中，依赖关系的设置尤为重要。例如，在延迟渲染中，第一个子传递渲染G-buffer，第二个子传递使用G-buffer数据进行光照计算，这时需要设置适当的依赖关系来确保G-buffer数据的正确访问。</p>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section id="section4" class="chapter">
+            <details>
+                <summary>4. 完整代码示例</summary>
+                <div class="chapter-content">
+                    <div id="section4-1">
+                        <h3>4.1 初始化Vulkan</h3>
+                        <p>以下是一个完整的Vulkan初始化代码示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>#include &lt;vulkan/vulkan.h&gt;
+#include &lt;GLFW/glfw3.h&gt;
+#include &lt;vector&gt;
+#include &lt;stdexcept&gt;
+#include &lt;cstdlib&gt;
+#include &lt;optional&gt;
+
+const uint32_t WIDTH = 800;
+const uint32_t HEIGHT = 600;
+
+class HelloTriangleApplication {
+public:
+    void run() {
+        initWindow();
+        initVulkan();
+        mainLoop();
+        cleanup();
+    }
+
+private:
+    GLFWwindow* window;
+    VkInstance instance;
+    VkSurfaceKHR surface;
+    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+    VkDevice device;
+    VkQueue graphicsQueue;
+    VkQueue presentQueue;
+
+    void initWindow() {
+        glfwInit();
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+    }
+
+    void initVulkan() {
+        createInstance();
+        createSurface();
+        pickPhysicalDevice();
+        createLogicalDevice();
+    }
+
+    // 其他函数实现...
+};</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div id="section4-2">
+                        <h3>4.2 完整渲染流程</h3>
+                        <p>以下是一个完整的Vulkan渲染流程代码示例：</p>
+                        
+                        <div class="code-block">
+                            <pre><code>// 在上一个示例基础上添加以下成员变量
+VkSwapchainKHR swapChain;
+std::vector&lt;VkImage&gt; swapChainImages;
+VkFormat swapChainImageFormat;
+VkExtent2D swapChainExtent;
+std::vector&lt;VkImageView&gt; swapChainImageViews;
+VkRenderPass renderPass;
+VkPipelineLayout pipelineLayout;
+VkPipeline graphicsPipeline;
+std::vector&lt;VkFramebuffer&gt; swapChainFramebuffers;
+VkCommandPool commandPool;
+std::vector&lt;VkCommandBuffer&gt; commandBuffers;
+std::vector&lt;VkSemaphore&gt; imageAvailableSemaphores;
+std::vector&lt;VkSemaphore&gt; renderFinishedSemaphores;
+std::vector&lt;VkFence&gt; inFlightFences;
+const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+size_t currentFrame = 0;
+
+// 在initVulkan()中添加以下调用
+createSwapChain();
+createImageViews();
+createRenderPass();
+createGraphicsPipeline();
+createFramebuffers();
+createCommandPool();
+createCommandBuffers();
+createSyncObjects();
+
+// 创建交换链
+void createSwapChain() {
+    SurfaceCapabilitiesKHR surfaceCapabilities;
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, &surfaceCapabilities);
+
+    SurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(surfaceCapabilities.formats);
+    PresentModeKHR presentMode = chooseSwapPresentMode(surfaceCapabilities.presentModes);
+    swapChainExtent = chooseSwapExtent(surfaceCapabilities.currentExtent);
+
+    uint32_t imageCount = surfaceCapabilities.minImageCount + 1;
+    if (surfaceCapabilities.maxImageCount > 0 && imageCount > surfaceCapabilities.maxImageCount) {
+        imageCount = surfaceCapabilities.maxImageCount;
+    }
+
+    SwapchainCreateInfoKHR swapChainInfo{};
+    swapChainInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    swapChainInfo.surface = surface;
+    swapChainInfo.minImageCount = imageCount;
+    swapChainInfo.imageFormat = surfaceFormat.format;
+    swapChainInfo.imageColorSpace = surfaceFormat.colorSpace;
+    swapChainInfo.imageExtent = swapChainExtent;
+    swapChainInfo.imageArrayLayers = 1;
+    swapChainInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+    QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+    uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+    if (indices.graphicsFamily != indices.presentFamily) {
+        swapChainInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        swapChainInfo.queueFamilyIndexCount = 2;
+        swapChainInfo.pQueueFamilyIndices = queueFamilyIndices;
+    } else {
+        swapChainInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    }
+
+    swapChainInfo.preTransform = surfaceCapabilities.currentTransform;
+    swapChainInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    swapChainInfo.presentMode = presentMode;
+    swapChainInfo.clipped = VK_TRUE;
+    swapChainInfo.oldSwapchain = VK_NULL_HANDLE;
+
+    if (vkCreateSwapchainKHR(device, &swapChainInfo, nullptr, &swapChain) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create swap chain!");
+    }
+
+    vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
+    swapChainImages.resize(imageCount);
+    vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
+    swapChainImageFormat = surfaceFormat.format;
+}
+
+// 创建图像视图
+void createImageViews() {
+    swapChainImageViews.resize(swapChainImages.size());
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        ImageViewCreateInfo viewInfo{};
+        viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        viewInfo.image = swapChainImages[i];
+        viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        viewInfo.format = swapChainImageFormat;
+        viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        viewInfo.subresourceRange.baseMipLevel = 0;
+        viewInfo.subresourceRange.levelCount = 1;
+        viewInfo.subresourceRange.baseArrayLayer = 0;
+        viewInfo.subresourceRange.layerCount = 1;
+
+        if (vkCreateImageView(device, &viewInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create image views!");
+        }
+    }
+}
+
+// 创建渲染通道
+void createRenderPass() {
+    std::array&lt;AttachmentDescription, 1&gt; attachments = {
+        {
+            .format = swapChainImageFormat,
+            .samples = VK_SAMPLE_COUNT_1_BIT,
+            .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+            .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+            .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+            .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+            .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+            .finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+        }
+    };
+
+    AttachmentReference colorAttachmentRef{};
+    colorAttachmentRef.attachment = 0;
+    colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+    SubpassDescription subpass{};
+    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpass.colorAttachmentCount = 1;
+    subpass.pColorAttachments = &colorAttachmentRef;
+
+    std::array&lt;SubpassDependency, 1&gt; dependencies = {
+        {
+            .srcSubpass = VK_SUBPASS_EXTERNAL,
+            .dstSubpass = 0,
+            .srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .srcAccessMask = 0,
+            .dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
+        }
+    };
+
+    RenderPassCreateInfo renderPassInfo{};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.attachmentCount = static_cast&lt;uint32_t&gt;(attachments.size());
+    renderPassInfo.pAttachments = attachments.data();
+    renderPassInfo.subpassCount = 1;
+    renderPassInfo.pSubpasses = &subpass;
+    renderPassInfo.dependencyCount = static_cast&lt;uint32_t&gt;(dependencies.size());
+    renderPassInfo.pDependencies = dependencies.data();
+
+    if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create render pass!");
+    }
+}
+
+// 创建图形管线
+void createGraphicsPipeline() {
+    ShaderModule vertShaderModule = createShaderModule("shaders/vert.spv");
+    ShaderModule fragShaderModule = createShaderModule("shaders/frag.spv");
+
+    std::array&lt;PipelineShaderStageCreateInfo, 2&gt; shaderStages = {
+        {
+            {
+                .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                .stage = VK_SHADER_STAGE_VERTEX_BIT,
+                .module = vertShaderModule,
+                .pName = "main"
+            },
+            {
+                .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                .stage = VK_SHADER_STAGE_FRAGMENT_BIT,
+                .module = fragShaderModule,
+                .pName = "main"
+            }
+        }
+    };
+
+    PipelineVertexInputStateCreateInfo vertexInputInfo{};
+    vertexInputInfo.vertexBindingDescriptionCount = 0;
+    vertexInputInfo.vertexAttributeDescriptionCount = 0;
+
+    PipelineInputAssemblyStateCreateInfo inputAssembly{};
+    inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    inputAssembly.primitiveRestartEnable = VK_FALSE;
+
+    Viewport viewport{};
+    viewport.x = 0.0f;
+    viewport.y = 0.0f;
+    viewport.width = (float)swapChainExtent.width;
+    viewport.height = (float)swapChainExtent.height;
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+
+    Rect2D scissor{};
+    scissor.offset = {0, 0};
+    scissor.extent = swapChainExtent;
+
+    PipelineViewportStateCreateInfo viewportState{};
+    viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+    viewportState.viewportCount = 1;
+    viewportState.pViewports = &viewport;
+    viewportState.scissorCount = 1;
+    viewportState.pScissors = &scissor;
+
+    PipelineRasterizationStateCreateInfo rasterizer{};
+    rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    rasterizer.depthClampEnable = VK_FALSE;
+    rasterizer.rasterizerDiscardEnable = VK_FALSE;
+    rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+    rasterizer.depthBiasEnable = VK_FALSE;
+    rasterizer.depthBiasConstantFactor = 0.0f;
+    rasterizer.depthBiasClamp = 0.0f;
+    rasterizer.depthBiasSlopeFactor = 0.0f;
+    rasterizer.lineWidth = 1.0f;
+
+    PipelineMultisampleStateCreateInfo multisampling{};
+    multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+    multisampling.sampleShadingEnable = VK_FALSE;
+    multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+    multisampling.minSampleShading = 1.0f;
+    multisampling.pSampleMask = nullptr;
+    multisampling.alphaToCoverageEnable = VK_FALSE;
+    multisampling.alphaToOneEnable = VK_FALSE;
+
+    PipelineColorBlendAttachmentState colorBlendAttachment{};
+    colorBlendAttachment.blendEnable = VK_FALSE;
+    colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+    colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+    colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+    colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | 
+        VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+
+    PipelineColorBlendStateCreateInfo colorBlend{};
+    colorBlend.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+    colorBlend.logicOpEnable = VK_FALSE;
+    colorBlend.logicOp = VK_LOGIC_OP_COPY;
+    colorBlend.attachmentCount = 1;
+    colorBlend.pAttachments = &colorBlendAttachment;
+    colorBlend.blendConstants[0] = 0.0f;
+    colorBlend.blendConstants[1] = 0.0f;
+    colorBlend.blendConstants[2] = 0.0f;
+    colorBlend.blendConstants[3] = 0.0f;
+
+    PipelineLayoutCreateInfo pipelineLayoutInfo{};
+    pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineLayoutInfo.setLayoutCount = 0;
+    pipelineLayoutInfo.pSetLayouts = nullptr;
+    pipelineLayoutInfo.pushConstantRangeCount = 0;
+    pipelineLayoutInfo.pPushConstantRanges = nullptr;
+
+    if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create pipeline layout!");
+    }
+
+    GraphicsPipelineCreateInfo pipelineInfo{};
+    pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+    pipelineInfo.stageCount = static_cast&lt;uint32_t&gt;(shaderStages.size());
+    pipelineInfo.pStages = shaderStages.data();
+    pipelineInfo.pVertexInputState = &vertexInputInfo;
+    pipelineInfo.pInputAssemblyState = &inputAssembly;
+    pipelineInfo.pViewportState = &viewportState;
+    pipelineInfo.pRasterizationState = &rasterizer;
+    pipelineInfo.pMultisampleState = &multisampling;
+    pipelineInfo.pColorBlendState = &colorBlend;
+    pipelineInfo.layout = pipelineLayout;
+    pipelineInfo.renderPass = renderPass;
+    pipelineInfo.subpass = 0;
+    pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+    pipelineInfo.basePipelineIndex = -1;
+
+    if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create graphics pipeline!");
+    }
+
+    vkDestroyShaderModule(device, vertShaderModule, nullptr);
+    vkDestroyShaderModule(device, fragShaderModule, nullptr);
+}
+
+// 创建帧缓冲区
+void createFramebuffers() {
+    swapChainFramebuffers.resize(swapChainImageViews.size());
+    for (size_t i = 0; i < swapChainImageViews.size(); i++) {
+        std::array&lt;ImageView, 1&gt; attachments = { swapChainImageViews[i] };
+
+        FramebufferCreateInfo framebufferInfo{};
+        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        framebufferInfo.renderPass = renderPass;
+        framebufferInfo.attachmentCount = static_cast&lt;uint32_t&gt;(attachments.size());
+        framebufferInfo.pAttachments = attachments.data();
+        framebufferInfo.width = swapChainExtent.width;
+        framebufferInfo.height = swapChainExtent.height;
+        framebufferInfo.layers = 1;
+
+        if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create framebuffer!");
+        }
+    }
+}
+
+// 创建命令池
+void createCommandPool() {
+    QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+
+    CommandPoolCreateInfo poolInfo{};
+    poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    poolInfo.queueFamilyIndex = indices.graphicsFamily.value();
+
+    if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create command pool!");
+    }
+}
+
+// 创建命令缓冲区
+void createCommandBuffers() {
+    CommandBufferAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool = commandPool;
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandBufferCount = static_cast&lt;uint32_t&gt;(swapChainFramebuffers.size());
+
+    commandBuffers.resize(swapChainFramebuffers.size());
+    if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate command buffers!");
+    }
+
+    for (size_t i = 0; i < swapChainFramebuffers.size(); i++) {
+        CommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+
+        if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+            throw std::runtime_error("failed to begin recording command buffer!");
+        }
+
+        RenderPassBeginInfo renderPassInfo{};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.renderPass = renderPass;
+        renderPassInfo.framebuffer = swapChainFramebuffers[i];
+        renderPassInfo.renderArea.offset = {0, 0};
+        renderPassInfo.renderArea.extent = swapChainExtent;
+
+        std::array&lt;ClearValue, 1&gt; clearValues = {
+            {{0.0f, 0.0f, 0.0f, 1.0f}}
+        };
+        renderPassInfo.clearValueCount = static_cast&lt;uint32_t&gt;(clearValues.size());
+        renderPassInfo.pClearValues = clearValues.data();
+
+        vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+
+        // 顶点数据
+        const std::vector&lt;glm::vec3&gt; vertices = {
+            {0.0f, -0.5f, 0.0f},
+            {0.5f, 0.5f, 0.0f},
+            {-0.5f, 0.5f, 0.0f}
+        };
+
+        VkBuffer vertexBuffer;
+        VkDeviceMemory vertexBufferMemory;
+        createVertexBuffer(vertices, vertexBuffer, vertexBufferMemory);
+
+        VkBuffer vertexBuffers[] = {vertexBuffer};
+        VkDeviceSize offsets[] = {0};
+        vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+
+        vkCmdDraw(commandBuffers[i], static_cast&lt;uint32_t&gt;(vertices.size()), 1, 0);</code></pre>
+                        </div>
+                        
+                        <p>完整的渲染流程包括：</p>
+                        <ol>
+                            <li>创建交换链</li>
+                            <li>创建图像视图</li>
+                            <li>创建渲染通道</li>
+                            <li>创建图形管线</li>
+                            <li>创建帧缓冲区</li>
+                            <li>创建命令池和命令缓冲区</li>
+                            <li>创建同步对象</li>
+                            <li>渲染循环</li>
+                        </ol>
+                    </div>
+                </div>
+            </details>
+        </section>
+    </div>
+
+    <footer>
+        <p>Vulkan完整绘制流程详解 &copy; 2023</p>
+        <p>本文档提供了Vulkan图形API的完整绘制流程，从管线配置到绘图执行的详细说明。</p>
+    </footer>
+</body>
+</html>
