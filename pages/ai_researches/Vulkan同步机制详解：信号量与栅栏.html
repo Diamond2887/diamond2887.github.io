@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulkan同步机制详解：信号量与栅栏</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: #3949ab;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background-color: #303f9f;
+        }
+        
+        .tab.active {
+            background-color: #283593;
+            border-bottom: 3px solid #5c6bc0;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        h2 {
+            color: #1a237e;
+            margin: 25px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8eaf6;
+        }
+        
+        h3 {
+            color: #283593;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3949ab;
+            padding: 15px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            background-color: #3949ab;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .collapsible {
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .collapsible-header {
+            background-color: #e8eaf6;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        
+        .collapsible-header::after {
+            content: '+';
+            font-size: 1.5rem;
+        }
+        
+        .collapsible.active .collapsible-header::after {
+            content: '-';
+        }
+        
+        .collapsible-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .collapsible.active .collapsible-content {
+            padding: 20px;
+            max-height: 10000px;
+        }
+        
+        .note {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .tip {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            .tab.active {
+                border-bottom: 3px solid #5c6bc0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Vulkan同步机制详解</h1>
+            <div class="subtitle">信号量与栅栏的原理与实践</div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="overview">概述</div>
+            <div class="tab" data-tab="semaphores">信号量详解</div>
+            <div class="tab" data-tab="fences">栅栏详解</div>
+            <div class="tab" data-tab="examples">应用示例</div>
+            <div class="tab" data-tab="optimization">性能优化</div>
+        </div>
+        
+        <div class="tab-content active" id="overview">
+            <h2>1. Vulkan同步机制概述</h2>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">1.1 Vulkan同步设计理念</div>
+                <div class="collapsible-content">
+                    <p>Vulkan作为一款底层图形API，其设计理念强调显式控制和高性能。在Vulkan中，资源访问的同步主要由应用程序负责，命令执行的顺序相对于主机和设备上的其他命令几乎没有隐式保证，需要显式指定。这种显式设计给予开发者最大的控制权，但同时也要求开发者深入理解同步机制的工作原理。</p>
+                    
+                    <p>Vulkan的同步机制建立在执行依赖（Execution Dependencies）和内存依赖（Memory Dependencies）的概念之上。一个操作（Operation）是指在主机、设备或外部实体（如呈现引擎）上执行的任意工作量。同步命令在两个操作集合之间引入显式的执行依赖和内存依赖，这两个操作集合由命令的两个同步作用域（Synchronization Scopes）定义。</p>
+                    
+                    <p>Vulkan提供了五种显式同步机制：栅栏（Fences）、信号量（Semaphores）、事件（Events）、管线屏障（Pipeline Barriers）和渲染通道对象（Render Pass Objects）。每种机制都有其特定的应用场景和优势，共同构成了Vulkan强大而灵活的同步体系。</p>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">1.2 信号量与栅栏在同步体系中的定位</div>
+                <div class="collapsible-content">
+                    <p>在Vulkan的同步体系中，信号量和栅栏扮演着核心角色，但它们解决的问题截然不同。栅栏主要用于CPU与GPU之间的同步，是一种从队列到主机插入依赖关系的同步原语。栅栏有两种状态——已发信号（signaled）和未发信号（unsignaled），可以作为队列提交命令执行的一部分被发信号。</p>
+                    
+                    <p>信号量则主要用于多个队列之间的资源访问控制，是GPU内部的同步机制，不会使CPU阻塞。与管线屏障不同，信号量不直接控制管线阶段或资源访问，而是通过信号（signal）和等待（wait）机制协调不同操作序列的执行顺序。</p>
+                    
+                    <p>从功能定位来看，栅栏是CPU等待GPU完成任务的工具，而信号量是GPU内部不同队列或操作之间协调的机制。这种分工使得Vulkan能够在保持高性能的同时，提供灵活的同步控制能力。</p>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">1.3 多线程多队列架构下的同步需求</div>
+                <div class="collapsible-content">
+                    <p>Vulkan的多线程多队列架构对同步机制提出了特殊需求。在这种架构下，多个队列可以并行执行不同类型的工作（如图形、计算、传输），但这些工作之间可能存在数据依赖关系。例如，计算着色器可能需要等待图形渲染完成后才能读取渲染结果，或者传输队列需要等待计算完成后才能将结果复制到其他内存位置。</p>
+                    
+                    <p>在多线程环境下，CPU线程之间也需要同步来协调对Vulkan对象的访问。例如，一个线程可能负责提交渲染命令，另一个线程负责处理用户输入并更新Uniform缓冲区，这两个线程需要通过同步机制确保数据的一致性。</p>
+                    
+                    <p>Vulkan 1.2引入的时间线信号量（Timeline Semaphore）极大地简化了多队列和多线程环境下的同步问题。时间线信号量是一种状态为单调递增64位整数值的同步原语，支持设备和主机之间使用单一原语进行全向同步。这种设计使得原本需要多个信号量和栅栏组合才能实现的复杂同步场景变得更加简单高效。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="semaphores">
+            <h2>2. 信号量（Semaphore）详解</h2>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">2.1 信号量的基本概念与工作原理</div>
+                <div class="collapsible-content">
+                    <p>信号量是Vulkan中用于不同队列之间或队列与呈现引擎之间同步的机制。从概念上讲，信号量可以看作是一种计数器，用于控制对资源的访问。当一个操作完成时，它可以增加信号量的值（信号操作），而另一个操作在开始之前可以等待这个信号量的值达到一定的条件（等待操作）。</p>
+                    
+                    <p>在Vulkan中，信号量有两种类型：二元信号量（Binary Semaphore）和时间线信号量（Timeline Semaphore）。二元信号量是Vulkan 1.0引入的原始类型，它的信号和等待操作必须以1:1的方式配对出现。当在队列上完成对信号量的等待时，信号量会自动复位为未发信号状态。这种特性在某些场景下会带来限制，特别是在需要实现生产者-消费者模式或更复杂的同步逻辑时。</p>
+                    
+                    <p>时间线信号量是Vulkan 1.2引入的重要特性，它解决了二元信号量的许多痛点。时间线信号量的状态是一个单调递增的64位整数值，支持设备和主机之间使用单一原语进行全向同步，允许等待-前-信号（wait-before-signal）的提交顺序，并且一个信号操作可以对应多个等待操作。</p>
+                    
+                    <p>信号量的工作原理基于执行依赖链的建立。当一个队列操作等待某个信号量时，它会建立一个依赖关系，确保在信号量被发信号之前，该操作不会开始执行。这种依赖关系通过同步作用域来定义，确保只有相关的操作才会受到影响。</p>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">2.2 二元信号量与时间线信号量的对比</div>
+                <div class="collapsible-content">
+                    <table class="comparison-table">
+                        <tr>
+                            <th>特性</th>
+                            <th>二元信号量</th>
+                            <th>时间线信号量</th>
+                        </tr>
+                        <tr>
+                            <td>状态类型</td>
+                            <td>二元状态（signaled/unsignaled）</td>
+                            <td>64位单调递增整数</td>
+                        </tr>
+                        <tr>
+                            <td>信号等待关系</td>
+                            <td>必须1:1配对</td>
+                            <td>一个信号可对应多个等待</td>
+                        </tr>
+                        <tr>
+                            <td>复位机制</td>
+                            <td>等待后自动复位</td>
+                            <td>无需复位，值持续递增</td>
+                        </tr>
+                        <tr>
+                            <td>同步方向</td>
+                            <td>主要用于GPU-GPU同步</td>
+                            <td>支持全向同步（CPU-GPU、GPU-CPU）</td>
+                        </tr>
+                        <tr>
+                            <td>提交顺序要求</td>
+                            <td>必须信号在前，等待在后</td>
+                            <td>支持等待-前-信号顺序</td>
+                        </tr>
+                        <tr>
+                            <td>内存占用</td>
+                            <td>较小</td>
+                            <td>稍大（需存储64位值）</td>
+                        </tr>
+                        <tr>
+                            <td>灵活性</td>
+                            <td>有限</td>
+                            <td>极高</td>
+                        </tr>
+                    </table>
+                    
+                    <p>二元信号量的主要限制在于其严格的1:1信号等待关系。在实际应用中，这种限制会导致一些问题。例如，在生产者-消费者模式中，如果生产者产生了多个数据项，而消费者需要处理这些数据项，使用二元信号量就需要为每个数据项创建一个独立的信号量，这会导致信号量数量的爆炸式增长。</p>
+                    
+                    <p>时间线信号量通过引入单调递增的64位整数值解决了这些问题。应用程序可以通过设置不同的等待值来实现复杂的同步逻辑，而无需为每个同步点创建独立的信号量。例如，可以使用单个时间线信号量来跟踪多个帧的完成状态，每个帧使用不同的计数值进行标识。</p>
+                    
+                    <p>另一个重要区别是时间线信号量支持等待-前-信号的提交顺序。这意味着应用程序可以先提交一个等待某个值的操作，然后再提交一个将信号量设置为该值的操作，而不必担心死锁。这种特性极大地简化了异步工作流程的管理。</p>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">2.3 信号量的创建与销毁</div>
+                <div class="collapsible-content">
+                    <p>创建信号量需要使用<code>vkCreateSemaphore</code>函数，该函数的原型如下：</p>
+                    
+                    <div class="code-block">VkResult vkCreateSemaphore(
+    VkDevice device,
+    const VkSemaphoreCreateInfo* pCreateInfo,
+    const VkAllocationCallbacks* pAllocator,
+    VkSemaphore* pSemaphore
+);</div>
+                    
+                    <p>其中，<code>device</code>参数是创建信号量的逻辑设备，<code>pCreateInfo</code>是指向<code>VkSemaphoreCreateInfo</code>结构的指针，<code>pAllocator</code>用于控制主机内存分配（通常设为<code>NULL</code>使用默认分配器），<code>pSemaphore</code>用于返回创建的信号量句柄。</p>
+                    
+                    <p><code>VkSemaphoreCreateInfo</code>结构的定义如下：</p>
+                    
+                    <div class="code-block">typedef struct VkSemaphoreCreateInfo {
+    VkStructureType    sType;
+    const void*        pNext;
+    VkSemaphoreCreateFlags flags;
+} VkSemaphoreCreateInfo;</div>
+                    
+                    <p>在Vulkan 1.0中，<code>flags</code>字段必须设置为0，因为该字段保留供未来使用。要创建时间线信号量，需要在<code>pNext</code>链中添加<code>VkSemaphoreTypeCreateInfo</code>结构：</p>
+                    
+                    <div class="code-block">VkSemaphoreTypeCreateInfo timelineCreateInfo = {
+    sType: VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO,
+    pNext: NULL,
+    semaphoreType: VK_SEMAPHORE_TYPE_TIMELINE,
+    initialValue: 0 // 初始值
+};
+
+VkSemaphoreCreateInfo createInfo = {
+    sType: VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+    pNext: &timelineCreateInfo,
+    flags: 0
+};
+
+VkSemaphore timelineSemaphore;
+vkCreateSemaphore(device, &createInfo, NULL, &timelineSemaphore);</div>
+                    
+                    <p>销毁信号量使用<code>vkDestroySemaphore</code>函数：</p>
+                    
+                    <div class="code-block">void vkDestroySemaphore(
+    VkDevice device,
+    VkSemaphore semaphore,
+    const VkAllocationCallbacks* pAllocator
+);</div>
+                    
+                    <div class="note">
+                        <p>注意：在销毁信号量之前，必须确保没有任何GPU操作正在等待该信号量，否则可能导致资源泄漏或未定义行为。可以通过等待相关的栅栏或使用<code>vkDeviceWaitIdle</code>来确保所有相关操作都已完成。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">2.4 信号量等待与信号操作</div>
+                <div class="collapsible-content">
+                    <p>信号量的等待和信号操作是通过<code>VkSubmitInfo</code>结构在队列提交时指定的。对于二元信号量，等待操作使用<code>waitSemaphores</code>和<code>pWaitDstStageMask</code>字段，信号操作使用<code>signalSemaphores</code>字段。</p>
+                    
+                    <div class="code-block">VkSubmitInfo submitInfo = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &imageAvailableSemaphore,
+    pWaitDstStageMask: &waitStages, // 等待的管线阶段
+    commandBufferCount: 1,
+    pCommandBuffers: &commandBuffer,
+    signalSemaphoreCount: 1,
+    pSignalSemaphores: &renderFinishedSemaphore
+};</div>
+                    
+                    <p>管线阶段掩码（<code>pWaitDstStageMask</code>）指定了在哪个管线阶段等待信号量。常见的管线阶段包括：</p>
+                    
+                    <ul>
+                        <li><code>VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</code>：颜色附件输出阶段</li>
+                        <li><code>VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT</code>：计算着色器阶段</li>
+                        <li><code>VK_PIPELINE_STAGE_TRANSFER_BIT</code>：传输阶段</li>
+                        <li><code>VK_PIPELINE_STAGE_VERTEX_INPUT_BIT</code>：顶点输入阶段</li>
+                    </ul>
+                    
+                    <p>对于时间线信号量，需要使用<code>VkTimelineSemaphoreSubmitInfo</code>结构来指定等待值和信号值：</p>
+                    
+                    <div class="code-block">uint64_t waitValue = 1;
+uint64_t signalValue = 2;
+
+VkTimelineSemaphoreSubmitInfo timelineInfo = {
+    sType: VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO,
+    pNext: NULL,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &timelineSemaphore,
+    pWaitValues: &waitValue,
+    signalSemaphoreCount: 1,
+    pSignalSemaphores: &timelineSemaphore,
+    pSignalValues: &signalValue
+};
+
+VkSubmitInfo submitInfo = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    pNext: &timelineInfo,
+    commandBufferCount: 1,
+    pCommandBuffers: &commandBuffer
+};</div>
+                    
+                    <p>时间线信号量还支持直接从主机进行等待和信号操作。主机等待使用<code>vkWaitSemaphores</code>函数：</p>
+                    
+                    <div class="code-block">VkSemaphoreWaitInfo waitInfo = {
+    sType: VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
+    pNext: NULL,
+    semaphoreCount: 1,
+    pSemaphores: &timelineSemaphore,
+    pValues: &waitValue,
+    flags: 0
+};
+
+vkWaitSemaphores(device, &waitInfo, UINT64_MAX);</div>
+                    
+                    <p>主机信号操作使用<code>vkSignalSemaphore</code>函数：</p>
+                    
+                    <div class="code-block">VkSemaphoreSignalInfo signalInfo = {
+    sType: VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO,
+    pNext: NULL,
+    semaphore: timelineSemaphore,
+    value: signalValue
+};
+
+vkSignalSemaphore(device, &signalInfo);</div>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">2.5 信号量在不同场景下的应用</div>
+                <div class="collapsible-content">
+                    <h3>交换链图像同步</h3>
+                    <p>在图形渲染中，信号量最常见的用途是同步交换链图像的获取和呈现。典型的流程包括：</p>
+                    
+                    <ol>
+                        <li>使用<code>vkAcquireNextImageKHR</code>获取交换链图像，指定一个信号量用于标识图像可用</li>
+                        <li>渲染完成后，在提交命令缓冲区时信号另一个信号量，表示渲染已完成</li>
+                        <li>使用<code>vkQueuePresentKHR</code>进行呈现时，等待渲染完成信号量</li>
+                    </ol>
+                    
+                    <div class="code-block">// 获取交换链图像
+vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+
+// 渲染命令缓冲区记录...
+
+// 提交渲染命令
+VkSubmitInfo submitInfo = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &imageAvailableSemaphore,
+    pWaitDstStageMask: &waitStages,
+    commandBufferCount: 1,
+    pCommandBuffers: &commandBuffer,
+    signalSemaphoreCount: 1,
+    pSignalSemaphores: &renderFinishedSemaphore
+};
+vkQueueSubmit(graphicsQueue, 1, &submitInfo, NULL);
+
+// 呈现图像
+VkPresentInfoKHR presentInfo = {
+    sType: VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &renderFinishedSemaphore,
+    swapchainCount: 1,
+    pSwapchains: &swapchain,
+    pImageIndices: &imageIndex
+};
+vkQueuePresentKHR(presentQueue, &presentInfo);</div>
+                    
+                    <h3>多队列同步</h3>
+                    <p>当使用多个队列（如图形队列和计算队列）时，信号量用于协调不同队列之间的工作：</p>
+                    
+                    <div class="code-block">// 计算队列提交 - 写入数据到缓冲区
+VkSubmitInfo computeSubmit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    commandBufferCount: 1,
+    pCommandBuffers: &computeCommandBuffer,
+    signalSemaphoreCount: 1,
+    pSignalSemaphores: &dataReadySemaphore
+};
+vkQueueSubmit(computeQueue, 1, &computeSubmit, NULL);
+
+// 图形队列提交 - 读取计算结果进行渲染
+VkSubmitInfo graphicsSubmit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &dataReadySemaphore,
+    pWaitDstStageMask: &graphicsWaitStages,
+    commandBufferCount: 1,
+    pCommandBuffers: &graphicsCommandBuffer
+};
+vkQueueSubmit(graphicsQueue, 1, &graphicsSubmit, NULL);</div>
+                    
+                    <h3>多阶段渲染依赖</h3>
+                    <p>在复杂的渲染流程中，可能需要多个渲染阶段之间的同步：</p>
+                    
+                    <div class="code-block">// 第一阶段渲染完成后信号信号量
+VkSubmitInfo stage1Submit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    commandBufferCount: 1,
+    pCommandBuffers: &stage1CommandBuffer,
+    signalSemaphoreCount: 1,
+    pSignalSemaphores: &stage1FinishedSemaphore
+};
+
+// 第二阶段等待第一阶段完成
+VkSubmitInfo stage2Submit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &stage1FinishedSemaphore,
+    pWaitDstStageMask: &stage2WaitStages,
+    commandBufferCount: 1,
+    pCommandBuffers: &stage2CommandBuffer
+};</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="fences">
+            <h2>3. 栅栏（Fence）详解</h2>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">3.1 栅栏的基本概念与工作原理</div>
+                <div class="collapsible-content">
+                    <p>栅栏是Vulkan中用于CPU与GPU之间同步的基本机制，是一种从队列到主机插入依赖关系的同步原语。栅栏有两种状态——已发信号（signaled）和未发信号（unsignaled），可以作为队列提交命令执行的一部分被发信号。</p>
+                    
+                    <p>栅栏的工作原理相对简单：当提交一个带有栅栏的队列操作时，栅栏会在该操作中的所有命令都执行完成后自动发信号。CPU线程可以通过<code>vkWaitForFences</code>函数等待栅栏变为已发信号状态，从而确保GPU操作已经完成。</p>
+                    
+                    <p>栅栏是唯一的单向同步机制，它只能从GPU传递到CPU，并且只表示整个命令缓冲区是否完成执行，而不提供任何子操作完成的信息。这种设计使得栅栏非常适合用于粗粒度的CPU-GPU同步，例如等待渲染帧完成、等待数据传输完成等场景。</p>
+                    
+                    <p>与信号量不同，栅栏不能用于GPU之间的同步，也不能在GPU上等待。栅栏完全是为了满足CPU等待GPU完成任务的需求而设计的。</p>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">3.2 栅栏的创建与状态管理</div>
+                <div class="collapsible-content">
+                    <p>创建栅栏使用<code>vkCreateFence</code>函数，其原型如下：</p>
+                    
+                    <div class="code-block">VkResult vkCreateFence(
+    VkDevice device,
+    const VkFenceCreateInfo* pCreateInfo,
+    const VkAllocationCallbacks* pAllocator,
+    VkFence* pFence
+);</div>
+                    
+                    <p><code>VkFenceCreateInfo</code>结构定义如下：</p>
+                    
+                    <div class="code-block">typedef struct VkFenceCreateInfo {
+    VkStructureType    sType;
+    const void*        pNext;
+    VkFenceCreateFlags flags;
+} VkFenceCreateInfo;</div>
+                    
+                    <p><code>flags</code>字段可以设置为以下值：</p>
+                    
+                    <ul>
+                        <li><code>VK_FENCE_CREATE_SIGNALED_BIT</code>：创建时初始化为已发信号状态</li>
+                        <li>0：创建时初始化为未发信号状态（默认）</li>
+                    </ul>
+                    
+                    <p>例如，创建一个初始为已发信号状态的栅栏：</p>
+                    
+                    <div class="code-block">VkFenceCreateInfo fenceCreateInfo = {
+    sType: VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+    pNext: NULL,
+    flags: VK_FENCE_CREATE_SIGNALED_BIT
+};
+
+VkFence fence;
+vkCreateFence(device, &fenceCreateInfo, NULL, &fence);</div>
+                    
+                    <p>栅栏的状态管理包括等待、查询和复位操作：</p>
+                    
+                    <ol>
+                        <li><strong>等待栅栏</strong>：使用<code>vkWaitForFences</code>函数等待栅栏变为已发信号状态</li>
+                        <li><strong>查询状态</strong>：使用<code>vkGetFenceStatus</code>函数查询栅栏的当前状态</li>
+                        <li><strong>复位栅栏</strong>：使用<code>vkResetFences</code>函数将已发信号的栅栏重置为未发信号状态</li>
+                    </ol>
+                    
+                    <p><code>vkWaitForFences</code>函数的原型如下：</p>
+                    
+                    <div class="code-block">VkResult vkWaitForFences(
+    VkDevice device,
+    uint32_t fenceCount,
+    const VkFence* pFences,
+    VkBool32 waitAll,
+    uint64_t timeout
+);</div>
+                    
+                    <p>其中：</p>
+                    
+                    <ul>
+                        <li><code>waitAll</code>：如果为<code>VK_TRUE</code>，等待所有栅栏都变为已发信号；如果为<code>VK_FALSE</code>，只要有一个栅栏变为已发信号就返回</li>
+                        <li><code>timeout</code>：等待超时时间，单位为纳秒</li>
+                    </ul>
+                    
+                    <p><code>vkGetFenceStatus</code>函数用于非阻塞地查询栅栏状态：</p>
+                    
+                    <div class="code-block">VkResult vkGetFenceStatus(VkDevice device, VkFence fence);</div>
+                    
+                    <p>返回值为<code>VK_SUCCESS</code>表示栅栏已发信号，<code>VK_NOT_READY</code>表示栅栏未发信号。</p>
+                    
+                    <p><code>vkResetFences</code>函数用于重置栅栏：</p>
+                    
+                    <div class="code-block">VkResult vkResetFences(
+    VkDevice device,
+    uint32_t fenceCount,
+    const VkFence* pFences
+);</div>
+                    
+                    <div class="warning">
+                        <p>注意：如果栅栏当前有负载（payload）被导入，或者正在被GPU使用，则不能重置该栅栏。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">3.3 栅栏在CPU-GPU同步中的应用</div>
+                <div class="collapsible-content">
+                    <h3>等待渲染帧完成</h3>
+                    <p>在多帧渲染中，栅栏用于确保前一帧的渲染已经完成，避免资源冲突：</p>
+                    
+                    <div class="code-block">// 等待前一帧完成
+while (vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, 1000000) == VK_TIMEOUT) {
+    // 处理超时，可能需要重新创建交换链
+}
+
+// 重置栅栏以便下一帧使用
+vkResetFences(device, 1, &inFlightFences[currentFrame]);
+
+// 渲染当前帧...
+
+// 提交时关联栅栏
+vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]);</div>
+                    
+                    <h3>异步数据读取</h3>
+                    <p>当需要从GPU内存读取数据到CPU时，使用栅栏进行异步同步：</p>
+                    
+                    <div class="code-block">// 提交命令将数据从GPU复制到CPU可见内存
+VkSubmitInfo copySubmit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    commandBufferCount: 1,
+    pCommandBuffers: &copyCommandBuffer
+};
+vkQueueSubmit(transferQueue, 1, &copySubmit, readbackFence);
+
+// 等待数据复制完成
+vkWaitForFences(device, 1, &readbackFence, VK_TRUE, UINT64_MAX);
+
+// 安全地读取数据
+uint32_t* data = (uint32_t*)mappedMemory;
+// 处理数据...
+
+// 重置栅栏
+vkResetFences(device, 1, &readbackFence);</div>
+                    
+                    <h3>资源创建与销毁同步</h3>
+                    <p>在创建或销毁Vulkan资源时，需要确保相关的GPU操作已经完成：</p>
+                    
+                    <div class="code-block">// 等待所有GPU操作完成
+vkDeviceWaitIdle(device);
+
+// 安全地销毁资源
+vkDestroyBuffer(device, buffer, NULL);
+vkFreeMemory(device, memory, NULL);
+
+// 或者使用栅栏进行更精细的控制
+vkQueueSubmit(queue, 0, NULL, destroyFence);
+vkWaitForFences(device, 1, &destroyFence, VK_TRUE, UINT64_MAX);</div>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">3.4 栅栏与信号量的配合使用</div>
+                <div class="collapsible-content">
+                    <p>在实际应用中，栅栏和信号量经常配合使用以实现复杂的同步逻辑。以下是一些典型的配合使用场景：</p>
+                    
+                    <h3>多帧渲染同步</h3>
+                    <p>在多帧渲染系统中，通常使用栅栏来跟踪每帧的完成状态，使用信号量来同步交换链图像的获取和呈现：</p>
+                    
+                    <div class="code-block">const int MAX_FRAMES_IN_FLIGHT = 2;
+std::vector<VkSemaphore> imageAvailableSemaphores(MAX_FRAMES_IN_FLIGHT);
+std::vector<VkSemaphore> renderFinishedSemaphores(MAX_FRAMES_IN_FLIGHT);
+std::vector<VkFence> inFlightFences(MAX_FRAMES_IN_FLIGHT);
+
+// 创建同步对象
+for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+    VkSemaphoreCreateInfo semaphoreInfo = {};
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    vkCreateSemaphore(device, &semaphoreInfo, NULL, &imageAvailableSemaphores[i]);
+    vkCreateSemaphore(device, &semaphoreInfo, NULL, &renderFinishedSemaphores[i]);
+
+    VkFenceCreateInfo fenceInfo = {};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+    vkCreateFence(device, &fenceInfo, NULL, &inFlightFences[i]);
+}
+
+// 渲染循环
+uint32_t currentFrame = 0;
+while (!shouldClose) {
+    // 等待前一帧完成
+    vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
+    // 获取交换链图像
+    uint32_t imageIndex;
+    VkResult result = vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, 
+        imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        recreateSwapchain();
+        continue;
+    } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+        throw std::runtime_error("failed to acquire swap chain image!");
+    }
+
+    // 重置栅栏
+    vkResetFences(device, 1, &inFlightFences[currentFrame]);
+
+    // 记录渲染命令...
+
+    // 提交渲染命令
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = &imageAvailableSemaphores[currentFrame];
+    submitInfo.pWaitDstStageMask = &waitStages;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffers[currentFrame];
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = &renderFinishedSemaphores[currentFrame];
+
+    vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]);
+
+    // 呈现
+    VkPresentInfoKHR presentInfo = {};
+    presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores = &renderFinishedSemaphores[currentFrame];
+    presentInfo.swapchainCount = 1;
+    presentInfo.pSwapchains = &swapchain;
+    presentInfo.pImageIndices = &imageIndex;
+
+    result = vkQueuePresentKHR(presentQueue, &presentInfo);
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+        recreateSwapchain();
+        continue;
+    } else if (result != VK_SUCCESS) {
+        throw std::runtime_error("failed to present swap chain image!");
+    }
+
+    currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+}</div>
+                    
+                    <h3>复杂的多阶段同步</h3>
+                    <p>在涉及多个阶段和多个队列的复杂渲染流程中，栅栏和信号量的配合使用可以实现精确的同步控制：</p>
+                    
+                    <div class="code-block">// 阶段1：计算着色器生成数据
+VkSubmitInfo computeSubmit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    commandBufferCount: 1,
+    pCommandBuffers: &computeCommandBuffer,
+    signalSemaphoreCount: 1,
+    pSignalSemaphores: &computeFinishedSemaphore
+};
+vkQueueSubmit(computeQueue, 1, &computeSubmit, computeFence);
+
+// 阶段2：等待计算完成，然后进行图形渲染
+vkWaitForFences(device, 1, &computeFence, VK_TRUE, UINT64_MAX);
+
+VkSubmitInfo graphicsSubmit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &computeFinishedSemaphore,
+    pWaitDstStageMask: &graphicsWaitStages,
+    commandBufferCount: 1,
+    pCommandBuffers: &graphicsCommandBuffer,
+    signalSemaphoreCount: 1,
+    pSignalSemaphores: &graphicsFinishedSemaphore
+};
+vkQueueSubmit(graphicsQueue, 1, &graphicsSubmit, graphicsFence);
+
+// 阶段3：等待图形渲染完成，然后进行后处理
+vkWaitForFences(device, 1, &graphicsFence, VK_TRUE, UINT64_MAX);
+
+VkSubmitInfo postProcessSubmit = {
+    sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
+    waitSemaphoreCount: 1,
+    pWaitSemaphores: &graphicsFinishedSemaphore,
+    pWaitDstStageMask: &postProcessWaitStages,
+    commandBufferCount: 1,
+    pCommandBuffers: &postProcessCommandBuffer
+};
+vkQueueSubmit(transferQueue, 1, &postProcessSubmit, VK_NULL_HANDLE);</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="examples">
+            <h2>4. 实际应用示例代码</h2>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">4.1 基本图像呈现同步示例</div>
+                <div class="collapsible-content">
+                    <p>以下是一个完整的Vulkan图像呈现同步示例，展示了如何使用信号量和栅栏实现基本的渲染循环：</p>
+                    
+                    <div class="code-block">#include <vulkan/vulkan.h>
+#include <iostream>
+#include <stdexcept>
+#include <vector>
+#include <optional>
+
+const int MAX_FRAMES_IN_FLIGHT = 2;
+
+class VulkanRenderer {
+public:
+    VulkanRenderer() {
+        createInstance();
+        setupDebugMessenger();
+        createSurface();
+        pickPhysicalDevice();
+        createLogicalDevice();
+        createSwapchain();
+        createImageViews();
+        createRenderPass();
+        createGraphicsPipeline();
+        createFramebuffers();
+        createCommandPool();
+        createCommandBuffers();
+        createSyncObjects();
+    }
+
+    ~VulkanRenderer() {
+        cleanup();
+    }
+
+    void run() {
+        mainLoop();
+    }
+
+private:
+    VkInstance instance;
+    VkDebugUtilsMessengerEXT debugMessenger;
+    VkSurfaceKHR surface;
+    VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+    VkDevice device;
+    VkQueue graphicsQueue;
+    VkSwapchainKHR swapchain;
+    std::vector<VkImage> swapchainImages;
+    std::vector<VkImageView> swapchainImageViews;
+    VkRenderPass renderPass;
+    VkPipeline graphicsPipeline;
+    std::vector<VkFramebuffer> framebuffers;
+    VkCommandPool commandPool;
+    std::vector<VkCommandBuffer> commandBuffers;
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+    uint32_t currentFrame = 0;
+
+    void createInstance() {
+        // 实例创建代码...
+    }
+
+    void setupDebugMessenger() {
+        // 调试信使设置代码...
+    }
+
+    void createSurface() {
+        // 表面创建代码...
+    }
+
+    void pickPhysicalDevice() {
+        // 物理设备选择代码...
+    }
+
+    void createLogicalDevice() {
+        // 逻辑设备创建代码...
+    }
+
+    void createSwapchain() {
+        // 交换链创建代码...
+    }
+
+    void createImageViews() {
+        // 图像视图创建代码...
+    }
+
+    void createRenderPass() {
+        // 渲染通道创建代码...
+    }
+
+    void createGraphicsPipeline() {
+        // 图形管线创建代码...
+    }
+
+    void createFramebuffers() {
+        // 帧缓冲区创建代码...
+    }
+
+    void createCommandPool() {
+        // 命令池创建代码...
+    }
+
+    void createCommandBuffers() {
+        VkCommandBufferAllocateInfo allocInfo = {};
+        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        allocInfo.commandPool = commandPool;
+        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        allocInfo.commandBufferCount = (uint32_t)MAX_FRAMES_IN_FLIGHT;
+
+        commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+        vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data());
+    }
+
+    void createSyncObjects() {
+        VkSemaphoreCreateInfo semaphoreInfo = {};
+        semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+        imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
+        inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
+                vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to create semaphores!");
+            }
+
+            VkFenceCreateInfo fenceInfo = {};
+            fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+            fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+            if (vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to create fences!");
+            }
+        }
+    }
+
+    void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
+        VkCommandBufferBeginInfo beginInfo = {};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+
+        vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+        VkRenderPassBeginInfo renderPassInfo = {};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.renderPass = renderPass;
+        renderPassInfo.framebuffer = framebuffers[imageIndex];
+        renderPassInfo.renderArea.offset = {0, 0};
+        renderPassInfo.renderArea.extent = swapchainExtent;
+
+        std::array<VkClearValue, 2> clearValues = {};
+        clearValues[0].color = {0.0f, 0.0f, 0.0f, 1.0f};
+        clearValues[1].depthStencil = {1.0f, 0};
+        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+        renderPassInfo.pClearValues = clearValues.data();
+
+        vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+        vkCmdEndRenderPass(commandBuffer);
+
+        vkEndCommandBuffer(commandBuffer);
+    }
+
+    void mainLoop() {
+        while (!shouldClose()) {
+            // 等待前一帧完成
+            vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
+            // 获取交换链图像
+            uint32_t imageIndex;
+            VkResult result = vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, 
+                imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+            if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+                recreateSwapchain();
+                continue;
+            } else if (result != VK_SUCCESS) {
+                throw std::runtime_error("failed to acquire swap chain image!");
+            }
+
+            // 重置栅栏
+            vkResetFences(device, 1, &inFlightFences[currentFrame]);
+
+            // 记录命令缓冲区
+            recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
+
+            // 设置等待阶段
+            VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
+            // 提交命令缓冲区
+            VkSubmitInfo submitInfo = {};
+            submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+            submitInfo.waitSemaphoreCount = 1;
+            submitInfo.pWaitSemaphores = &imageAvailableSemaphores[currentFrame];
+            submitInfo.pWaitDstStageMask = waitStages;
+            submitInfo.commandBufferCount = 1;
+            submitInfo.pCommandBuffers = &commandBuffers[currentFrame];
+            submitInfo.signalSemaphoreCount = 1;
+            submitInfo.pSignalSemaphores = &renderFinishedSemaphores[currentFrame];
+
+            if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to submit draw command buffer!");
+            }
+
+            // 呈现
+            VkPresentInfoKHR presentInfo = {};
+            presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+            presentInfo.waitSemaphoreCount = 1;
+            presentInfo.pWaitSemaphores = &renderFinishedSemaphores[currentFrame];
+            presentInfo.swapchainCount = 1;
+            presentInfo.pSwapchains = &swapchain;
+            presentInfo.pImageIndices = &imageIndex;
+
+            result = vkQueuePresentKHR(graphicsQueue, &presentInfo);
+            if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+                recreateSwapchain();
+            } else if (result != VK_SUCCESS) {
+                throw std::runtime_error("failed to present swap chain image!");
+            }
+
+            currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+        }
+
+        vkDeviceWaitIdle(device);
+    }
+
+    void recreateSwapchain() {
+        // 清理交换链相关资源
+        vkDeviceWaitIdle(device);
+
+        for (auto framebuffer : framebuffers) {
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
+        }
+        vkDestroyRenderPass(device, renderPass, nullptr);
+        vkDestroyPipeline(device, graphicsPipeline, nullptr);
+        for (auto imageView : swapchainImageViews) {
+            vkDestroyImageView(device, imageView, nullptr);
+        }
+        vkDestroySwapchainKHR(device, swapchain, nullptr);
+
+        // 重新创建交换链
+        createSwapchain();
+        createImageViews();
+        createRenderPass();
+        createGraphicsPipeline();
+        createFramebuffers();
+    }
+
+    void cleanup() {
+        vkDeviceWaitIdle(device);
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(device, inFlightFences[i], nullptr);
+        }
+
+        for (auto framebuffer : framebuffers) {
+            vkDestroyFramebuffer(device, framebuffer, nullptr);
+        }
+        vkDestroyPipeline(device, graphicsPipeline, nullptr);
+        vkDestroyRenderPass(device, renderPass, nullptr);
+        for (auto imageView : swapchainImageViews) {
+            vkDestroyImageView(device, imageView, nullptr);
+        }
+        vkDestroySwapchainKHR(device, swapchain, nullptr);
+        vkDestroyCommandPool(device, commandPool, nullptr);
+        vkDestroyDevice(device, nullptr);
+        vkDestroySurfaceKHR(instance, surface, nullptr);
+        destroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+        vkDestroyInstance(instance, nullptr);
+    }
+
+    bool shouldClose() {
+        // 检查窗口关闭条件
+        return false;
+    }
+
+    // 其他辅助函数...
+};
+
+int main() {
+    VulkanRenderer renderer;
+    try {
+        renderer.run();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}</div>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">4.2 计算着色器与图形管线协同示例</div>
+                <div class="collapsible-content">
+                    <p>以下示例展示了如何使用信号量实现计算着色器与图形管线之间的同步：</p>
+                    
+                    <div class="code-block">void computeAndGraphicsSynchronizationExample(VkDevice device, VkQueue computeQueue, VkQueue graphicsQueue) {
+    // 创建同步信号量
+    VkSemaphore dataReadySemaphore;
+    VkSemaphoreCreateInfo semaphoreInfo = {};
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &dataReadySemaphore) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create data ready semaphore!");
+    }
+
+    // 创建命令缓冲区
+    VkCommandBuffer computeCommandBuffer;
+    VkCommandBuffer graphicsCommandBuffer;
+
+    VkCommandBufferAllocateInfo allocInfo = {};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool = commandPool; // 假设已创建命令池
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandBufferCount = 2;
+
+    VkCommandBuffer commandBuffers[2];
+    vkAllocateCommandBuffers(device, &allocInfo, commandBuffers);
+    computeCommandBuffer = commandBuffers[0];
+    graphicsCommandBuffer = commandBuffers[1];
+
+    // 记录计算着色器命令缓冲区
+    vkBeginCommandBuffer(computeCommandBuffer, nullptr);
+
+    // 设置计算着色器所需的资源（描述符集、存储缓冲区等）
+    vkCmdBindDescriptorSets(computeCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, pipelineLayout, 
+        0, 1, &computeDescriptorSet, 0, nullptr);
+
+    // 调度计算着色器
+    vkCmdDispatch(computeCommandBuffer, 16, 16, 1);
+
+    // 计算完成后信号信号量
+    VkSubmitInfo computeSubmit = {};
+    computeSubmit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    computeSubmit.commandBufferCount = 1;
+    computeSubmit.pCommandBuffers = &computeCommandBuffer;
+    computeSubmit.signalSemaphoreCount = 1;
+    computeSubmit.pSignalSemaphores = &dataReadySemaphore;
+
+    vkEndCommandBuffer(computeCommandBuffer);
+
+    // 记录图形命令缓冲区
+    vkBeginCommandBuffer(graphicsCommandBuffer, nullptr);
+
+    // 设置等待阶段 - 等待计算结果准备好
+    VkPipelineStageFlags waitStages = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+
+    // 图形管线使用计算结果进行渲染
+    VkSubmitInfo graphicsSubmit = {};
+    graphicsSubmit.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    graphicsSubmit.waitSemaphoreCount = 1;
+    graphicsSubmit.pWaitSemaphores = &dataReadySemaphore;
+    graphicsSubmit.pWaitDstStageMask = &waitStages;
+    graphicsSubmit.commandBufferCount = 1;
+    graphicsSubmit.pCommandBuffers = &graphicsCommandBuffer;
+
+    vkEndCommandBuffer(graphicsCommandBuffer);
+
+    // 提交计算命令
+    vkQueueSubmit(computeQueue, 1, &computeSubmit, nullptr);
+
+    // 提交图形命令
+    vkQueueSubmit(graphicsQueue, 1, &graphicsSubmit, nullptr);
+
+    // 等待所有操作完成
+    VkFence fence;
+    VkFenceCreateInfo fenceInfo = {};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    vkCreateFence(device, &fenceInfo, nullptr, &fence);
+
+    vkQueueSubmit(graphicsQueue, 0, nullptr, fence);
+    vkWaitForFences(device, 1, &fence, VK_TRUE, UINT64_MAX);
+    vkDestroyFence(device, fence, nullptr);
+
+    // 清理资源
+    vkFreeCommandBuffers(device, commandPool, 2, commandBuffers);
+    vkDestroySemaphore(device, dataReadySemaphore, nullptr);
+}</div>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">4.3 时间线信号量高级应用示例</div>
+                <div class="collapsible-content">
+                    <p>以下示例展示了时间线信号量的高级应用，包括等待-前-信号模式和多消费者场景：</p>
+                    
+                    <div class="code-block">void timelineSemaphoreAdvancedExample(VkDevice device, VkQueue queue1, VkQueue queue2, VkQueue queue3) {
+    // 创建时间线信号量
+    VkSemaphoreTypeCreateInfo timelineCreateInfo = {};
+    timelineCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO;
+    timelineCreateInfo.semaphoreType = VK_SEMAPHORE_TYPE_TIMELINE;
+    timelineCreateInfo.initialValue = 0;
+
+    VkSemaphoreCreateInfo createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    createInfo.pNext = &timelineCreateInfo;
+
+    VkSemaphore timelineSemaphore;
+    if (vkCreateSemaphore(device, &createInfo, nullptr, &timelineSemaphore) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create timeline semaphore!");
+    }
+
+    // 线程1：执行初始设备工作并信号时间线信号量
+    std::thread thread1([=]() {
+        uint64_t waitValue1 = 0;  // 无操作等待，值总是 >= 0
+        uint64_t signalValue1 = 1; // 设置为1
+
+        VkTimelineSemaphoreSubmitInfo timelineInfo1 = {};
+        timelineInfo1.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
+        timelineInfo1.waitSemaphoreCount = 1;
+        timelineInfo1.pWaitSemaphores = &timelineSemaphore;
+        timelineInfo1.pWaitValues = &waitValue1;
+        timelineInfo1.signalSemaphoreCount = 1;
+        timelineInfo1.pSignalSemaphores = &timelineSemaphore;
+        timelineInfo1.pSignalValues = &signalValue1;
+
+        VkSubmitInfo info1 = {};
+        info1.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        info1.pNext = &timelineInfo1;
+        info1.commandBufferCount = 1;
+        info1.pCommandBuffers = &commandBuffer1; // 假设已创建命令缓冲区
+
+        vkQueueSubmit(queue1, 1, &info1, nullptr);
+    });
+
+    // 线程2：等待线程1的设备工作完成，执行CPU工作，然后信号时间线信号量
+    std::thread thread2([=]() {
+        uint64_t waitValue2 = 1;
+        VkSemaphoreWaitInfo waitInfo = {};
+        waitInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO;
+        waitInfo.semaphoreCount = 1;
+        waitInfo.pSemaphores = &timelineSemaphore;
+        waitInfo.pValues = &waitValue2;
+
+        vkWaitSemaphores(device, &waitInfo, UINT64_MAX);
+
+        // 执行依赖于线程1设备工作的CPU工作...
+
+        uint64_t signalValue2 = 2;
+        VkSemaphoreSignalInfo signalInfo = {};
+        signalInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO;
+        signalInfo.semaphore = timelineSemaphore;
+        signalInfo.value = signalValue2;
+
+        vkSignalSemaphore(device, &signalInfo);
+    });
+
+    // 线程3：等待线程2的CPU工作完成，执行设备工作
+    std::thread thread3([=]() {
+        uint64_t waitValue3 = 2;
+        uint64_t signalValue3 = 3;
+
+        VkTimelineSemaphoreSubmitInfo timelineInfo3 = {};
+        timelineInfo3.sType = VK_STRUCTURE_TYPE_TIMELINE_SEMAPHORE_SUBMIT_INFO;
+        timelineInfo3.waitSemaphoreCount = 1;
+        timelineInfo3.pWaitSemaphores = &timelineSemaphore;
+        timelineInfo3.pWaitValues = &waitValue3;
+        timelineInfo3.signalSemaphoreCount = 1;
+        timelineInfo3.pSignalSemaphores = &timelineSemaphore;
+        timelineInfo3.pSignalValues = &signalValue3;
+
+        VkSubmitInfo info3 = {};
+        info3.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        info3.pNext = &timelineInfo3;
+        info3.commandBufferCount = 1;
+        info3.pCommandBuffers = &commandBuffer3;
+
+        vkQueueSubmit(queue3, 1, &info3, nullptr);
+    });
+
+    thread1.join();
+    thread2.join();
+    thread3.join();
+
+    // 等待所有工作完成
+    uint64_t finalWaitValue = 3;
+    VkSemaphoreWaitInfo finalWaitInfo = {};
+    finalWaitInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO;
+    finalWaitInfo.semaphoreCount = 1;
+    finalWaitInfo.pSemaphores = &timelineSemaphore;
+    finalWaitInfo.pValues = &finalWaitValue;
+
+    vkWaitSemaphores(device, &finalWaitInfo, UINT64_MAX);
+
+    vkDestroySemaphore(device, timelineSemaphore, nullptr);
+}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="optimization">
+            <h2>5. 性能优化与最佳实践</h2>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">5.1 同步机制的性能考量</div>
+                <div class="collapsible-content">
+                    <p>Vulkan的同步机制虽然强大，但不当使用会严重影响性能。理解各种同步原语的性能特征对于编写高效的Vulkan应用至关重要。</p>
+                    
+                    <p>栅栏的性能开销相对较低，因为它主要是CPU端的操作。<code>vkWaitForFences</code>函数的开销主要取决于等待的栅栏数量和超时设置。如果设置了合理的超时时间，并且避免不必要的等待，栅栏的性能影响可以忽略不计。</p>
+                    
+                    <p>信号量的性能影响则更复杂。二元信号量的等待和信号操作会引入一定的开销，特别是在需要频繁同步的场景中。时间线信号量虽然功能更强大，但由于需要维护64位的单调递增计数器，在某些硬件上可能有轻微的额外开销。</p>
+                    
+                    <p>管线屏障（Pipeline Barrier）的性能影响最大，因为它会导致GPU管线的刷新。过度使用管线屏障会严重影响性能，因此应该只在必要时使用，并尽可能减少屏障的使用频率。</p>
+                    
+                    <p>在多队列环境下，队列之间的同步开销通常比队列内部的同步更高。这是因为队列之间的同步需要跨队列的通信和协调。因此，在设计应用架构时，应该尽量减少跨队列的同步需求。</p>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">5.2 减少不必要的同步</div>
+                <div class="collapsible-content">
+                    <p>减少不必要的同步是提高Vulkan应用性能的关键策略。以下是一些实用的优化技巧：</p>
+                    
+                    <h3>1. 最大化并行性</h3>
+                    <p>尽可能让不同的工作负载并行执行。例如，在渲染流程中，可以让计算着色器和图形管线并行执行，只要它们不访问相同的资源。这需要仔细的资源管理和同步点的精心设计。</p>
+                    
+                    <h3>2. 批处理同步操作</h3>
+                    <p>如果有多个需要同步的操作，可以尝试将它们合并为更少的同步点。例如，使用单个时间线信号量来跟踪多个操作的完成状态，而不是为每个操作创建独立的信号量。</p>
+                    
+                    <h3>3. 使用适当的同步原语</h3>
+                    <p>选择最适合特定场景的同步原语。例如：</p>
+                    
+                    <ul>
+                        <li>使用栅栏进行CPU-GPU同步</li>
+                        <li>使用信号量进行GPU-GPU同步</li>
+                        <li>使用管线屏障进行细粒度的管线控制</li>
+                        <li>使用事件进行更灵活的同步需求</li>
+                    </ul>
+                    
+                    <h3>4. 避免过度同步</h3>
+                    <p>许多开发者在刚开始学习Vulkan时会过度使用同步，导致性能下降。例如，不必要地等待每个渲染阶段完成后才开始下一个阶段。通过仔细分析数据依赖关系，可以减少很多不必要的同步点。</p>
+                    
+                    <h3>5. 利用时间线信号量</h3>
+                    <p>时间线信号量可以显著减少所需的同步对象数量和复杂度。在支持Vulkan 1.2的平台上，应该优先使用时间线信号量而不是二元信号量。</p>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">5.3 同步策略的选择建议</div>
+                <div class="collapsible-content">
+                    <p>根据不同的应用场景，选择合适的同步策略至关重要。以下是一些场景化的建议：</p>
+                    
+                    <h3>实时渲染应用</h3>
+                    <p>对于实时渲染应用（如游戏），低延迟是关键。建议采用以下策略：</p>
+                    
+                    <ul>
+                        <li>使用三重缓冲（triple buffering）来平衡延迟和吞吐量</li>
+                        <li>使用时间线信号量来简化多帧同步逻辑</li>
+                        <li>避免在关键渲染路径上使用<code>vkDeviceWaitIdle</code></li>
+                        <li>优先使用队列本地的同步（如管线屏障）而不是跨队列同步</li>
+                    </ul>
+                    
+                    <h3>计算密集型应用</h3>
+                    <p>对于计算密集型应用（如科学计算），GPU利用率是关键。建议采用以下策略：</p>
+                    
+                    <ul>
+                        <li>使用专用的计算队列来最大化GPU利用率</li>
+                        <li>使用时间线信号量实现生产者-消费者模式</li>
+                        <li>设计数据结构以支持批量处理和向量化</li>
+                        <li>最小化CPU-GPU数据传输</li>
+                    </ul>
+                    
+                    <h3>多线程应用</h3>
+                    <p>对于多线程Vulkan应用，线程安全和同步效率都很重要：</p>
+                    
+                    <ul>
+                        <li>使用独立的命令池和命令缓冲区来避免线程竞争</li>
+                        <li>使用栅栏来协调CPU线程之间的工作</li>
+                        <li>使用时间线信号量来实现线程间的高效同步</li>
+                        <li>避免在多个线程间共享同一个Vulkan对象</li>
+                    </ul>
+                    
+                    <h3>内存管理优化</h3>
+                    <p>内存访问的同步是另一个重要的优化点：</p>
+                    
+                    <ul>
+                        <li>使用<code>VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</code>内存来减少内存屏障的使用</li>
+                        <li>使用<code>VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</code>内存来提高设备访问性能</li>
+                        <li>合理安排内存布局以减少缓存未命中</li>
+                        <li>使用零拷贝算法来避免不必要的数据复制</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="collapsible">
+                <div class="collapsible-header">5.4 调试与验证工具</div>
+                <div class="collapsible-content">
+                    <p>在开发过程中，使用适当的调试和验证工具可以帮助发现同步问题：</p>
+                    
+                    <h3>1. Vulkan Validation Layers</h3>
+                    <ul>
+                        <li>启用同步验证层来检测同步错误</li>
+                        <li>使用<code>VK_LAYER_KHRONOS_validation</code>层</li>
+                        <li>配置验证层以报告详细的同步错误信息</li>
+                    </ul>
+                    
+                    <h3>2. 性能分析工具</h3>
+                    <ul>
+                        <li>使用NVIDIA Nsight、AMD Radeon GPU Profiler等工具</li>
+                        <li>分析GPU利用率和管线状态</li>
+                        <li>识别同步瓶颈和管线阻塞</li>
+                    </ul>
+                    
+                    <h3>3. 日志记录</h3>
+                    <ul>
+                        <li>在关键同步点添加日志输出</li>
+                        <li>记录信号量和栅栏的状态变化</li>
+                        <li>跟踪命令缓冲区的提交顺序</li>
+                    </ul>
+                    
+                    <h3>4. 断言检查</h3>
+                    <ul>
+                        <li>使用<code>VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT</code>级别</li>
+                        <li>在开发模式下启用详细的错误检查</li>
+                        <li>使用自定义调试回调函数</li>
+                    </ul>
+                    
+                    <p>通过合理使用这些工具，可以快速定位和解决同步相关的问题，确保应用程序的正确性和性能。</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Vulkan同步机制详解：信号量与栅栏的原理与实践</p>
+            <p>内容由 AI 生成</p>
+        </footer>
+    </div>
+
+    <script>
+        // 标签页切换
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有标签的active类
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // 添加当前标签的active类
+                tab.classList.add('active');
+                
+                // 隐藏所有标签内容
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 显示对应标签内容
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 折叠面板切换
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const collapsible = header.parentElement;
+                collapsible.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
