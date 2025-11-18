@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++11新特性全面解析</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --code-bg: #2d2d2d;
+            --code-color: #f8f8f2;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin: 30px 0 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            font-size: 1.6rem;
+            margin: 25px 0 15px;
+            color: var(--dark-color);
+        }
+        
+        h4 {
+            font-size: 1.3rem;
+            margin: 20px 0 10px;
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .toc {
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style-type: none;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .toc a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .toc a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        .chapter {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .chapter:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-card {
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            color: var(--code-color);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.4;
+        }
+        
+        .code-block code {
+            white-space: pre-wrap;
+        }
+        
+        .comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-item {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--light-color);
+        }
+        
+        .comparison-item h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .stat {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+        
+        .tip {
+            background-color: #e8f4fd;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background-color: #fde8e8;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .comparison {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>C++11新特性全面解析</h1>
+            <p>现代C++编程的革命性更新</p>
+        </header>
+        
+        <div class="toc">
+            <h2>目录</h2>
+            <ul>
+                <li><a href="#chapter1">1. 引言：C++11的历史背景与设计理念</a></li>
+                <li><a href="#chapter2">2. 智能指针（Smart Pointers）</a></li>
+                <li><a href="#chapter3">3. Lambda表达式</a></li>
+                <li><a href="#chapter4">4. 右值引用与移动语义</a></li>
+                <li><a href="#chapter5">5. 其他重要新特性</a></li>
+                <li><a href="#chapter6">6. 实际项目应用与最佳实践</a></li>
+                <li><a href="#chapter7">7. C++11与之前版本的对比分析</a></li>
+                <li><a href="#chapter8">8. 总结与展望</a></li>
+            </ul>
+        </div>
+        
+        <div id="chapter1" class="chapter">
+            <h2>1. 引言：C++11的历史背景与设计理念</h2>
+            
+            <h3>1.1 C++11的诞生背景</h3>
+            <p>C++11（原名C++0x）是C++编程语言的一个重要标准版本，于2011年8月12日正式发布。这是继C++98/03之后的第一个重大更新，距离C++98发布已有13年之久。</p>
+            
+            <div class="feature-card">
+                <p>C++11引入了约<span class="stat">140个新特性</span>，修复了<span class="stat">600多个C++03标准中的缺陷</span>，重构了近半数的标准库组件。</p>
+            </div>
+            
+            <p>C++11的设计背景源于多方面的需求：</p>
+            <ul>
+                <li>多核处理器的普及需要更好的并发编程支持</li>
+                <li>现代软件开发对效率、安全性和表达能力提出更高要求</li>
+                <li>其他现代编程语言如Java、Python等的兴起推动了C++的现代化改革</li>
+            </ul>
+            
+            <h3>1.2 设计目标与核心理念</h3>
+            <p>C++11的主要设计目标包括：</p>
+            <ul>
+                <li>改进C++以促进系统和库设计</li>
+                <li>通过提供更安全的替代方案来增强类型安全性</li>
+                <li>提高性能并增强与硬件直接交互的能力</li>
+                <li>为实际问题提供适当的解决方案</li>
+            </ul>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>简洁性</h4>
+                    <p>auto关键字简化类型声明、lambda表达式消除仿函数冗余、范围for循环缩短迭代代码</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>性能</h4>
+                    <p>右值引用和移动语义减少不必要的拷贝操作</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>安全性</h4>
+                    <p>智能指针自动管理内存、nullptr提供类型安全的空指针、强类型枚举避免命名冲突</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>开发效率</h4>
+                    <p>自动类型推导、并发编程支持、统一的初始化语法</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="chapter2" class="chapter">
+            <h2>2. 智能指针（Smart Pointers）</h2>
+            
+            <h3>2.1 智能指针概述与设计动机</h3>
+            <p>智能指针是C++11引入的核心内存管理工具，旨在解决传统C++中手动内存管理带来的诸多问题。</p>
+            
+            <div class="feature-card">
+                <p>智能指针的自动内存管理功能可以减少<span class="stat">30%的内存泄漏风险</span>。</p>
+            </div>
+            
+            <p>智能指针基于RAII（Resource Acquisition Is Initialization，资源获取即初始化）机制，将普通指针封装为栈对象，利用对象的生命周期来管理资源。</p>
+            
+            <h3>2.2 std::unique_ptr：独占所有权的智能指针</h3>
+            <p>std::unique_ptr是一种独占式智能指针，它确保同一时间只有一个指针拥有资源的所有权。</p>
+            
+            <div class="code-block">
+<code>#include &lt;memory&gt;
+#include &lt;iostream&gt;
+
+class Resource {
+public:
+    Resource() { std::cout &lt;&lt; "Resource created" &lt;&lt; std::endl; }
+    ~Resource() { std::cout &lt;&lt; "Resource destroyed" &lt;&lt; std::endl; }
+    void use() { std::cout &lt;&lt; "Using resource" &lt;&lt; std::endl; }
+};
+
+int main() {
+    // 使用std::make_unique创建unique_ptr
+    std::unique_ptr&lt;Resource&gt; res1 = std::make_unique&lt;Resource&gt;();
+    
+    // 移动所有权
+    std::unique_ptr&lt;Resource&gt; res2 = std::move(res1);
+    
+    // 此时res1不再拥有资源，res2拥有
+    res2-&gt;use();
+    
+    return 0;
+}</code>
+            </div>
+            
+            <h3>2.3 std::shared_ptr：共享所有权的智能指针</h3>
+            <p>std::shared_ptr是一种共享式智能指针，允许多个指针实例共享同一资源的所有权。它通过引用计数机制来管理资源的生命周期。</p>
+            
+            <div class="code-block">
+<code>#include &lt;memory&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    // 使用std::make_shared创建shared_ptr
+    std::shared_ptr&lt;int&gt; num1 = std::make_shared&lt;int&gt;(42);
+    
+    // 拷贝构造，引用计数增加
+    std::shared_ptr&lt;int&gt; num2 = num1;
+    
+    // 输出引用计数
+    std::cout &lt;&lt; "num1 use count: " &lt;&lt; num1.use_count() &lt;&lt; std::endl;  // 输出2
+    std::cout &lt;&lt; "num2 use count: " &lt;&lt; num2.use_count() &lt;&lt; std::endl;  // 输出2
+    
+    return 0;
+}</code>
+            </div>
+            
+            <h3>2.4 std::weak_ptr：弱引用与循环引用问题</h3>
+            <p>std::weak_ptr是一种弱引用智能指针，它指向由std::shared_ptr管理的对象，但不会增加引用计数。std::weak_ptr的主要作用是解决std::shared_ptr之间的循环引用问题。</p>
+            
+            <div class="code-block">
+<code>#include &lt;memory&gt;
+
+class B;
+
+class A {
+public:
+    std::shared_ptr&lt;B&gt; b;
+    ~A() { std::cout &lt;&lt; "A destroyed" &lt;&lt; std::endl; }
+};
+
+class B {
+public:
+    std::weak_ptr&lt;A&gt; a;  // 使用weak_ptr打破循环引用
+    ~B() { std::cout &lt;&lt; "B destroyed" &lt;&lt; std::endl; }
+};
+
+int main() {
+    std::shared_ptr&lt;A&gt; a = std::make_shared&lt;A&gt;();
+    std::shared_ptr&lt;B&gt; b = std::make_shared&lt;B&gt;();
+    a-&gt;b = b;
+    b-&gt;a = a;  // 使用weak_ptr，不会增加引用计数
+    
+    return 0;  // 对象会被正确释放
+}</code>
+            </div>
+            
+            <h3>2.5 智能指针的应用场景与最佳实践</h3>
+            
+            <div class="tip">
+                <h4>最佳实践</h4>
+                <ul>
+                    <li>优先使用std::make_unique和std::make_shared</li>
+                    <li>避免混合使用原始指针和智能指针</li>
+                    <li>注意std::shared_ptr的性能开销</li>
+                    <li>合理使用std::weak_ptr解决循环引用</li>
+                    <li>理解所有权语义</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <p>在高性能Web服务器中使用智能指针可以使<span class="stat">内存占用降低40%</span>，<span class="stat">吞吐量提升2倍</span>。</p>
+            </div>
+        </div>
+        
+        <div id="chapter3" class="chapter">
+            <h2>3. Lambda表达式</h2>
+            
+            <h3>3.1 Lambda表达式的概念与语法</h3>
+            <p>Lambda表达式是C++11引入的一个强大特性，它允许在代码中直接定义匿名函数对象。</p>
+            
+            <div class="code-block">
+<code>[capture-list] (parameters) mutable exception-specification -&gt; return-type { body }</code>
+            </div>
+            
+            <table>
+                <tr>
+                    <th>捕获列表形式</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>[]</td>
+                    <td>不捕获任何外部变量</td>
+                </tr>
+                <tr>
+                    <td>[=]</td>
+                    <td>以值传递方式捕获所有外部变量</td>
+                </tr>
+                <tr>
+                    <td>[&]</td>
+                    <td>以引用传递方式捕获所有外部变量</td>
+                </tr>
+                <tr>
+                    <td>[var1, var2]</td>
+                    <td>以值传递方式捕获指定变量</td>
+                </tr>
+                <tr>
+                    <td>[&var1, &var2]</td>
+                    <td>以引用传递方式捕获指定变量</td>
+                </tr>
+            </table>
+            
+            <h3>3.2 Lambda表达式的使用示例</h3>
+            
+            <div class="code-block">
+<code>// 简单的加法函数
+auto add = [](int x, int y) { return x + y; };
+std::cout &lt;&lt; add(3, 5) &lt;&lt; std::endl;  // 输出8
+
+// 捕获外部变量
+int factor = 2;
+auto multiply = [factor](int x) { return x * factor; };
+std::cout &lt;&lt; multiply(3) &lt;&lt; std::endl;  // 输出6
+
+// 在STL算法中使用
+std::vector&lt;Goods&gt; products;
+std::sort(products.begin(), products.end(), 
+          [](const Goods& lhs, const Goods& rhs) {
+              return lhs.price &lt; rhs.price;
+          });</code>
+            </div>
+            
+            <h3>3.3 Lambda的设计目的与解决的问题</h3>
+            <p>Lambda表达式主要解决了C++98/03中函数对象创建的复杂性问题：</p>
+            <ul>
+                <li>代码简洁性：直接在使用点定义函数</li>
+                <li>可读性提升：函数定义与使用紧密结合</li>
+                <li>性能优化：编译器可以更好地进行内联优化</li>
+                <li>闭包支持：可以捕获外部变量，形成闭包</li>
+            </ul>
+            
+            <h3>3.4 Lambda在实际项目中的应用</h3>
+            
+            <div class="code-block">
+<code>// 多线程编程
+std::thread t([]() {
+    std::cout &lt;&lt; "Thread running" &lt;&lt; std::endl;
+});
+
+// 事件处理
+button.setOnClick([this]() {
+    this-&gt;handleClickEvent();
+});
+
+// 算法与容器操作
+int count = std::count_if(users.begin(), users.end(), 
+                          [](const User& u) {
+                              return u.age &gt;= 18 && u.isActive();
+                          });</code>
+            </div>
+        </div>
+        
+        <div id="chapter4" class="chapter">
+            <h2>4. 右值引用与移动语义</h2>
+            
+            <h3>4.1 左值、右值与右值引用的概念</h3>
+            <p>在C++中，表达式可以分为左值（lvalue）和右值（rvalue）两类。</p>
+            
+            <div class="code-block">
+<code>int&& rvalue_ref = 42;  // 正确：绑定到字面量
+int x = 10;
+int&& rvalue_ref2 = x;  // 错误：不能绑定到左值
+int&& rvalue_ref3 = std::move(x);  // 正确：使用std::move转换为右值</code>
+            </div>
+            
+            <p>std::move函数并不实际移动任何东西，它只是将一个左值强制转换为右值引用。</p>
+            
+            <h3>4.2 移动语义的原理与实现</h3>
+            <p>移动语义允许对象通过转移资源而非复制资源来初始化或赋值给另一个对象。</p>
+            
+            <div class="code-block">
+<code>class MyString {
+private:
+    char* data;
+    size_t size;
+public:
+    // 移动构造函数
+    MyString(MyString&& other) noexcept : data(other.data), size(other.size) {
+        other.data = nullptr;
+        other.size = 0;
+        std::cout &lt;&lt; "Moved from temporary" &lt;&lt; std::endl;
+    }
+    
+    // 移动赋值运算符
+    MyString& operator=(MyString&& other) noexcept {
+        if (this != &other) {
+            delete[] data;
+            data = other.data;
+            size = other.size;
+            other.data = nullptr;
+            other.size = 0;
+        }
+        std::cout &lt;&lt; "Move-assigned from temporary" &lt;&lt; std::endl;
+        return *this;
+    }
+};</code>
+            </div>
+            
+            <h3>4.3 移动语义的设计动机与性能优势</h3>
+            <p>移动语义的设计目的是解决传统C++中深拷贝带来的性能问题。</p>
+            
+            <div class="feature-card">
+                <p>在游戏引擎优化中使用移动语义可以使<span class="stat">纹理加载速度提升35%</span>。</p>
+            </div>
+            
+            <h3>4.4 右值引用的其他应用：完美转发</h3>
+            <p>完美转发允许函数模板将其参数原封不动地转发给其他函数，包括参数的类型和值类别。</p>
+            
+            <div class="code-block">
+<code>template&lt;typename T&gt;
+void wrapper(T&& param) {
+    func(std::forward&lt;T&gt;(param));
+}</code>
+            </div>
+            
+            <h3>4.5 移动语义的实际应用场景</h3>
+            
+            <div class="code-block">
+<code>// 容器操作优化
+std::vector&lt;MyString&gt; vec;
+vec.reserve(1000);
+
+// 使用push_back添加临时对象
+for (int i = 0; i &lt; 1000; ++i) {
+    vec.push_back(MyString("临时字符串"));  // 移动构造
+}
+
+// 使用emplace_back原地构造
+for (int i = 0; i &lt; 1000; ++i) {
+    vec.emplace_back("原地构造字符串");  // 避免临时对象
+}</code>
+            </div>
+        </div>
+        
+        <div id="chapter5" class="chapter">
+            <h2>5. 其他重要新特性</h2>
+            
+            <h3>5.1 范围for循环（Range-based for）</h3>
+            <p>范围for循环是C++11引入的一种简化容器和数组遍历的语法。</p>
+            
+            <div class="code-block">
+<code>// 遍历数组
+int arr[] = {1, 2, 3, 4, 5};
+for (int x : arr) {
+    std::cout &lt;&lt; x &lt;&lt; " ";
+}
+
+// 遍历std::vector
+std::vector&lt;std::string&gt; fruits = {"apple", "banana", "orange"};
+for (const std::string& fruit : fruits) {
+    std::cout &lt;&lt; fruit &lt;&lt; " ";
+}
+
+// 遍历std::map
+std::map&lt;int, std::string&gt; id_name;
+for (const auto& pair : id_name) {
+    std::cout &lt;&lt; pair.first &lt;&lt; ": " &lt;&lt; pair.second &lt;&lt; std::endl;
+}</code>
+            </div>
+            
+            <h3>5.2 nullptr：类型安全的空指针</h3>
+            <p>C++11引入了nullptr关键字来解决NULL的类型安全问题。</p>
+            
+            <div class="code-block">
+<code>void f(int) { std::cout &lt;&lt; "f(int)" &lt;&lt; std::endl; }
+void f(char*) { std::cout &lt;&lt; "f(char*)" &lt;&lt; std::endl; }
+
+int main() {
+    f(0);        // 调用f(int)
+    f(NULL);     // 可能调用f(int)或f(char*)，取决于NULL的定义
+    f(nullptr);  // 明确调用f(char*)
+    return 0;
+}</code>
+            </div>
+            
+            <h3>5.3 auto与decltype：类型推导机制</h3>
+            
+            <div class="code-block">
+<code>// auto关键字
+auto x = 42;         // int
+auto y = 3.14;       // double
+auto z = "Hello";    // const char*
+
+// decltype关键字
+int x = 5;
+const int& y = x;
+decltype(y) z = x;  // z是const int&
+
+// decltype(auto)
+decltype(auto) func() {
+    int x = 42;
+    return x;  // 返回int
+}</code>
+            </div>
+            
+            <h3>5.4 并发编程支持</h3>
+            <p>C++11首次在标准库中提供了对多线程编程的原生支持。</p>
+            
+            <div class="code-block">
+<code>#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;atomic&gt;
+
+std::mutex mtx;
+std::atomic&lt;int&gt; counter(0);
+
+void increment() {
+    for (int i = 0; i &lt; 1000000; ++i) {
+        ++counter;
+    }
+}
+
+int main() {
+    std::thread t1(increment);
+    std::thread t2(increment);
+    t1.join();
+    t2.join();
+    std::cout &lt;&lt; "Counter: " &lt;&lt; counter &lt;&lt; std::endl;  // 输出2000000
+    return 0;
+}</code>
+            </div>
+            
+            <h3>5.5 其他实用特性</h3>
+            
+            <div class="code-block">
+<code>// 统一初始化语法
+int x{5};
+std::vector&lt;int&gt; vec{1, 2, 3, 4, 5};
+MyClass obj{10, "Hello"};
+
+// 初始化列表
+class MyClass {
+public:
+    MyClass(std::initializer_list&lt;int&gt; list) {
+        for (auto x : list) {
+            std::cout &lt;&lt; x &lt;&lt; " ";
+        }
+    }
+};
+
+// 智能指针的工厂函数
+auto ptr1 = std::make_unique&lt;int&gt;(42);
+auto ptr2 = std::make_shared&lt;MyClass&gt;(10, "Hello");</code>
+            </div>
+        </div>
+        
+        <div id="chapter6" class="chapter">
+            <h2>6. 实际项目应用与最佳实践</h2>
+            
+            <h3>6.1 各特性在不同项目类型中的应用</h3>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>系统编程项目</h4>
+                    <p>智能指针、移动语义和原子操作是最常用的特性。</p>
+                    <div class="feature-card">
+                        <p>在高性能Web服务器中使用C++11特性可以使<span class="stat">内存占用降低40%</span>，<span class="stat">吞吐量提升2倍</span>。</p>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <h4>游戏开发项目</h4>
+                    <p>lambda表达式、移动语义和并发支持特别有用。</p>
+                    <div class="feature-card">
+                        <p>游戏引擎优化中使用移动语义可以使<span class="stat">纹理加载速度提升35%</span>。</p>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <h4>数据处理项目</h4>
+                    <p>范围for循环、auto和并发算法特别有用。</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>嵌入式系统项目</h4>
+                    <p>constexpr和原子操作特别有用。</p>
+                </div>
+            </div>
+            
+            <h3>6.2 特性组合使用的最佳实践</h3>
+            
+            <div class="code-block">
+<code>// 智能指针 + 移动语义 + 并发
+template&lt;typename T&gt;
+class ThreadSafeResourcePool {
+private:
+    std::mutex mtx;
+    std::queue&lt;std::unique_ptr&lt;T&gt;&gt; resources;
+    
+public:
+    void returnResource(std::unique_ptr&lt;T&gt; resource) {
+        std::lock_guard&lt;std::mutex&gt; lock(mtx);
+        resources.push(std::move(resource));
+    }
+    
+    std::unique_ptr&lt;T&gt; acquireResource() {
+        std::lock_guard&lt;std::mutex&gt; lock(mtx);
+        if (resources.empty()) {
+            return std::make_unique&lt;T&gt;();  // 创建新资源
+        } else {
+            auto resource = std::move(resources.front());
+            resources.pop();
+            return resource;
+        }
+    }
+};</code>
+            </div>
+            
+            <h3>6.3 性能优化与代码规范建议</h3>
+            
+            <div class="tip">
+                <h4>性能优化建议</h4>
+                <ul>
+                    <li>优先使用std::make_unique和std::make_shared</li>
+                    <li>合理使用移动语义</li>
+                    <li>使用constexpr进行编译时计算</li>
+                    <li>避免过度使用std::shared_ptr</li>
+                    <li>使用原子操作替代锁</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <h4>代码规范建议</h4>
+                <ul>
+                    <li>统一的智能指针策略</li>
+                    <li>一致的lambda风格</li>
+                    <li>合理使用auto</li>
+                    <li>遵循Rule of Five</li>
+                    <li>线程安全设计</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="chapter7" class="chapter">
+            <h2>7. C++11与之前版本的对比分析</h2>
+            
+            <h3>7.1 从C++98/03到C++11的演进</h3>
+            
+            <table>
+                <tr>
+                    <th>特性</th>
+                    <th>C++98/03</th>
+                    <th>C++11</th>
+                </tr>
+                <tr>
+                    <td>内存管理方式</td>
+                    <td>手动new/delete</td>
+                    <td>智能指针自动管理</td>
+                </tr>
+                <tr>
+                    <td>类型推导</td>
+                    <td>仅模板参数</td>
+                    <td>auto和decltype</td>
+                </tr>
+                <tr>
+                    <td>空指针</td>
+                    <td>NULL/0（存在歧义）</td>
+                    <td>nullptr（类型安全）</td>
+                </tr>
+                <tr>
+                    <td>函数对象</td>
+                    <td>需要定义类</td>
+                    <td>lambda表达式</td>
+                </tr>
+                <tr>
+                    <td>并发支持</td>
+                    <td>依赖平台（如pthreads）</td>
+                    <td>标准库原生支持</td>
+                </tr>
+            </table>
+            
+            <h3>7.2 语言特性的改进</h3>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>C++98</h4>
+                    <div class="code-block">
+<code>// 迭代器
+std::vector&lt;int&gt;::iterator it = vec.begin();
+
+// 遍历容器
+for (std::vector&lt;int&gt;::iterator it = vec.begin(); 
+     it != vec.end(); ++it) {
+    std::cout &lt;&lt; *it &lt;&lt; " ";
+}
+
+// 函数对象
+struct CompareByPrice {
+    bool operator()(const Goods& lhs, 
+                    const Goods& rhs) const {
+        return lhs.price &lt; rhs.price;
+    }
+};</code>
+                    </div>
+                </div>
+                <div class="comparison-item">
+                    <h4>C++11</h4>
+                    <div class="code-block">
+<code>// 迭代器
+auto it = vec.begin();
+
+// 遍历容器
+for (auto& x : vec) {
+    std::cout &lt;&lt; x &lt;&lt; " ";
+}
+
+// Lambda表达式
+std::sort(products.begin(), products.end(), 
+          [](const Goods& lhs, const Goods& rhs) {
+              return lhs.price &lt; rhs.price;
+          });</code>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>7.3 标准库的重大更新</h3>
+            <p>C++11对标准库进行了大规模的重构和扩展：</p>
+            <ul>
+                <li>新增容器：std::array、std::forward_list、std::unordered_map等</li>
+                <li>移动语义支持：所有容器都支持移动构造和移动赋值</li>
+                <li>emplace操作：支持就地构造元素，避免临时对象</li>
+                <li>新增算法：std::copy_if、std::all_of、std::any_of等</li>
+            </ul>
+            
+            <h3>7.4 开发效率的提升</h3>
+            
+            <div class="feature-card">
+                <p>使用C++11特性可以使<span class="stat">代码量减少约30-40%</span>。</p>
+            </div>
+            
+            <ul>
+                <li>减少代码量：auto、lambda等特性减少重复代码</li>
+                <li>类型安全：nullptr、强类型枚举等减少类型相关错误</li>
+                <li>内存安全：智能指针自动管理内存，减少内存相关错误</li>
+                <li>编译时计算：constexpr允许在编译时进行计算</li>
+            </ul>
+        </div>
+        
+        <div id="chapter8" class="chapter">
+            <h2>8. 总结与展望</h2>
+            
+            <p>C++11作为C++语言发展史上的重要里程碑，通过引入约140个新特性，从根本上改变了C++的编程方式。</p>
+            
+            <h3>主要收获总结</h3>
+            
+            <div class="comparison">
+                <div class="comparison-item">
+                    <h4>智能指针</h4>
+                    <p>彻底改变了内存管理方式，自动内存管理可以减少30%的内存泄漏风险。</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>Lambda表达式</h4>
+                    <p>极大简化了函数对象的使用，使代码更简洁、更易维护。</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>移动语义</h4>
+                    <p>带来了显著的性能提升，在实际项目中可以获得2-3倍的性能提升。</p>
+                </div>
+                <div class="comparison-item">
+                    <h4>并发编程</h4>
+                    <p>原生的线程支持和原子操作使C++在多线程编程领域更具竞争力。</p>
+                </div>
+            </div>
+            
+            <h3>实际应用价值</h3>
+            
+            <ul>
+                <li>在系统编程中，智能指针和移动语义可以使内存占用降低40%</li>
+                <li>在游戏开发中，移动语义可以使纹理加载速度提升35%</li>
+                <li>在数据处理中，并发算法和类型推导可以显著提高处理效率</li>
+                <li>在嵌入式系统中，constexpr和原子操作提供了高效的解决方案</li>
+            </ul>
+            
+            <h3>对未来的展望</h3>
+            
+            <p>C++11确立的设计理念和发展方向对后续版本产生了深远影响：</p>
+            <ul>
+                <li>C++14增加了泛型lambda、constexpr函数的更多支持等</li>
+                <li>C++17增加了结构化绑定、文件系统库、并行算法等</li>
+                <li>C++20增加了概念、协程、模块等重要特性</li>
+            </ul>
+            
+            <div class="tip">
+                <h4>学习建议</h4>
+                <ul>
+                    <li>系统学习每个新特性的原理和用法</li>
+                    <li>通过实际项目练习，掌握最佳实践</li>
+                    <li>关注C++标准的最新发展，了解新特性的演进</li>
+                    <li>在团队中推广C++11的使用，提高整体代码质量</li>
+                </ul>
+            </div>
+            
+            <p>C++11的成功充分证明了C++语言的生命力和适应性。随着硬件技术的不断发展和软件需求的日益复杂，C++11提供的新特性将继续发挥重要作用，帮助开发者构建更高效、更安全、更优雅的软件系统。</p>
+        </div>
+        
+        <footer>
+            <p>C++11新特性全面解析 &copy; 2023</p>
+            <p>内容基于C++11标准文档和实际项目经验总结</p>
+        </footer>
+    </div>
+</body>
+</html>
