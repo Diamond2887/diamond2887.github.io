@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>有向无环图（DAG）核心概念与原理</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin: 1.5rem 0 0.8rem;
+        }
+        
+        section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-container {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #3c3c3c;
+            padding: 0.5rem 1rem;
+            border-radius: 5px 5px 0 0;
+            margin: -1rem -1rem 1rem -1rem;
+        }
+        
+        .code-language {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+        
+        .code-content {
+            white-space: pre-wrap;
+        }
+        
+        .keyword {
+            color: #f92672;
+        }
+        
+        .type {
+            color: #66d9ef;
+        }
+        
+        .string {
+            color: #e6db74;
+        }
+        
+        .comment {
+            color: #75715e;
+        }
+        
+        .highlight {
+            background-color: #ffeaa7;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .note {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .example {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        
+        .graph-container {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        
+        .graph {
+            display: inline-block;
+            position: relative;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .node {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: absolute;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .edge {
+            position: absolute;
+            height: 3px;
+            background-color: #333;
+            transform-origin: 0 0;
+        }
+        
+        .arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid #333;
+        }
+        
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .complexity-table th, .complexity-table td {
+            border: 1px solid #ddd;
+            padding: 0.8rem;
+            text-align: left;
+        }
+        
+        .complexity-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .complexity-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>有向无环图（DAG）核心概念与原理</h1>
+        <p class="subtitle">深入理解有向无环图的原理、算法与应用</p>
+    </header>
+
+    <section>
+        <h2>什么是DAG？</h2>
+        <p>有向无环图（Directed Acyclic Graph，DAG）是一种特殊的有向图，它由<span class="highlight">顶点（节点）</span>和<span class="highlight">有向边</span>组成，并且<span class="highlight">不包含任何有向环</span>。</p>
+        
+        <div class="graph-container">
+            <div class="graph" style="width: 400px; height: 300px;">
+                <!-- 节点 -->
+                <div class="node" style="top: 50px; left: 50px;">A</div>
+                <div class="node" style="top: 50px; left: 150px;">B</div>
+                <div class="node" style="top: 150px; left: 50px;">C</div>
+                <div class="node" style="top: 150px; left: 150px;">D</div>
+                <div class="node" style="top: 250px; left: 100px;">E</div>
+                
+                <!-- 边 -->
+                <div class="edge" style="width: 100px; top: 75px; left: 75px; transform: rotate(0deg);"></div>
+                <div class="arrow" style="top: 75px; left: 175px;"></div>
+                
+                <div class="edge" style="width: 100px; top: 100px; left: 75px; transform: rotate(90deg);"></div>
+                <div class="arrow" style="top: 175px; left: 75px;"></div>
+                
+                <div class="edge" style="width: 100px; top: 100px; left: 150px; transform: rotate(90deg);"></div>
+                <div class="arrow" style="top: 175px; left: 150px;"></div>
+                
+                <div class="edge" style="width: 71px; top: 175px; left: 75px; transform: rotate(45deg);"></div>
+                <div class="arrow" style="top: 225px; left: 125px;"></div>
+                
+                <div class="edge" style="width: 71px; top: 175px; left: 125px; transform: rotate(-45deg);"></div>
+                <div class="arrow" style="top: 225px; left: 125px;"></div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <p><strong>关键特性：</strong>DAG具有明确的方向性，并且不会形成循环依赖。这使得DAG非常适合表示具有依赖关系的数据结构，如任务调度、编译过程和数据流等。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>DAG的核心特性</h2>
+        
+        <h3>1. 有向性</h3>
+        <p>DAG中的边具有明确的方向，表示节点之间的依赖关系。例如，如果存在从节点A到节点B的边，那么A必须在B之前执行或处理。</p>
+        
+        <h3>2. 无环性</h3>
+        <p>DAG中不存在任何有向循环。这意味着从任意节点出发，沿着边的方向前进，最终都无法回到起点。</p>
+        
+        <h3>3. 拓扑排序</h3>
+        <p>每个DAG都存在至少一个拓扑排序，即节点的线性排列，使得对于每一条有向边(u, v)，节点u在排列中都出现在节点v之前。</p>
+        
+        <div class="example">
+            <p><strong>示例：</strong>考虑一个简单的DAG：A → B → C。有效的拓扑排序可以是[A, B, C]，但不能是[B, A, C]，因为A必须在B之前。</p>
+        </div>
+        
+        <h3>4. 源点与汇点</h3>
+        <p>在DAG中，<span class="highlight">源点</span>是入度为0的节点（没有前驱），<span class="highlight">汇点</span>是出度为0的节点（没有后继）。每个非空的DAG至少有一个源点和一个汇点。</p>
+    </section>
+
+    <section>
+        <h2>DAG的存储结构</h2>
+        
+        <h3>邻接矩阵</h3>
+        <p>使用二维数组表示节点之间的连接关系。对于n个节点的DAG，邻接矩阵是n×n的矩阵，其中matrix[i][j]表示从节点i到节点j的边。</p>
+        
+        <div class="code-container">
+            <div class="code-header">
+                <span class="code-language">C++</span>
+            </div>
+            <div class="code-content">
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="keyword">class</span> <span class="type">DAGMatrix</span> {
+<span class="keyword">private</span>:
+    <span class="type">vector</span>&lt;<span class="type">vector</span>&lt;<span class="type">W</span>&gt;&gt; matrix;
+    <span class="type">map</span>&lt;<span class="type">V</span>, <span class="type">int</span>&gt; vertexIndex;
+
+<span class="keyword">public</span>:
+    <span class="comment">// 添加有向边</span>
+    <span class="keyword">void</span> <span class="function">addEdge</span>(<span class="keyword">const</span> <span class="type">V</span>& src, <span class="keyword">const</span> <span class="type">V</span>& dest, <span class="keyword">const</span> <span class="type">W</span>& weight) {
+        <span class="type">int</span> srcIdx = vertexIndex[src];
+        <span class="type">int</span> destIdx = vertexIndex[dest];
+        matrix[srcIdx][destIdx] = weight;
+    }
+    
+    <span class="comment">// 检查是否存在边</span>
+    <span class="type">bool</span> <span class="function">hasEdge</span>(<span class="keyword">const</span> <span class="type">V</span>& src, <span class="keyword">const</span> <span class="type">V</span>& dest) <span class="keyword">const</span> {
+        <span class="type">int</span> srcIdx = vertexIndex[src];
+        <span class="type">int</span> destIdx = vertexIndex[dest];
+        <span class="keyword">return</span> matrix[srcIdx][destIdx] != MAX_WEIGHT;
+    }
+};</div>
+        </div>
+        
+        <h3>邻接表</h3>
+        <p>为每个节点维护一个链表，存储其所有出边指向的节点。这种结构更适合稀疏图。</p>
+        
+        <div class="code-container">
+            <div class="code-header">
+                <span class="code-language">C++</span>
+            </div>
+            <div class="code-content">
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="keyword">class</span> <span class="type">DAGList</span> {
+<span class="keyword">private</span>:
+    <span class="keyword">struct</span> <span class="type">Edge</span> {
+        <span class="type">int</span> dest;
+        <span class="type">W</span> weight;
+        <span class="type">Edge</span>* next;
+    };
+    
+    <span class="type">vector</span>&lt;<span class="type">Edge</span>*&gt; adjList;
+    <span class="type">map</span>&lt;<span class="type">V</span>, <span class="type">int</span>&gt; vertexIndex;
+
+<span class="keyword">public</span>:
+    <span class="comment">// 添加有向边</span>
+    <span class="keyword">void</span> <span class="function">addEdge</span>(<span class="keyword">const</span> <span class="type">V</span>& src, <span class="keyword">const</span> <span class="type">V</span>& dest, <span class="keyword">const</span> <span class="type">W</span>& weight) {
+        <span class="type">int</span> srcIdx = vertexIndex[src];
+        <span class="type">int</span> destIdx = vertexIndex[dest];
+        
+        <span class="type">Edge</span>* newEdge = <span class="keyword">new</span> <span class="type">Edge</span>{destIdx, weight, adjList[srcIdx]};
+        adjList[srcIdx] = newEdge;
+    }
+};</div>
+        </div>
+        
+        <div class="note">
+            <p><strong>存储结构选择：</strong>邻接矩阵适合稠密图，查询边的时间复杂度为O(1)；邻接表适合稀疏图，空间效率更高。</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>拓扑排序算法</h2>
+        
+        <p>拓扑排序是将DAG的所有节点排列成线性序列，使得对于每条边(u, v)，节点u在序列中都出现在节点v之前。</p>
+        
+        <h3>Kahn算法（基于入度）</h3>
+        <p>Kahn算法通过不断移除入度为0的节点来实现拓扑排序：</p>
+        
+        <ol>
+            <li>计算所有节点的入度</li>
+            <li>将所有入度为0的节点加入队列</li>
+            <li>从队列中取出节点，加入拓扑序列，并减少其邻居的入度</li>
+            <li>如果邻居的入度变为0，将其加入队列</li>
+            <li>重复直到队列为空</li>
+        </ol>
+        
+        <div class="code-container">
+            <div class="code-header">
+                <span class="code-language">C++</span>
+            </div>
+            <div class="code-content">
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="type">vector</span>&lt;<span class="type">V</span>&gt; <span class="function">kahnTopologicalSort</span>(<span class="keyword">const</span> <span class="type">DAGList</span>&lt;<span class="type">V</span>, <span class="type">W</span>&gt;& dag) {
+    <span class="type">vector</span>&lt;<span class="type">int</span>&gt; inDegree(dag.getVertexCount(), <span class="number">0</span>);
+    
+    <span class="comment">// 计算所有节点的入度</span>
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; dag.getVertexCount(); i++) {
+        <span class="keyword">auto</span> edge = dag.getAdjList()[i];
+        <span class="keyword">while</span> (edge) {
+            inDegree[edge-&gt;dest]++;
+            edge = edge-&gt;next;
+        }
+    }
+    
+    <span class="type">queue</span>&lt;<span class="type">int</span>&gt; q;
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; dag.getVertexCount(); i++) {
+        <span class="keyword">if</span> (inDegree[i] == <span class="number">0</span>) {
+            q.push(i);
+        }
+    }
+    
+    <span class="type">vector</span>&lt;<span class="type">V</span>&gt; result;
+    <span class="keyword">while</span> (!q.empty()) {
+        <span class="type">int</span> u = q.front();
+        q.pop();
+        result.push_back(dag.getVertex(u));
+        
+        <span class="keyword">auto</span> edge = dag.getAdjList()[u];
+        <span class="keyword">while</span> (edge) {
+            <span class="type">int</span> v = edge-&gt;dest;
+            <span class="keyword">if</span> (--inDegree[v] == <span class="number">0</span>) {
+                q.push(v);
+            }
+            edge = edge-&gt;next;
+        }
+    }
+    
+    <span class="keyword">if</span> (result.size() != dag.getVertexCount()) {
+        <span class="keyword">throw</span> <span class="string">"图中存在环，不是DAG"</span>;
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+        </div>
+        
+        <h3>DFS算法</h3>
+        <p>使用深度优先搜索实现拓扑排序：</p>
+        
+        <div class="code-container">
+            <div class="code-header">
+                <span class="code-language">C++</span>
+            </div>
+            <div class="code-content">
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="keyword">void</span> <span class="function">dfsTopoUtil</span>(<span class="type">int</span> u, <span class="keyword">const</span> <span class="type">DAGList</span>&lt;<span class="type">V</span>, <span class="type">W</span>&gt;& dag, 
+                  <span class="type">vector</span>&lt;<span class="type">bool</span>&gt;& visited, <span class="type">stack</span>&lt;<span class="type">int</span>&gt;& stack) {
+    visited[u] = <span class="keyword">true</span>;
+    
+    <span class="keyword">auto</span> edge = dag.getAdjList()[u];
+    <span class="keyword">while</span> (edge) {
+        <span class="type">int</span> v = edge-&gt;dest;
+        <span class="keyword">if</span> (!visited[v]) {
+            <span class="function">dfsTopoUtil</span>(v, dag, visited, stack);
+        }
+        edge = edge-&gt;next;
+    }
+    
+    stack.push(u);
+}
+
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="type">vector</span>&lt;<span class="type">V</span>&gt; <span class="function">dfsTopologicalSort</span>(<span class="keyword">const</span> <span class="type">DAGList</span>&lt;<span class="type">V</span>, <span class="type">W</span>&gt;& dag) {
+    <span class="type">vector</span>&lt;<span class="type">bool</span>&gt; visited(dag.getVertexCount(), <span class="keyword">false</span>);
+    <span class="type">stack</span>&lt;<span class="type">int</span>&gt; stack;
+    
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; dag.getVertexCount(); i++) {
+        <span class="keyword">if</span> (!visited[i]) {
+            <span class="function">dfsTopoUtil</span>(i, dag, visited, stack);
+        }
+    }
+    
+    <span class="type">vector</span>&lt;<span class="type">V</span>&gt; result;
+    <span class="keyword">while</span> (!stack.empty()) {
+        result.push_back(dag.getVertex(stack.top()));
+        stack.pop();
+    }
+    
+    <span class="keyword">return</span> result;
+}</div>
+        </div>
+        
+        <table class="complexity-table">
+            <thead>
+                <tr>
+                    <th>算法</th>
+                    <th>时间复杂度</th>
+                    <th>空间复杂度</th>
+                    <th>优点</th>
+                    <th>缺点</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Kahn算法</td>
+                    <td>O(V+E)</td>
+                    <td>O(V)</td>
+                    <td>直观，易于理解</td>
+                    <td>需要维护入度数组</td>
+                </tr>
+                <tr>
+                    <td>DFS算法</td>
+                    <td>O(V+E)</td>
+                    <td>O(V)</td>
+                    <td>实现简洁</td>
+                    <td>递归深度可能受限</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>关键路径算法</h2>
+        
+        <p>关键路径是DAG中最长的路径，决定了整个项目的最短完成时间。在AOE网（Activity On Edge）中，顶点表示事件，边表示活动，边的权重表示活动持续时间。</p>
+        
+        <div class="graph-container">
+            <div class="graph" style="width: 500px; height: 300px;">
+                <!-- 节点 -->
+                <div class="node" style="top: 50px; left: 50px;">开始</div>
+                <div class="node" style="top: 150px; left: 150px;">A</div>
+                <div class="node" style="top: 50px; left: 250px;">B</div>
+                <div class="node" style="top: 150px; left: 350px;">C</div>
+                <div class="node" style="top: 250px; left: 450px;">结束</div>
+                
+                <!-- 边和权重 -->
+                <div class="edge" style="width: 100px; top: 75px; left: 75px; transform: rotate(45deg);"></div>
+                <div class="arrow" style="top: 125px; left: 125px;"></div>
+                <div style="position: absolute; top: 90px; left: 100px; color: #e74c3c; font-weight: bold;">5</div>
+                
+                <div class="edge" style="width: 100px; top: 75px; left: 150px; transform: rotate(0deg);"></div>
+                <div class="arrow" style="top: 75px; left: 250px;"></div>
+                <div style="position: absolute; top: 60px; left: 200px; color: #e74c3c; font-weight: bold;">3</div>
+                
+                <div class="edge" style="width: 100px; top: 175px; left: 175px; transform: rotate(0deg);"></div>
+                <div class="arrow" style="top: 175px; left: 275px;"></div>
+                <div style="position: absolute; top: 160px; left: 225px; color: #e74c3c; font-weight: bold;">4</div>
+                
+                <div class="edge" style="width: 100px; top: 100px; left: 275px; transform: rotate(45deg);"></div>
+                <div class="arrow" style="top: 150px; left: 325px;"></div>
+                <div style="position: absolute; top: 115px; left: 300px; color: #e74c3c; font-weight: bold;">2</div>
+                
+                <div class="edge" style="width: 100px; top: 200px; left: 375px; transform: rotate(0deg);"></div>
+                <div class="arrow" style="top: 200px; left: 475px;"></div>
+                <div style="position: absolute; top: 185px; left: 425px; color: #e74c3c; font-weight: bold;">6</div>
+            </div>
+        </div>
+        
+        <h3>关键路径计算步骤</h3>
+        <ol>
+            <li>计算事件的最早发生时间(ve)：从源点开始，按拓扑顺序计算</li>
+            <li>计算事件的最晚发生时间(vl)：从汇点开始，按逆拓扑顺序计算</li>
+            <li>计算活动的最早开始时间(e)和最晚开始时间(l)</li>
+            <li>找出e=l的活动，这些活动构成关键路径</li>
+        </ol>
+        
+        <div class="code-container">
+            <div class="code-header">
+                <span class="code-language">C++</span>
+            </div>
+            <div class="code-content">
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="type">vector</span>&lt;<span class="type">V</span>&gt; <span class="function">criticalPath</span>(<span class="keyword">const</span> <span class="type">DAGList</span>&lt;<span class="type">V</span>, <span class="type">W</span>&gt;& dag, <span class="keyword">const</span> <span class="type">V</span>& start, <span class="keyword">const</span> <span class="type">V</span>& end) {
+    <span class="type">int</span> n = dag.getVertexCount();
+    <span class="type">int</span> startIdx = dag.getVertexIndex(start);
+    <span class="type">int</span> endIdx = dag.getVertexIndex(end);
+    
+    <span class="comment">// 拓扑排序</span>
+    <span class="type">vector</span>&lt;<span class="type">int</span>&gt; topoOrder = <span class="function">kahnTopologicalSort</span>(dag);
+    
+    <span class="comment">// 计算最早发生时间</span>
+    <span class="type">vector</span>&lt;<span class="type">W</span>&gt; ve(n, <span class="number">0</span>);
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+        <span class="type">int</span> u = topoOrder[i];
+        <span class="keyword">auto</span> edge = dag.getAdjList()[u];
+        <span class="keyword">while</span> (edge) {
+            <span class="type">int</span> v = edge-&gt;dest;
+            <span class="keyword">if</span> (ve[v] &lt; ve[u] + edge-&gt;weight) {
+                ve[v] = ve[u] + edge-&gt;weight;
+            }
+            edge = edge-&gt;next;
+        }
+    }
+    
+    <span class="comment">// 计算最晚发生时间</span>
+    <span class="type">vector</span>&lt;<span class="type">W</span>&gt; vl(n, ve[endIdx]);
+    <span class="keyword">for</span> (<span class="type">int</span> i = n-<span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) {
+        <span class="type">int</span> u = topoOrder[i];
+        <span class="keyword">auto</span> edge = dag.getAdjList()[u];
+        <span class="keyword">while</span> (edge) {
+            <span class="type">int</span> v = edge-&gt;dest;
+            <span class="keyword">if</span> (vl[u] &gt; vl[v] - edge-&gt;weight) {
+                vl[u] = vl[v] - edge-&gt;weight;
+            }
+            edge = edge-&gt;next;
+        }
+    }
+    
+    <span class="comment">// 找出关键活动</span>
+    <span class="type">vector</span>&lt;<span class="type">V</span>&gt; criticalActivities;
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+        <span class="keyword">auto</span> edge = dag.getAdjList()[i];
+        <span class="keyword">while</span> (edge) {
+            <span class="type">int</span> j = edge-&gt;dest;
+            <span class="type">W</span> e = ve[i];  <span class="comment">// 最早开始时间</span>
+            <span class="type">W</span> l = vl[j] - edge-&gt;weight;  <span class="comment">// 最晚开始时间</span>
+            
+            <span class="keyword">if</span> (e == l) {  <span class="comment">// 关键活动</span>
+                criticalActivities.push_back(dag.getVertex(i));
+                criticalActivities.push_back(dag.getVertex(j));
+            }
+            edge = edge-&gt;next;
+        }
+    }
+    
+    <span class="keyword">return</span> criticalActivities;
+}</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>DAG的应用场景</h2>
+        
+        <h3>1. 项目管理</h3>
+        <p>DAG可用于表示任务之间的依赖关系，通过关键路径分析确定项目最短工期。</p>
+        
+        <h3>2. 编译器优化</h3>
+        <p>在编译器中，DAG用于表示表达式和指令之间的依赖关系，优化指令调度。</p>
+        
+        <h3>3. 数据处理流程</h3>
+        <p>ETL（提取-转换-加载）流程通常使用DAG表示数据处理步骤之间的依赖关系。</p>
+        
+        <h3>4. 版本控制系统</h3>
+        <p>Git等版本控制系统使用DAG表示提交历史，每个提交是一个节点，边表示父子关系。</p>
+        
+        <h3>5. 机器学习</h3>
+        <p>TensorFlow等框架使用DAG表示计算图，节点表示操作，边表示数据流。</p>
+    </section>
+
+    <section>
+        <h2>DAG与环检测</h2>
+        
+        <p>在实际应用中，我们需要确保图确实是DAG（无环）。可以使用拓扑排序或DFS来检测环：</p>
+        
+        <div class="code-container">
+            <div class="code-header">
+                <span class="code-language">C++</span>
+            </div>
+            <div class="code-content">
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="type">bool</span> <span class="function">hasCycleDFS</span>(<span class="type">int</span> u, <span class="keyword">const</span> <span class="type">DAGList</span>&lt;<span class="type">V</span>, <span class="type">W</span>&gt;& dag, 
+                   <span class="type">vector</span>&lt;<span class="type">bool</span>&gt;& visited, <span class="type">vector</span>&lt;<span class="type">bool</span>&gt;& recStack) {
+    <span class="keyword">if</span> (!visited[u]) {
+        visited[u] = <span class="keyword">true</span>;
+        recStack[u] = <span class="keyword">true</span>;
+        
+        <span class="keyword">auto</span> edge = dag.getAdjList()[u];
+        <span class="keyword">while</span> (edge) {
+            <span class="type">int</span> v = edge-&gt;dest;
+            <span class="keyword">if</span> (!visited[v] && <span class="function">hasCycleDFS</span>(v, dag, visited, recStack)) {
+                <span class="keyword">return</span> <span class="keyword">true</span>;
+            } <span class="keyword">else</span> <span class="keyword">if</span> (recStack[v]) {
+                <span class="keyword">return</span> <span class="keyword">true</span>;
+            }
+            edge = edge-&gt;next;
+        }
+    }
+    
+    recStack[u] = <span class="keyword">false</span>;
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+}
+
+<span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="type">V</span>, <span class="keyword">class</span> <span class="type">W</span>&gt;
+<span class="type">bool</span> <span class="function">hasCycle</span>(<span class="keyword">const</span> <span class="type">DAGList</span>&lt;<span class="type">V</span>, <span class="type">W</span>&gt;& dag) {
+    <span class="type">vector</span>&lt;<span class="type">bool</span>&gt; visited(dag.getVertexCount(), <span class="keyword">false</span>);
+    <span class="type">vector</span>&lt;<span class="type">bool</span>&gt; recStack(dag.getVertexCount(), <span class="keyword">false</span>);
+    
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; dag.getVertexCount(); i++) {
+        <span class="keyword">if</span> (<span class="function">hasCycleDFS</span>(i, dag, visited, recStack)) {
+            <span class="keyword">return</span> <span class="keyword">true</span>;
+        }
+    }
+    
+    <span class="keyword">return</span> <span class="keyword">false</span>;
+}</div>
+        </div>
+    </section>
+
+    <footer>
+        <p>有向无环图（DAG）核心概念与原理 | 深入理解依赖关系与拓扑排序</p>
+    </footer>
+</body>
+</html>

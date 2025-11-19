@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哈希表核心原理详解</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --code-bg: #f8f9fa;
+            --border-color: #bdc3c7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .sidebar {
+            flex: 0 0 250px;
+            background-color: var(--light-color);
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            min-width: 300px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        h3 {
+            color: var(--dark-color);
+            margin: 20px 0 10px;
+        }
+        
+        h4 {
+            color: var(--dark-color);
+            margin: 15px 0 8px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .nav-item {
+            margin-bottom: 10px;
+        }
+        
+        .nav-item a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-item a:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .nav-item.active a {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .comparison-table th {
+            background-color: var(--light-color);
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(236, 240, 241, 0.5);
+        }
+        
+        .highlight {
+            background-color: rgba(255, 255, 0, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .visualization {
+            background-color: #f9f9f9;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .visualization-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .hash-function-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .hash-function-card {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            background-color: white;
+        }
+        
+        .hash-function-name {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+        
+        .svg-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .svg-container svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>哈希表核心原理详解</h1>
+            <p class="subtitle">深入理解哈希表的工作原理与关键实现</p>
+        </header>
+        
+        <div class="content">
+            <nav class="sidebar">
+                <div class="nav-item active"><a href="#section1">1. 哈希表基础概念</a></div>
+                <div class="nav-item"><a href="#section2">2. 哈希函数原理</a></div>
+                <div class="nav-item"><a href="#section3">3. 哈希冲突解决方法</a></div>
+                <div class="nav-item"><a href="#section4">4. C++关键实现</a></div>
+                <div class="nav-item"><a href="#section5">5. 性能分析</a></div>
+            </nav>
+            
+            <main class="main-content">
+                <section id="section1" class="section">
+                    <h2>1. 哈希表基础概念</h2>
+                    
+                    <h3>1.1 哈希表定义与工作原理</h3>
+                    <p>哈希表（Hash Table）是一种通过哈希函数将键映射到存储位置的数据结构，实现快速的数据访问。</p>
+                    
+                    <div class="svg-container">
+                        <svg width="600" height="120" viewBox="0 0 600 120">
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                                    refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#3498db"/>
+                                </marker>
+                            </defs>
+                            
+                            <rect x="10" y="40" width="100" height="40" rx="5" fill="#ecf0f1" stroke="#3498db" stroke-width="2"/>
+                            <text x="60" y="65" text-anchor="middle" fill="#2c3e50" font-weight="bold">键(Key)</text>
+                            
+                            <path d="M120 60 L180 60" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            
+                            <rect x="180" y="40" width="120" height="40" rx="5" fill="#3498db" stroke="#3498db" stroke-width="2"/>
+                            <text x="240" y="65" text-anchor="middle" fill="white" font-weight="bold">哈希函数</text>
+                            
+                            <path d="M310 60 L370 60" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            
+                            <rect x="370" y="40" width="100" height="40" rx="5" fill="#ecf0f1" stroke="#3498db" stroke-width="2"/>
+                            <text x="420" y="65" text-anchor="middle" fill="#2c3e50" font-weight="bold">索引(Index)</text>
+                            
+                            <path d="M480 60 L540 60" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            
+                            <rect x="540" y="40" width="50" height="40" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="565" y="65" text-anchor="middle" fill="white" font-weight="bold">值</text>
+                        </svg>
+                    </div>
+                    
+                    <p>哈希表的核心优势在于其<span class="highlight">平均O(1)时间复杂度</span>的查找、插入和删除操作。这种高效性来源于：</p>
+                    <ul>
+                        <li><strong>直接访问机制</strong>：通过哈希函数直接计算存储位置</li>
+                        <li><strong>避免顺序查找</strong>：无需遍历整个数据集</li>
+                        <li><strong>负载因子控制</strong>：通过动态扩容保持性能</li>
+                    </ul>
+                    
+                    <h3>1.2 时间复杂度分析</h3>
+                    <p>哈希表的性能表现取决于哈希函数的质量和冲突解决方法：</p>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>操作</th>
+                                <th>平均情况</th>
+                                <th>最坏情况</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>查找</td>
+                                <td>O(1)</td>
+                                <td>O(n)</td>
+                                <td>哈希函数均匀分布时性能最佳</td>
+                            </tr>
+                            <tr>
+                                <td>插入</td>
+                                <td>O(1)</td>
+                                <td>O(n)</td>
+                                <td>包含可能的扩容开销</td>
+                            </tr>
+                            <tr>
+                                <td>删除</td>
+                                <td>O(1)</td>
+                                <td>O(n)</td>
+                                <td>取决于冲突解决方法</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                
+                <section id="section2" class="section">
+                    <h2>2. 哈希函数原理</h2>
+                    
+                    <h3>2.1 理想哈希函数的特性</h3>
+                    <p>一个高质量的哈希函数应具备以下特性：</p>
+                    <ul>
+                        <li><strong>均匀分布性</strong>：将键均匀分布到整个地址空间</li>
+                        <li><strong>计算高效性</strong>：快速计算，避免成为性能瓶颈</li>
+                        <li><strong>确定性</strong>：相同输入总是产生相同输出</li>
+                        <li><strong>雪崩效应</strong>：微小输入变化导致输出显著不同</li>
+                    </ul>
+                    
+                    <div class="svg-container">
+                        <svg width="600" height="200" viewBox="0 0 600 200">
+                            <!-- 输入键 -->
+                            <rect x="50" y="30" width="80" height="30" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                            <text x="90" y="50" text-anchor="middle" fill="white" font-weight="bold">键1</text>
+                            
+                            <rect x="50" y="80" width="80" height="30" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                            <text x="90" y="100" text-anchor="middle" fill="white" font-weight="bold">键2</text>
+                            
+                            <rect x="50" y="130" width="80" height="30" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                            <text x="90" y="150" text-anchor="middle" fill="white" font-weight="bold">键3</text>
+                            
+                            <!-- 箭头 -->
+                            <path d="M140 45 L180 45" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <path d="M140 95 L180 95" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <path d="M140 145 L180 145" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            
+                            <!-- 哈希函数 -->
+                            <rect x="180" y="20" width="120" height="150" rx="5" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                            <text x="240" y="100" text-anchor="middle" fill="white" font-weight="bold" font-size="16">哈希函数</text>
+                            
+                            <!-- 箭头 -->
+                            <path d="M310 45 L350 45" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <path d="M310 95 L350 95" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            <path d="M310 145 L350 145" stroke="#3498db" stroke-width="2" marker-end="url(#arrowhead)"/>
+                            
+                            <!-- 输出哈希值 -->
+                            <rect x="350" y="30" width="80" height="30" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="390" y="50" text-anchor="middle" fill="white" font-weight="bold">索引1</text>
+                            
+                            <rect x="350" y="80" width="80" height="30" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="390" y="100" text-anchor="middle" fill="white" font-weight="bold">索引2</text>
+                            
+                            <rect x="350" y="130" width="80" height="30" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="390" y="150" text-anchor="middle" fill="white" font-weight="bold">索引3</text>
+                            
+                            <!-- 均匀分布示意 -->
+                            <text x="300" y="190" text-anchor="middle" fill="#7f8c8d" font-size="14">均匀分布到不同位置</text>
+                        </svg>
+                    </div>
+                    
+                    <h3>2.2 常见哈希函数实现</h3>
+                    
+                    <div class="hash-function-examples">
+                        <div class="hash-function-card">
+                            <div class="hash-function-name">除留余数法</div>
+                            <p>最常用的哈希函数，通过取模运算确定位置：</p>
+                            <div class="code-block">
+int mod_hash(int key, int size) {
+    return key % size;
+}
+                            </div>
+                            <p><strong>特点</strong>：实现简单，当表大小为质数时效果更好</p>
+                        </div>
+                        
+                        <div class="hash-function-card">
+                            <div class="hash-function-name">乘法哈希</div>
+                            <p>利用乘法与取小数部分实现：</p>
+                            <div class="code-block">
+int multiplicative_hash(int key, int size) {
+    double A = 0.6180339887; // 黄金分割比的近似值
+    double product = key * A;
+    double fractional = product - (int)product;
+    return (int)(size * fractional);
+}
+                            </div>
+                            <p><strong>特点</strong>：分布均匀，适合未知数据分布</p>
+                        </div>
+                        
+                        <div class="hash-function-card">
+                            <div class="hash-function-name">字符串哈希(BKDR)</div>
+                            <p>专为字符串设计的哈希函数：</p>
+                            <div class="code-block">
+unsigned int bkdr_hash(const char* str) {
+    unsigned int seed = 131; // 31, 131, 1313, 13131, 131313 etc.
+    unsigned int hash = 0;
+    
+    while (*str) {
+        hash = hash * seed + (*str++);
+    }
+    
+    return hash;
+}
+                            </div>
+                            <p><strong>特点</strong>：简单有效，广泛用于实际应用</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="section3" class="section">
+                    <h2>3. 哈希冲突解决方法</h2>
+                    
+                    <h3>3.1 链地址法 (Separate Chaining)</h3>
+                    <p>将哈希到同一位置的元素存储在链表中：</p>
+                    
+                    <div class="svg-container">
+                        <svg width="600" height="300" viewBox="0 0 600 300">
+                            <!-- 哈希表 -->
+                            <rect x="50" y="50" width="500" height="40" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+                            
+                            <!-- 桶 -->
+                            <rect x="50" y="50" width="50" height="40" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+                            <text x="75" y="75" text-anchor="middle" fill="white" font-weight="bold">0</text>
+                            
+                            <rect x="100" y="50" width="50" height="40" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+                            <text x="125" y="75" text-anchor="middle" fill="#2c3e50">1</text>
+                            
+                            <rect x="150" y="50" width="50" height="40" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+                            <text x="175" y="75" text-anchor="middle" fill="white" font-weight="bold">2</text>
+                            
+                            <rect x="200" y="50" width="50" height="40" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+                            <text x="225" y="75" text-anchor="middle" fill="#2c3e50">3</text>
+                            
+                            <rect x="250" y="50" width="50" height="40" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+                            <text x="275" y="75" text-anchor="middle" fill="white" font-weight="bold">4</text>
+                            
+                            <!-- 链表节点 -->
+                            <!-- 桶0的链表 -->
+                            <rect x="75" y="120" width="80" height="30" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="115" y="140" text-anchor="middle" fill="white" font-weight="bold">K1,V1</text>
+                            
+                            <rect x="75" y="170" width="80" height="30" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="115" y="190" text-anchor="middle" fill="white" font-weight="bold">K4,V4</text>
+                            
+                            <rect x="75" y="220" width="80" height="30" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="115" y="240" text-anchor="middle" fill="white" font-weight="bold">K7,V7</text>
+                            
+                            <!-- 连接线 -->
+                            <path d="M75 90 L75 120" stroke="#3498db" stroke-width="2"/>
+                            <path d="M115 150 L115 170" stroke="#3498db" stroke-width="2"/>
+                            <path d="M115 200 L115 220" stroke="#3498db" stroke-width="2"/>
+                            
+                            <!-- 桶2的链表 -->
+                            <rect x="175" y="120" width="80" height="30" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                            <text x="215" y="140" text-anchor="middle" fill="white" font-weight="bold">K2,V2</text>
+                            
+                            <rect x="175" y="170" width="80" height="30" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                            <text x="215" y="190" text-anchor="middle" fill="white" font-weight="bold">K5,V5</text>
+                            
+                            <!-- 连接线 -->
+                            <path d="M175 90 L175 120" stroke="#3498db" stroke-width="2"/>
+                            <path d="M215 150 L215 170" stroke="#3498db" stroke-width="2"/>
+                            
+                            <!-- 桶4的链表 -->
+                            <rect x="275" y="120" width="80" height="30" rx="5" fill="#f39c12" stroke="#d35400" stroke-width="2"/>
+                            <text x="315" y="140" text-anchor="middle" fill="white" font-weight="bold">K3,V3</text>
+                            
+                            <!-- 连接线 -->
+                            <path d="M275 90 L275 120" stroke="#3498db" stroke-width="2"/>
+                            
+                            <!-- 说明 -->
+                            <text x="300" y="280" text-anchor="middle" fill="#7f8c8d" font-size="14">每个桶对应一个链表，冲突元素添加到链表中</text>
+                        </svg>
+                    </div>
+                    
+                    <p><strong>优点</strong>：实现简单，负载因子可大于1，适合动态数据</p>
+                    <p><strong>缺点</strong>：需要额外指针空间，缓存不友好</p>
+                    
+                    <h3>3.2 开放地址法 (Open Addressing)</h3>
+                    <p>当发生冲突时，按照某种探测序列寻找下一个可用位置：</p>
+                    
+                    <div class="svg-container">
+                        <svg width="600" height="300" viewBox="0 0 600 300">
+                            <!-- 哈希表 -->
+                            <rect x="50" y="50" width="500" height="40" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+                            
+                            <!-- 桶 -->
+                            <rect x="50" y="50" width="50" height="40" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+                            <text x="75" y="75" text-anchor="middle" fill="white" font-weight="bold">0</text>
+                            
+                            <rect x="100" y="50" width="50" height="40" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+                            <text x="125" y="75" text-anchor="middle" fill="#2c3e50">1</text>
+                            
+                            <rect x="150" y="50" width="50" height="40" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+                            <text x="175" y="75" text-anchor="middle" fill="white" font-weight="bold">2</text>
+                            
+                            <rect x="200" y="50" width="50" height="40" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+                            <text x="225" y="75" text-anchor="middle" fill="#2c3e50">3</text>
+                            
+                            <rect x="250" y="50" width="50" height="40" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+                            <text x="275" y="75" text-anchor="middle" fill="white" font-weight="bold">4</text>
+                            
+                            <!-- 元素 -->
+                            <rect x="75" y="120" width="80" height="30" rx="5" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                            <text x="115" y="140" text-anchor="middle" fill="white" font-weight="bold">K1,V1</text>
+                            
+                            <rect x="175" y="120" width="80" height="30" rx="5" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                            <text x="215" y="140" text-anchor="middle" fill="white" font-weight="bold">K2,V2</text>
+                            
+                            <rect x="275" y="120" width="80" height="30" rx="5" fill="#f39c12" stroke="#d35400" stroke-width="2"/>
+                            <text x="315" y="140" text-anchor="middle" fill="white" font-weight="bold">K3,V3</text>
+                            
+                            <!-- 新元素 -->
+                            <rect x="375" y="120" width="80" height="30" rx="5" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/>
+                            <text x="415" y="140" text-anchor="middle" fill="white" font-weight="bold">K4,V4</text>
+                            
+                            <!-- 冲突示意 -->
+                            <path d="M415 120 Q415 100 275 90" stroke="#e74c3c" stroke-width="2" fill="none" stroke-dasharray="5,5"/>
+                            <text x="345" y="80" text-anchor="middle" fill="#e74c3c" font-size="12">哈希冲突</text>
+                            
+                            <!-- 探测序列 -->
+                            <path d="M415 150 L475 150 L475 200 L125 200 L125 170" stroke="#3498db" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                            <text x="300" y="190" text-anchor="middle" fill="#3498db" font-size="12">探测序列寻找空位</text>
+                            
+                            <!-- 最终位置 -->
+                            <rect x="125" y="220" width="80" height="30" rx="5" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/>
+                            <text x="165" y="240" text-anchor="middle" fill="white" font-weight="bold">K4,V4</text>
+                            
+                            <!-- 连接线 -->
+                            <path d="M125 170 L125 220" stroke="#3498db" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    
+                    <p><strong>常用探测方法</strong>：</p>
+                    <ul>
+                        <li><strong>线性探测</strong>：h(key, i) = (h(key) + i) mod m</li>
+                        <li><strong>二次探测</strong>：h(key, i) = (h(key) + i²) mod m</li>
+                        <li><strong>双重哈希</strong>：h(key, i) = (h1(key) + i × h2(key)) mod m</li>
+                    </ul>
+                    
+                    <h3>3.3 方法对比</h3>
+                    
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>方法</th>
+                                <th>原理</th>
+                                <th>优点</th>
+                                <th>缺点</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>链地址法</td>
+                                <td>冲突元素组成链表</td>
+                                <td>实现简单，负载因子可>1</td>
+                                <td>需要额外指针，缓存不友好</td>
+                            </tr>
+                            <tr>
+                                <td>线性探测</td>
+                                <td>顺序查找下一个空位</td>
+                                <td>缓存友好，实现简单</td>
+                                <td>容易产生聚集现象</td>
+                            </tr>
+                            <tr>
+                                <td>二次探测</td>
+                                <td>平方步长查找</td>
+                                <td>减少聚集现象</td>
+                                <td>可能无法探测所有位置</td>
+                            </tr>
+                            <tr>
+                                <td>双重哈希</td>
+                                <td>使用两个哈希函数</td>
+                                <td>探测均匀，理论最优</td>
+                                <td>计算开销大</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                
+                <section id="section4" class="section">
+                    <h2>4. C++关键实现</h2>
+                    
+                    <h3>4.1 哈希节点结构</h3>
+                    <div class="code-block">
+template <class K, class V>
+struct HashNode {
+    std::pair<K, V> kv;        // 存储键值对
+    std::unique_ptr<HashNode<K, V>> next;  // 指向下一个节点
+    
+    // 构造函数
+    HashNode(const std::pair<K, V>& data, 
+             std::unique_ptr<HashNode<K, V>> n = nullptr)
+        : kv(data), next(std::move(n)) {}
+};
+                    </div>
+                    
+                    <h3>4.2 哈希表核心实现</h3>
+                    <div class="code-block">
+template <class K, class V, class Hash = std::hash<K>>
+class HashTable {
+private:
+    std::vector<std::unique_ptr<HashNode<K, V>>*> buckets;
+    size_t bucket_count;
+    size_t element_count;
+    Hash hash_func;
+
+public:
+    // 构造函数
+    explicit HashTable(size_t bucket_count = 100) 
+        : bucket_count(nextPrime(bucket_count)), 
+          element_count(0) {
+        // 初始化桶数组
+        buckets.resize(bucket_count);
+        for (size_t i = 0; i < bucket_count; ++i) {
+            buckets[i] = new std::unique_ptr<HashNode<K, V>>();
+        }
+    }
+    
+    // 插入操作
+    bool insert(const std::pair<K, V>& kv) {
+        // 检查是否需要扩容
+        if (element_count >= bucket_count) {
+            rehash(nextPrime(bucket_count * 2));
+        }
+        
+        size_t bucket_idx = bucket(kv.first);
+        
+        // 检查键是否已存在
+        HashNode<K, V>* current = (*buckets[bucket_idx]) ? 
+                                  (*buckets[bucket_idx])->get() : nullptr;
+        while (current) {
+            if (current->kv.first == kv.first) {
+                return false;  // 键已存在
+            }
+            current = current->next.get();
+        }
+        
+        // 创建新节点并插入链表头部
+        auto new_node = std::make_unique<HashNode<K, V>>(
+            kv, std::move(*buckets[bucket_idx]));
+        *buckets[bucket_idx] = std::move(new_node);
+        
+        ++element_count;
+        return true;
+    }
+    
+    // 查找操作
+    V* find(const K& key) {
+        size_t bucket_idx = bucket(key);
+        HashNode<K, V>* current = (*buckets[bucket_idx]) ? 
+                                  (*buckets[bucket_idx])->get() : nullptr;
+        
+        while (current) {
+            if (current->kv.first == key) {
+                return &current->kv.second;
+            }
+            current = current->next.get();
+        }
+        return nullptr;
+    }
+    
+    // 计算桶索引
+    size_t bucket(const K& key) const {
+        return hash_func(key) % bucket_count;
+    }
+    
+    // 动态扩容
+    void rehash(size_t new_capacity) {
+        // 创建新的桶数组
+        std::vector<std::unique_ptr<HashNode<K, V>>*> new_buckets;
+        new_buckets.resize(new_capacity);
+        for (size_t i = 0; i < new_capacity; ++i) {
+            new_buckets[i] = new std::unique_ptr<HashNode<K, V>>();
+        }
+        
+        // 重新哈希所有元素
+        for (size_t i = 0; i < bucket_count; ++i) {
+            HashNode<K, V>* current = (*buckets[i]) ? 
+                                      (*buckets[i])->get() : nullptr;
+            while (current) {
+                HashNode<K, V>* next_node = current->next.get();
+                
+                // 计算新的桶索引
+                size_t new_bucket_idx = hash_func(current->kv.first) % new_capacity;
+                
+                // 插入到新桶的头部
+                auto temp = std::make_unique<HashNode<K, V>>(
+                    std::move(current->kv), std::move(*new_buckets[new_bucket_idx]));
+                *new_buckets[new_bucket_idx] = std::move(temp);
+                
+                current = next_node;
+            }
+            *buckets[i] = nullptr;  // 清空旧桶
+        }
+        
+        // 交换新旧桶数组
+        for (size_t i = 0; i < bucket_count; ++i) {
+            delete buckets[i];
+        }
+        buckets = std::move(new_buckets);
+        bucket_count = new_capacity;
+    }
+};
+                    </div>
+                </section>
+                
+                <section id="section5" class="section">
+                    <h2>5. 性能分析</h2>
+                    
+                    <h3>5.1 负载因子影响</h3>
+                    <p>负载因子 α = n/m（n为元素数量，m为桶数量）直接影响哈希表性能：</p>
+                    
+                    <div class="svg-container">
+                        <svg width="600" height="300" viewBox="0 0 600 300">
+                            <!-- 坐标轴 -->
+                            <path d="M50 250 L550 250" stroke="#2c3e50" stroke-width="2"/>
+                            <path d="M50 250 L50 50" stroke="#2c3e50" stroke-width="2"/>
+                            
+                            <!-- 坐标轴标签 -->
+                            <text x="300" y="280" text-anchor="middle" fill="#2c3e50">负载因子 α</text>
+                            <text x="20" y="150" text-anchor="middle" fill="#2c3e50" transform="rotate(-90 20 150)">查找时间</text>
+                            
+                            <!-- 刻度 -->
+                            <path d="M50 250 L50 245" stroke="#2c3e50" stroke-width="2"/>
+                            <text x="50" y="265" text-anchor="middle" fill="#2c3e50">0</text>
+                            
+                            <path d="M150 250 L150 245" stroke="#2c3e50" stroke-width="2"/>
+                            <text x="150" y="265" text-anchor="middle" fill="#2c3e50">0.5</text>
+                            
+                            <path d="M250 250 L250 245" stroke="#2c3e50" stroke-width="2"/>
+                            <text x="250" y="265" text-anchor="middle" fill="#2c3e50">1.0</text>
+                            
+                            <path d="M350 250 L350 245" stroke="#2c3e50" stroke-width="2"/>
+                            <text x="350" y="265" text-anchor="middle" fill="#2c3e50">1.5</text>
+                            
+                            <path d="M450 250 L450 245" stroke="#2c3e50" stroke-width="2"/>
+                            <text x="450" y="265" text-anchor="middle" fill="#2c3e50">2.0</text>
+                            
+                            <path d="M550 250 L550 245" stroke="#2c3e50" stroke-width="2"/>
+                            <text x="550" y="265" text-anchor="middle" fill="#2c3e50">2.5</text>
+                            
+                            <!-- 性能曲线 -->
+                            <path d="M50 200 L150 120 L250 100 L350 130 L450 180 L550 240" 
+                                  stroke="#e74c3c" stroke-width="3" fill="none"/>
+                            
+                            <!-- 关键点标注 -->
+                            <circle cx="250" cy="100" r="5" fill="#e74c3c"/>
+                            <text x="270" y="90" fill="#e74c3c" font-size="12">最佳性能点</text>
+                            
+                            <circle cx="350" cy="130" r="5" fill="#e74c3c"/>
+                            <text x="370" y="140" fill="#e74c3c" font-size="12">扩容阈值</text>
+                            
+                            <!-- 区域标注 -->
+                            <rect x="50" y="100" width="200" height="150" fill="#2ecc71" fill-opacity="0.1" stroke="#27ae60" stroke-dasharray="5,5"/>
+                            <text x="150" y="90" text-anchor="middle" fill="#27ae60" font-size="12">高性能区</text>
+                            
+                            <rect x="250" y="100" width="300" height="150" fill="#e74c3c" fill-opacity="0.1" stroke="#c0392b" stroke-dasharray="5,5"/>
+                            <text x="400" y="90" text-anchor="middle" fill="#c0392b" font-size="12">性能下降区</text>
+                        </svg>
+                    </div>
+                    
+                    <h3>5.2 优化建议</h3>
+                    <ul>
+                        <li><strong>选择合适的哈希函数</strong>：根据数据类型选择最适合的哈希算法</li>
+                        <li><strong>控制负载因子</strong>：通常保持在0.5-0.75之间，超过阈值时及时扩容</li>
+                        <li><strong>使用质数作为表大小</strong>：减少周期性冲突</li>
+                        <li><strong>考虑缓存友好性</strong>：开放地址法通常比链地址法具有更好的缓存性能</li>
+                    </ul>
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
