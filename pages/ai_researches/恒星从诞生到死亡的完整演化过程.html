@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恒星从诞生到死亡的完整演化过程</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #283593;
+            --accent: #5c6bc0;
+            --light: #e8eaf6;
+            --dark: #0d1338;
+            --highlight: #ffab00;
+            --danger: #c62828;
+            --success: #2e7d32;
+            --info: #0277bd;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to bottom, #0f1b3a, #1c2e50);
+            color: var(--light);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--highlight);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin: 30px 0 15px;
+            color: var(--accent);
+            border-left: 5px solid var(--highlight);
+            padding-left: 15px;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin: 20px 0 10px;
+            color: var(--light);
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .intro {
+            font-size: 1.2rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--highlight);
+        }
+        
+        .section {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section-header {
+            background-color: var(--primary);
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .section-header:hover {
+            background-color: var(--secondary);
+        }
+        
+        .section-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+        
+        .section-content.active {
+            padding: 20px;
+            max-height: 5000px;
+        }
+        
+        .subsection {
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .subsection h3 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .formula {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            border-left: 4px solid var(--highlight);
+        }
+        
+        .highlight {
+            color: var(--highlight);
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background-color: rgba(2, 119, 189, 0.2);
+            border-left: 4px solid var(--info);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning-box {
+            background-color: rgba(198, 40, 40, 0.2);
+            border-left: 4px solid var(--danger);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .success-box {
+            background-color: rgba(46, 125, 50, 0.2);
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--accent);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--highlight);
+            border: 4px solid var(--accent);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -13px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -13px;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            position: relative;
+        }
+        
+        .timeline-content h3 {
+            margin-top: 0;
+            color: var(--highlight);
+        }
+        
+        .conclusion {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 5px solid var(--highlight);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--accent);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 18px;
+            }
+            
+            .timeline-item:nth-child(odd)::after,
+            .timeline-item:nth-child(even)::after {
+                left: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>恒星从诞生到死亡的完整演化过程</h1>
+            <p class="intro">恒星是宇宙中最基本的天体之一，它们的生命周期跨越数百万到数十亿年。从分子云中的尘埃和气体开始，经过引力坍缩形成原恒星，再到主序星阶段的长期稳定燃烧，然后经历红巨星的膨胀与氦闪，最终以白矮星、中子星或黑洞的形式结束生命——这个过程不仅展现了自然界的神奇，也揭示了宇宙演化的基本规律。</p>
+        </header>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>分子云</h3>
+                    <p>恒星诞生于分子云，这是宇宙中最冷、最密集的星际介质区域。分子云的温度通常只有10-20开尔文，密度约为每立方厘米100-10000个分子。</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>原恒星</h3>
+                    <p>引力坍缩开始后，分子云的密度中心区域会快速收缩，形成原恒星。原恒星在形成初期仍然被浓厚的气体和尘埃包围。</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>主序星</h3>
+                    <p>主序星阶段是恒星一生中最长的时期，占据了恒星生命周期的90%以上。在这个阶段，恒星通过核聚变反应将氢转化为氦，释放出巨大的能量。</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>红巨星</h3>
+                    <p>当恒星核心的氢燃料逐渐耗尽时，主序星阶段宣告结束，恒星开始进入晚年期。核心收缩的同时，恒星的外层开始膨胀，形成红巨星。</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>恒星死亡</h3>
+                    <p>不同质量的恒星会有不同的死亡方式：低质量恒星形成白矮星，中等质量恒星经历超新星爆发形成中子星，大质量恒星形成黑洞。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>1. 引言：恒星演化概述</h2>
+                <span>+</span>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>1.1 恒星演化研究的意义与方法</h3>
+                    <p>恒星演化是天体物理学中最为基础和重要的研究领域之一，它不仅揭示了宇宙中最壮观天体现象的物理本质，还为我们理解宇宙的起源、元素的形成以及生命的可能性提供了关键线索。</p>
+                    <p>恒星作为宇宙的基本"砖块"，通过其漫长的生命周期，从简单的氢元素开始，逐步合成出碳、氧、铁等构成行星和生命的重元素。</p>
+                    <div class="info-box">
+                        <p><strong>研究方法：</strong>恒星演化研究主要基于理论模型和观测证据的结合。理论方面，通过求解流体力学方程组、核反应网络方程以及辐射转移方程，天文学家能够模拟恒星内部的物理过程。观测方面，通过分析恒星的光谱、光度、颜色等特征，结合星团统计和星际介质研究，我们可以推断恒星的年龄、质量、化学成分以及演化阶段。</p>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>1.2 恒星演化的基本概念</h3>
+                    <p>恒星演化是指恒星从诞生、成长、衰老到死亡的整个生命周期过程。这个过程的驱动力主要是恒星内部的核反应和引力作用之间的平衡。</p>
+                    <p>恒星的质量是决定其演化路径的最关键因素。根据质量的不同，恒星可以分为：</p>
+                    <ul>
+                        <li><span class="highlight">低质量恒星</span>：小于8倍太阳质量</li>
+                        <li><span class="highlight">中等质量恒星</span>：8-25倍太阳质量</li>
+                        <li><span class="highlight">大质量恒星</span>：大于25倍太阳质量</li>
+                    </ul>
+                    <p>不同质量的恒星会沿着完全不同的演化轨道发展，最终的结局也截然不同。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>2. 恒星的诞生：从星云到原恒星</h2>
+                <span>+</span>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>2.1 分子云：恒星的摇篮</h3>
+                    <p>恒星诞生于分子云，这是宇宙中最冷、最密集的星际介质区域。分子云的温度通常只有10-20开尔文，密度约为每立方厘米100-10000个分子，主要成分是分子氢（H₂），其次是一氧化碳（CO）等其他分子。</p>
+                    <p>分子云内部存在着复杂的结构和动力学过程。云团中包含着密度更高的核心区域，这些核心被认为是恒星形成的"种子"。</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>2.2 引力坍缩：金斯不稳定性</h3>
+                    <p>恒星形成的触发机制主要是引力坍缩，这一过程由金斯不稳定性（Jeans instability）控制。英国天文学家金斯在1902年提出，当分子云的某个区域质量超过特定临界值（称为金斯质量）时，引力将克服气体压力，导致该区域开始坍缩。</p>
+                    <div class="formula">
+                        M<sub>J</sub> = (5kT/4πGρ)<sup>3/2</sup>
+                    </div>
+                    <p>其中，k是玻尔兹曼常数，T是温度，G是引力常数，ρ是密度。这个公式表明，温度越高、密度越低，金斯质量就越大，云团就越不容易坍缩。</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>2.3 原恒星形成过程</h3>
+                    <p>引力坍缩开始后，分子云的密度中心区域会快速收缩。在这个过程中，角动量守恒定律发挥着关键作用。由于分子云通常具有一定的初始角动量，在坍缩过程中，旋转速度会不断加快，形成了一个扁平的盘状结构，称为原恒星盘（protoplanetary disk）。</p>
+                    <p>原恒星的形成过程可以分为几个阶段：</p>
+                    <ol>
+                        <li>在坍缩的早期阶段，物质以自由落体的方式向中心聚集，形成一个密度极高的核心。</li>
+                        <li>核心的温度逐渐升高，当达到约2000K时，氢分子开始解离，吸收大量的热能，导致核心再次快速坍缩（"第二坍缩"）。</li>
+                        <li>随着坍缩的进行，原恒星的核心温度和压力不断升高。当核心温度达到约100万K时，氢的同位素氘开始发生核聚变反应。</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>3. 主序星阶段：恒星的中年期</h2>
+                <span>+</span>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>3.1 氢核聚变：恒星的能量来源</h3>
+                    <p>主序星阶段是恒星一生中最长的时期，占据了恒星生命周期的90%以上。在这个阶段，恒星通过核聚变反应将氢转化为氦，释放出巨大的能量。</p>
+                    <p>氢核聚变主要通过两种反应链进行：</p>
+                    <ul>
+                        <li><span class="highlight">质子-质子链反应</span>：太阳等低质量恒星的主要能量来源</li>
+                        <li><span class="highlight">碳氮氧循环</span>：质量大于1.3倍太阳质量的恒星中占主导地位</li>
+                    </ul>
+                    <div class="info-box">
+                        <p><strong>质子-质子链反应步骤：</strong></p>
+                        <ol>
+                            <li>两个质子结合形成氘核（²H），同时释放出一个正电子和一个中微子：p + p → ²H + e⁺ + νe</li>
+                            <li>氘核与另一个质子结合形成氦-3核（³He）：²H + p → ³He + γ</li>
+                            <li>两个氦-3核结合形成氦-4核（⁴He），同时释放出两个质子：³He + ³He → ⁴He + 2p</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>3.2 流体静力学平衡</h3>
+                    <p>主序星能够保持稳定的关键在于其内部达到了精确的流体静力学平衡（hydrostatic equilibrium）。在这种平衡状态下，恒星内部任意一点的向外气体压力恰好等于向内的引力，使得恒星既不会坍缩也不会膨胀。</p>
+                    <div class="formula">
+                        dP/dr = -GM(r)ρ(r)/r²
+                    </div>
+                    <p>其中，P是压力，r是半径，M(r)是半径r内的质量，ρ(r)是密度，G是引力常数。</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>3.3 主序星的内部结构</h3>
+                    <p>主序星的内部结构可以分为几个不同的区域：</p>
+                    <ul>
+                        <li><span class="highlight">核心区</span>：核聚变反应发生的主要场所</li>
+                        <li><span class="highlight">辐射区</span>：能量主要通过辐射的方式传输</li>
+                        <li><span class="highlight">对流区</span>：能量主要通过物质的对流运动传输</li>
+                    </ul>
+                    <p>不同质量恒星的内部结构存在显著差异：</p>
+                    <ul>
+                        <li>低质量恒星（小于0.8倍太阳质量）：内部主要是对流区</li>
+                        <li>中等质量恒星（0.8-1.7倍太阳质量）：具有辐射核心和对流外层</li>
+                        <li>大质量恒星（大于1.7倍太阳质量）：具有对流核心和辐射外层</li>
+                    </ul>
+                </div>
+                
+                <div class="subsection">
+                    <h3>3.4 质量-光度关系</h3>
+                    <p>主序星的一个重要特征是质量与光度之间存在着确定的关系，这就是著名的质量-光度关系（mass-luminosity relation）。</p>
+                    <div class="formula">
+                        L ∝ M<sup>α</sup>，其中α的值约为3.5
+                    </div>
+                    <p>这个关系对于理解恒星演化具有重要意义。根据质量-光度关系，我们可以估算不同质量恒星的主序星寿命。由于恒星的寿命主要取决于其氢燃料的消耗速度，而光度越高的恒星消耗燃料越快，因此质量越大的恒星主序星寿命反而越短。</p>
+                    <div class="warning-box">
+                        <p><strong>注意：</strong>质量小于0.08倍太阳质量的天体无法达到氢核聚变所需的温度和压力，因此不能成为真正的恒星，只能形成褐矮星。质量超过150倍太阳质量的恒星则可能因为辐射压力过大而不稳定，容易发生质量损失或爆炸。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>4. 红巨星阶段：恒星的晚年</h2>
+                <span>+</span>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>4.1 氢燃料耗尽与核心收缩</h3>
+                    <p>当恒星核心的氢燃料逐渐耗尽时，主序星阶段宣告结束，恒星开始进入晚年期。当核心氢完全耗尽后，核聚变反应停止，核心失去了能量来源。此时，引力开始占主导地位，核心开始快速收缩。</p>
+                    <p>核心收缩的过程可以用热力学第一定律来描述。在绝热收缩过程中，引力势能的减少等于内能的增加：</p>
+                    <div class="formula">
+                        ΔU = -Δ(GM²/R)
+                    </div>
+                    <p>其中，U是内能，M是核心质量，R是核心半径。</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>4.2 外壳膨胀与红巨星形成</h3>
+                    <p>核心收缩的同时，恒星的外层开始膨胀，形成红巨星。核心收缩释放的能量通过辐射和对流的方式向外传输，加热了恒星的外层。外层气体受热膨胀，密度降低，同时温度下降。</p>
+                    <p>红巨星的表面温度通常只有3000-4000K，比主序星低得多，因此呈现红色。但由于表面积大大增加，红巨星的总光度反而比主序星高得多，可以达到太阳光度的1000倍以上。</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>4.3 氦闪：简并物质的爆炸</h3>
+                    <p>对于质量小于2.5倍太阳质量的恒星，在红巨星阶段会经历一个剧烈的事件——氦闪（helium flash）。当氦核心的温度达到约1亿K时，氦开始聚变为碳，这个过程被称为氦燃烧或3α过程。</p>
+                    <p>氦闪的发生与核心物质的简并态密切相关。在红巨星的氦核心中，物质密度极高，电子被压缩到量子力学效应显著的程度，形成了简并电子气。</p>
+                    <div class="info-box">
+                        <p><strong>氦闪的特点：</strong>氦闪虽然释放出巨大的能量，但由于这些能量主要用于加热和电离核心物质，而不是转化为机械功，因此从恒星外部几乎观测不到明显的变化。氦闪结束后，核心物质恢复到正常气体状态，开始稳定的氦燃烧，恒星进入水平分支阶段。</p>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>4.4 红巨星的结构特征</h3>
+                    <p>红巨星具有独特的结构和物理特征：</p>
+                    <ul>
+                        <li><span class="highlight">巨大的体积和低密度</span>：红巨星的平均密度可以低至水密度的千分之一甚至万分之一</li>
+                        <li><span class="highlight">复杂的对流模式</span>：红巨星的对流单元可以达到恒星半径的十分之一甚至更大</li>
+                        <li><span class="highlight">特殊的大气层</span>：由于表面温度较低，许多金属原子和分子能够在大气中存在</li>
+                    </ul>
+                    <p>红巨星阶段的持续时间相对较短，通常只有主序星阶段的10%左右。对于太阳来说，红巨星阶段大约持续10亿年。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>5. 恒星的晚期演化与死亡</h2>
+                <span>+</span>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>5.1 低质量恒星的演化：白矮星之路</h3>
+                    <p>质量小于8倍太阳质量的恒星（包括太阳）在结束红巨星阶段后，会经历相对平静的晚期演化过程，最终形成白矮星。</p>
+                    <p>在水平分支阶段，恒星核心稳定地进行氦燃烧，将氦转化为碳和氧。当氦燃料耗尽后，恒星会再次经历类似红巨星阶段的过程，进入渐近巨星分支（Asymptotic Giant Branch, AGB）阶段。</p>
+                    <p>在AGB阶段的末期，恒星会通过强烈的星风和多次爆发，将其外层物质抛射到周围空间，形成行星状星云。当恒星抛射出大部分外层物质后，留下的核心就是白矮星。</p>
+                    <div class="info-box">
+                        <p><strong>白矮星的特点：</strong>白矮星是一种极其致密的天体，其质量与太阳相当，但半径却只有地球大小。白矮星的密度可达10^9 kg/m³，一茶匙白矮星物质的质量就有几吨重。</p>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>5.2 中等质量恒星：超新星爆发</h3>
+                    <p>质量在8-25倍太阳质量之间的恒星会经历更加剧烈的死亡过程——超新星爆发。这类恒星在其核心能够产生足够高的温度和压力，使核聚变反应能够进行到更重的元素。</p>
+                    <p>中等质量恒星的核燃烧过程呈现出明显的分层结构：氢燃烧→氦燃烧→碳燃烧→氖燃烧→氧燃烧→硅燃烧，每一步都会产生更重的元素，直到核心形成一个铁核。</p>
+                    <p>当核心的铁核质量达到钱德拉塞卡极限（约1.4倍太阳质量）时，电子简并压力无法再支撑引力，核心开始快速坍缩，最终导致超新星爆发。</p>
+                    <div class="warning-box">
+                        <p><strong>超新星爆发的能量：</strong>超新星爆发释放的能量是惊人的，在短短几天内释放的能量可以超过太阳在其整个生命周期内释放能量的总和。</p>
+                    </div>
+                </div>
+                
+                <div class="subsection">
+                    <h3>5.3 大质量恒星：中子星与黑洞</h3>
+                    <p>质量大于25倍太阳质量的恒星会以更加壮观的方式结束其生命，最终形成中子星或黑洞。</p>
+                    <p>大质量恒星的核燃烧过程可以进行到更重的元素，包括硅、硫、钙等，最终在核心形成一个铁镍核心。当这个核心的质量超过钱德拉塞卡极限时，会发生核心坍缩和超新星爆发。</p>
+                    <p>中子星是一种极其致密的天体，其密度与原子核相当，达到10^17 kg/m³。中子星具有极强的磁场和极高的自转速度，有些中子星的自转周期可以短到毫秒级，被称为脉冲星。</p>
+                    <p>如果恒星的残余核心质量超过3倍太阳质量（奥本海默-沃尔科夫极限），那么即使是中子简并压力也无法支撑引力，核心会无限坍缩，形成黑洞。</p>
+                    <div class="formula">
+                        R<sub>s</sub> = 2GM/c²
+                    </div>
+                    <p>其中，G是引力常数，M是黑洞质量，c是光速。这个公式给出了黑洞事件视界的半径（史瓦西半径）。</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>5.4 超新星分类与核合成</h3>
+                    <p>超新星可以根据其光谱特征分为不同的类型：</p>
+                    <ul>
+                        <li><span class="highlight">I型超新星</span>：光谱中无氢线
+                            <ul>
+                                <li>Ia型：由白矮星吸积伴星物质形成</li>
+                                <li>Ib型：由大质量恒星的核心坍缩形成，但失去了外层的氢</li>
+                                <li>Ic型：由大质量恒星的核心坍缩形成，但失去了外层的氢和氦</li>
+                            </ul>
+                        </li>
+                        <li><span class="highlight">II型超新星</span>：光谱中有氢线
+                            <ul>
+                                <li>II-P型：光变曲线呈平台型</li>
+                                <li>II-L型：光变曲线呈线性下降</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="success-box">
+                        <p><strong>宇宙元素来源：</strong>超新星爆发是宇宙中重元素合成的主要场所。在超新星爆发的高温高压环境中，通过快中子俘获过程（r过程）可以合成比铁更重的元素，包括金、银、铀等。这些重元素在爆发过程中被抛射到星际空间，成为下一代恒星和行星系统的组成部分。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>6. 恒星演化的多样性与观测证据</h2>
+                <span>+</span>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>6.1 不同质量恒星的演化路径对比</h3>
+                    <p>恒星的演化路径与其初始质量密切相关：</p>
+                    <ul>
+                        <li><span class="highlight">低质量恒星（小于0.8倍太阳质量）</span>：演化路径最为简单，主序星寿命可以长达数千亿年，最终直接坍缩成氦白矮星</li>
+                        <li><span class="highlight">中等质量恒星（0.8-8倍太阳质量）</span>：演化路径最为复杂，经历红巨星、氦闪、水平分支和渐近巨星分支阶段，最终形成碳氧白矮星</li>
+                        <li><span class="highlight">大质量恒星（大于8倍太阳质量）</span>：演化速度极快，生命周期通常只有几百万年，在核心进行多轮核燃烧，最终发生超新星爆发，形成中子星或黑洞</li>
+                    </ul>
+                </div>
+                
+                <div class="subsection">
+                    <h3>6.2 星团：恒星演化的天然实验室</h3>
+                    <p>星团是研究恒星演化的理想"实验室"，因为星团中的恒星具有相同的年龄、化学成分和初始条件，它们的差异主要来自于质量的不同。</p>
+                    <p>星团主要分为两类：</p>
+                    <ul>
+                        <li><span class="highlight">疏散星团</span>：通常包含几十到几千颗年轻恒星，年龄从几百万年到几十亿年不等</li>
+                        <li><span class="highlight">球状星团</span>：包含数十万到数百万颗古老恒星，年龄可达100亿年以上</li>
+                    </ul>
+                    <p>通过绘制星团的赫罗图，可以清楚地看到恒星演化的轨迹。在赫罗图上，主序星形成一条明显的序列，称为主序。随着星团年龄的增长，质量较大的恒星会先离开主序，在赫罗图上形成一个拐点，称为主序拐点。</p>
+                </div>
+                
+                <div class="subsection">
+                    <h3>6.3 现代观测技术与发现</h3>
+                    <p>现代天文观测技术的发展为研究恒星演化提供了前所未有的手段：</p>
+                    <ul>
+                        <li><span class="highlight">望远镜技术</span>：哈勃太空望远镜（HST）、詹姆斯·韦伯太空望远镜（JWST）等</li>
+                        <li><span class="highlight">光谱学技术</span>：精确测量恒星的化学成分、温度、密度等物理参数</li>
+                        <li><span class="highlight">测光技术</span>：精确测量恒星的亮度变化，发现恒星的脉动、爆发等现象</li>
+                        <li><span class="highlight">多信使天文学</span>：结合引力波和电磁波观测，研究恒星演化</li>
+                    </ul>
+                </div>
+                
+                <div class="subsection">
+                    <h3>6.4 恒星演化理论的最新进展</h3>
+                    <p>恒星演化理论在过去几十年中取得了巨大进展，但仍有许多问题有待解决：</p>
+                    <ul>
+                        <li>恒星形成的初始条件问题</li>
+                        <li>大质量恒星的演化问题</li>
+                        <li>双星演化问题</li>
+                        <li>恒星内部的混合过程</li>
+                        <li>恒星死亡产物的研究</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h2>7. 结语：恒星演化与宇宙循环</h2>
+            <p>恒星的一生是宇宙中最壮丽的史诗之一。从分子云中的尘埃和气体开始，经过引力坍缩形成原恒星，再到主序星阶段的长期稳定燃烧，然后经历红巨星的膨胀与氦闪，最终以白矮星、中子星或黑洞的形式结束生命——这个过程不仅展现了自然界的神奇，也揭示了宇宙演化的基本规律。</p>
+            <p>恒星演化的意义远远超出了单个天体的生命周期。恒星是宇宙的"炼金术士"，通过核聚变反应将氢转化为氦，再将氦转化为碳、氧等重元素。超新星爆发更是合成了比铁更重的所有元素。这些元素在恒星死亡后被抛射到星际空间，成为下一代恒星和行星系统的原材料。我们地球上的一切，包括我们自己，都是由恒星"制造"的元素组成的。从这个意义上说，我们都是"星尘"的后代。</p>
+            <p>展望未来，恒星演化研究仍有许多未解之谜等待我们去探索。新一代的望远镜，如三十米望远镜（TMT）、欧洲极大望远镜（E-ELT）等，将为我们提供更清晰的恒星图像。引力波天文学的发展将开启观测宇宙的新窗口，使我们能够"听到"恒星死亡时的"绝唱"。</p>
+            <p>理解恒星演化，不仅是对自然奥秘的探索，也是对我们自身存在意义的思考。当我们仰望星空时，应该意识到，那些遥远的星星不仅是夜空中的亮点，更是宇宙演化历程的见证者。它们用自己的生命书写着宇宙的历史，也为我们指明了未来的方向。</p>
+        </div>
+        
+        <footer>
+            <p>内容由 AI 生成 | 恒星演化过程知识总结</p>
+        </footer>
+    </div>
+
+    <script>
+        // 折叠面板功能
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const isActive = content.classList.contains('active');
+            
+            // 关闭所有其他面板
+            document.querySelectorAll('.section-content.active').forEach(activeContent => {
+                if (activeContent !== content) {
+                    activeContent.classList.remove('active');
+                    activeContent.previousElementSibling.querySelector('span').textContent = '+';
+                }
+            });
+            
+            // 切换当前面板
+            if (isActive) {
+                content.classList.remove('active');
+                header.querySelector('span').textContent = '+';
+            } else {
+                content.classList.add('active');
+                header.querySelector('span').textContent = '-';
+            }
+        }
+        
+        // 默认打开第一个面板
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstHeader = document.querySelector('.section-header');
+            if (firstHeader) {
+                toggleSection(firstHeader);
+            }
+        });
+    </script>
+</body>
+</html>

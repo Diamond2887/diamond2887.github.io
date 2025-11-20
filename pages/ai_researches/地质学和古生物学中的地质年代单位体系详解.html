@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地质学和古生物学中的地质年代单位体系详解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        h3 {
+            color: #3498db;
+            margin: 20px 0 10px;
+        }
+        
+        h4 {
+            color: #2980b9;
+            margin: 15px 0 8px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .toc {
+            background-color: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .toc li {
+            margin-bottom: 8px;
+        }
+        
+        .toc a {
+            color: #2980b9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .toc a:hover {
+            color: #2c3e50;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f7fd;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3498db;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            margin-bottom: 30px;
+            position: relative;
+            width: 50%;
+            padding: 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            padding: 15px;
+        }
+        
+        .timeline-content h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .timeline-content p {
+            margin-bottom: 0;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 15px;
+            border-left: 4px solid #f1c40f;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .definition-box {
+            background-color: #e8f4fc;
+            border: 1px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .definition-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .image-placeholder {
+            background-color: #ecf0f1;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 20px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 10px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>地质学和古生物学中的地质年代单位体系详解</h1>
+        <p>探索地球46亿年演化历史的时间框架</p>
+    </header>
+
+    <div class="toc container">
+        <h2>目录</h2>
+        <ul>
+            <li><a href="#section1">1. 地质年代单位的层级结构体系</a></li>
+            <li><a href="#section2">2. 主要宙、代、纪及其时间跨度</a></li>
+            <li><a href="#section3">3. 各纪重要地质事件与生物演化特征</a></li>
+            <li><a href="#section4">4. 地质年代表的划分依据与历史发展</a></li>
+            <li><a href="#conclusion">结语</a></li>
+        </ul>
+    </div>
+
+    <div class="container" id="section1">
+        <h2>1. 地质年代单位的层级结构体系</h2>
+        
+        <div class="definition-box">
+            <div class="definition-title">地质年代单位定义</div>
+            <p>地质年代单位是地质学和古生物学中用于描述地球历史时间跨度的标准单位体系。这一体系按照时间尺度从大到小分为六个层级：宙（Eon）、代（Era）、纪（Period）、世（Epoch）、期（Age）和时（Chron）。</p>
+        </div>
+        
+        <h3>1.1 地质年代单位的定义与层级关系</h3>
+        <p>地质年代单位是地质学和古生物学中用于描述地球历史时间跨度的标准单位体系。这一体系按照时间尺度从大到小分为六个层级：宙（Eon）、代（Era）、纪（Period）、世（Epoch）、期（Age）和时（Chron）。与地质年代单位相对应的是年代地层单位，包括宇（Eonothem）、界（Erathem）、系（System）、统（Series）、阶（Stage）和时带（Chronozone）。</p>
+        
+        <p>在这个层级体系中，宙是最大的地质年代单位，代表地球历史上极其漫长的时间跨度，每个宙的演化时间通常在5亿年以上。代是仅次于宙的地质年代单位，反映了全球性的无机界与生物界的明显演化阶段。纪是代的进一步细分，通常持续几千万年到上亿年。世是纪的下一级单位，往往反映了生物界中"科""属"的一定变化。期和时则是更细的划分单位，其中期通常持续2-10百万年，而时是最小的标准单位。</p>
+        
+        <h3>1.2 宙、代、纪的具体定义</h3>
+        <h4>宙（Eon）的定义与划分</h4>
+        <p>宙是地质年代单位中的最高层级，代表地球历史上最漫长的时间跨度。根据生命物质存在及方式，地质学者将地质历史划分为四个宙：</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>宙</th>
+                    <th>时间跨度</th>
+                    <th>主要特征</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>冥古宙（Hadean Eon）</td>
+                    <td>约46亿年前至40亿年前</td>
+                    <td>地球形成初期，尚未形成稳定的地壳，生命尚未出现</td>
+                </tr>
+                <tr>
+                    <td>太古宙（Archean Eon）</td>
+                    <td>约40亿年前至25亿年前</td>
+                    <td>形成原始地壳、大气和水圈，最早的原核生物出现</td>
+                </tr>
+                <tr>
+                    <td>元古宙（Proterozoic Eon）</td>
+                    <td>约25亿年前至5.41亿年前</td>
+                    <td>真核生物出现并发展，大气氧气含量增加</td>
+                </tr>
+                <tr>
+                    <td>显生宙（Phanerozoic Eon）</td>
+                    <td>约5.41亿年前至今</td>
+                    <td>多细胞生物出现并分类分化，形成丰富多彩的生命世界</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h4>代（Era）的定义与划分</h4>
+        <p>代是地质年代单位的第二级，根据生物界发展的总体面貌进行划分。显生宙被划分为三个代：</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>代</th>
+                    <th>时间跨度</th>
+                    <th>主要特征</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>古生代（Paleozoic Era）</td>
+                    <td>约5.41亿年前至2.52亿年前</td>
+                    <td>生命从简单到复杂、从水生到陆生的演化过程</td>
+                </tr>
+                <tr>
+                    <td>中生代（Mesozoic Era）</td>
+                    <td>约2.52亿年前至6600万年前</td>
+                    <td>恐龙时代，陆生爬行动物占据高级生态位</td>
+                </tr>
+                <tr>
+                    <td>新生代（Cenozoic Era）</td>
+                    <td>约6600万年前至今</td>
+                    <td>哺乳动物、鸟类和被子植物高度繁盛</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>1.3 地质年代单位与年代地层单位的对应关系</h3>
+        <p>地质年代单位与年代地层单位之间存在严格的对应关系，这种对应关系构成了地质科学中时间-空间体系的基础。</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>地质年代单位</th>
+                    <th>年代地层单位</th>
+                    <th>英文对应</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>宙（Eon）</td>
+                    <td>宇（Eonothem）</td>
+                    <td>Eon/Eonothem</td>
+                </tr>
+                <tr>
+                    <td>代（Era）</td>
+                    <td>界（Erathem）</td>
+                    <td>Era/Erathem</td>
+                </tr>
+                <tr>
+                    <td>纪（Period）</td>
+                    <td>系（System）</td>
+                    <td>Period/System</td>
+                </tr>
+                <tr>
+                    <td>世（Epoch）</td>
+                    <td>统（Series）</td>
+                    <td>Epoch/Series</td>
+                </tr>
+                <tr>
+                    <td>期（Age）</td>
+                    <td>阶（Stage）</td>
+                    <td>Age/Stage</td>
+                </tr>
+                <tr>
+                    <td>时（Chron）</td>
+                    <td>时带（Chronozone）</td>
+                    <td>Chron/Chronozone</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container" id="section2">
+        <h2>2. 主要宙、代、纪及其时间跨度</h2>
+        
+        <h3>2.1 隐生宙（冥古宙、太古宙、元古宙）</h3>
+        <p>隐生宙是地球历史上最早的一个大阶段，包括冥古宙、太古宙和元古宙三个宙，时间跨度从地球形成（约46亿年前）到显生宙开始（约5.41亿年前），占据了地球历史的绝大部分时间。</p>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>冥古宙（Hadean Eon）</h3>
+                    <p>时间跨度：约46亿年前至40亿年前</p>
+                    <p>地球形成初期，经历了剧烈的地质活动。地球表面温度极高，岩浆横流，大气稀薄。没有稳定的地壳，也没有生命存在的迹象。</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>太古宙（Archean Eon）</h3>
+                    <p>时间跨度：约40亿年前至25亿年前</p>
+                    <p>地球开始形成原始地壳、大气和水圈，最早的原核生物（如蓝藻）出现。形成了地球上最古老的岩石——花岗岩和片麻岩。</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>元古宙（Proterozoic Eon）</h3>
+                    <p>时间跨度：约25亿年前至5.41亿年前</p>
+                    <p>真核生物出现并发展，大气中的氧气含量显著增加。出现了最早的动物化石，如海绵、水母等简单的多细胞动物。</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3>2.2 显生宙各代、纪的时间跨度</h3>
+        <p>显生宙（Phanerozoic Eon）是地球历史上最新的一个宙，时间跨度从约5.41亿年前至今，虽然只占地球历史的约12%，但却包含了地球生命演化史上最丰富多彩的篇章。</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>宙</th>
+                    <th>代</th>
+                    <th>纪</th>
+                    <th>开始时间（百万年前）</th>
+                    <th>结束时间（百万年前）</th>
+                    <th>持续时间（百万年）</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="6">显生宙</td>
+                    <td rowspan="6">古生代</td>
+                    <td>寒武纪</td>
+                    <td>541</td>
+                    <td>485.4</td>
+                    <td>55.6</td>
+                </tr>
+                <tr>
+                    <td>奥陶纪</td>
+                    <td>485.4</td>
+                    <td>443.8</td>
+                    <td>41.6</td>
+                </tr>
+                <tr>
+                    <td>志留纪</td>
+                    <td>443.8</td>
+                    <td>419.2</td>
+                    <td>24.6</td>
+                </tr>
+                <tr>
+                    <td>泥盆纪</td>
+                    <td>419.2</td>
+                    <td>358.9</td>
+                    <td>60.3</td>
+                </tr>
+                <tr>
+                    <td>石炭纪</td>
+                    <td>358.9</td>
+                    <td>298.9</td>
+                    <td>60.0</td>
+                </tr>
+                <tr>
+                    <td>二叠纪</td>
+                    <td>298.9</td>
+                    <td>252.2</td>
+                    <td>46.7</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"></td>
+                    <td rowspan="3">中生代</td>
+                    <td>三叠纪</td>
+                    <td>252.2</td>
+                    <td>201.3</td>
+                    <td>50.9</td>
+                </tr>
+                <tr>
+                    <td>侏罗纪</td>
+                    <td>201.3</td>
+                    <td>145.0</td>
+                    <td>56.3</td>
+                </tr>
+                <tr>
+                    <td>白垩纪</td>
+                    <td>145.0</td>
+                    <td>66.0</td>
+                    <td>79.0</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"></td>
+                    <td rowspan="3">新生代</td>
+                    <td>古近纪</td>
+                    <td>66.0</td>
+                    <td>23.03</td>
+                    <td>42.97</td>
+                </tr>
+                <tr>
+                    <td>新近纪</td>
+                    <td>23.03</td>
+                    <td>2.58</td>
+                    <td>20.45</td>
+                </tr>
+                <tr>
+                    <td>第四纪</td>
+                    <td>2.58</td>
+                    <td>0</td>
+                    <td>2.58</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>2.3 地质年代的命名来源与演变</h3>
+        <p>地质年代单位的命名反映了地质学发展的历史轨迹，许多名称来源于地名、古代民族名或岩石特征，这些命名背后蕴含着丰富的历史文化信息。</p>
+        
+        <div class="highlight">
+            <p><strong>命名示例：</strong></p>
+            <ul>
+                <li><strong>寒武纪（Cambrian）</strong>：1835年由英国地质学家亚当·塞奇威克命名，源自威尔士的古称"Cambria"</li>
+                <li><strong>奥陶纪（Ordovician）</strong>：1879年由查尔斯·拉普沃思命名，源自古代生活在威尔士的奥陶部落（Ordovices）</li>
+                <li><strong>志留纪（Silurian）</strong>：1835年由罗德里克·默奇森命名，源自古代生活在威尔士的志留部落（Silures）</li>
+                <li><strong>泥盆纪（Devonian）</strong>：1839年命名，源自英国西南部的德文郡（Devonshire）</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container" id="section3">
+        <h2>3. 各纪重要地质事件与生物演化特征</h2>
+        
+        <h3>3.1 寒武纪生命大爆发与早古生代演化</h3>
+        <p>寒武纪生命大爆发（Cambrian explosion）是地球生命演化史上最重大的事件之一，发生在约5.41亿年前至5.2亿年前的寒武纪早期，在不到地球历史1%的时间内（约2000万年），诞生了绝大多数现生动物门类。</p>
+        
+        <div class="highlight">
+            <p><strong>寒武纪生命大爆发的三个阶段：</strong></p>
+            <ol>
+                <li><strong>前奏阶段（约6亿年前）</strong>：发生双胚层动物和类双胚层动物的产生，以伊迪卡拉生物群为代表</li>
+                <li><strong>序幕阶段（约5.43-5.2亿年前）</strong>：多种小骨骼（或小壳）化石和早期遗迹化石的产生，以小壳化石群为代表</li>
+                <li><strong>主幕阶段（约5.2-5.05亿年前）</strong>：多种多样的后生动物爆发性出现，以中国云南的澄江动物群为代表</li>
+            </ol>
+        </div>
+        
+        <h3>3.2 晚古生代的生物登陆与演化辐射</h3>
+        <p>晚古生代包括泥盆纪、石炭纪和二叠纪，这一时期见证了生命演化史上的重大转折——生物从海洋向陆地的全面进军。</p>
+        
+        <h4>泥盆纪（约4.19-3.59亿年前）——鱼类时代与生物登陆</h4>
+        <p>泥盆纪被称为"鱼类时代"，这一时期鱼类的演化达到了顶峰。同时，植物登陆取得重大进展，裸蕨类植物进一步发展，演化出了真正的根、茎、叶系统。</p>
+        
+        <h4>石炭纪（约3.59-2.99亿年前）——巨虫时代与森林帝国</h4>
+        <p>石炭纪是陆生生物大发展的时期，被称为"巨虫时代"和"蕨类植物时代"。由于高氧环境，节肢动物体型巨大，如巨脉蜻蜓翼展可达70厘米。</p>
+        
+        <h4>二叠纪（约2.99-2.52亿年前）——盘古大陆与大灭绝</h4>
+        <p>二叠纪是古生代的最后一个纪，见证了超级大陆的形成和地球历史上最严重的生物灭绝事件。约95%的海洋物种和75%的陆地脊椎动物灭绝。</p>
+        
+        <h3>3.3 中生代：恐龙时代与爬行动物的统治</h3>
+        <p>中生代（约2.52-6600万年前）被称为"爬行动物时代"或"恐龙时代"，这一时期爬行动物占据了陆地、海洋和天空的统治地位。</p>
+        
+        <div class="image-placeholder">
+            [中生代恐龙复原图]
+        </div>
+        
+        <h3>3.4 新生代：哺乳动物时代与人类起源</h3>
+        <p>新生代（约6600万年前至今）是地球历史上最新的一个代，被称为"哺乳动物时代"或"被子植物时代"。这一时期哺乳动物在恐龙灭绝后迅速辐射演化，占据了各个生态位。</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>人类演化阶段</th>
+                    <th>代表物种</th>
+                    <th>时间</th>
+                    <th>主要特征</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>南方古猿阶段</td>
+                    <td>南方古猿（如露西）</td>
+                    <td>约440万-100万年前</td>
+                    <td>直立行走，脑容量约450-550毫升</td>
+                </tr>
+                <tr>
+                    <td>能人阶段</td>
+                    <td>能人（Homo habilis）</td>
+                    <td>约250万-160万年前</td>
+                    <td>脑容量约680毫升，会制造简单石器</td>
+                </tr>
+                <tr>
+                    <td>直立人阶段</td>
+                    <td>直立人（Homo erectus）</td>
+                    <td>约180万-30万年前</td>
+                    <td>脑容量约900-1200毫升，会使用火</td>
+                </tr>
+                <tr>
+                    <td>早期智人阶段</td>
+                    <td>海德堡人、尼安德特人</td>
+                    <td>约60万-4万年前</td>
+                    <td>脑容量接近现代人，有复杂的文化</td>
+                </tr>
+                <tr>
+                    <td>晚期智人阶段</td>
+                    <td>智人（Homo sapiens）</td>
+                    <td>约20万年前至今</td>
+                    <td>脑容量约1300-1500毫升，发展出复杂文明</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container" id="section4">
+        <h2>4. 地质年代表的划分依据与历史发展</h2>
+        
+        <h3>4.1 地质年代划分的科学依据</h3>
+        <p>地质年代表的划分建立在多种科学方法和证据的基础上，这些方法相互补充，共同构建了一个精确而可靠的地质时间框架。</p>
+        
+        <div class="definition-box">
+            <div class="definition-title">相对地质年代的确定方法</div>
+            <ul>
+                <li><strong>地层叠覆律</strong>：未经变动的地层中，年代较老的必在下，年代较新的叠覆于上</li>
+                <li><strong>化石层序律</strong>：含有相同化石的地层处于同一时代，不同时代的地层所含的化石不同</li>
+                <li><strong>标准化石</strong>：选择那些演化快、分布广、特征明显的化石作为地层对比的标志</li>
+            </ul>
+        </div>
+        
+        <div class="definition-box">
+            <div class="definition-title">绝对地质年代的确定方法</div>
+            <ul>
+                <li><strong>放射性同位素测年法</strong>：利用岩石中放射性同位素的衰变规律测定年龄</li>
+                <li><strong>古地磁学方法</strong>：利用岩石的磁性记录测定年龄</li>
+                <li><strong>裂变径迹法</strong>：利用铀等放射性元素的自发裂变在矿物中留下的径迹测定年龄</li>
+            </ul>
+        </div>
+        
+        <h3>4.2 地质年代表建立的历史发展</h3>
+        <p>地质年代表的建立是人类认识地球历史的一个漫长而艰辛的过程，经历了从定性到定量、从局部到全球、从相对时间到绝对时间的发展历程。</p>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>17-18世纪：早期探索阶段</h3>
+                    <p>尼古拉斯·斯泰诺提出地层学三大基本原理：叠覆律、原始水平律和侧向连续律</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>19世纪：地层系统建立阶段</h3>
+                    <p>威廉·史密斯提出"化石层序律"，亚当·塞奇威克和罗德里克·默奇森命名寒武纪、志留纪等</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>20世纪：绝对年龄测定的突破</h3>
+                    <p>放射性测年技术的发展，亚瑟·霍姆斯系统研究放射性测年方法</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>21世纪至今：现代发展阶段</h3>
+                    <p>高精度质谱仪的应用，多学科综合研究，GSSP体系的完善</p>
+                </div>
+            </div>
+        </div>
+        
+        <h3>4.3 现代地质年代表的划分标准与更新机制</h3>
+        <p>现代地质年代表的划分建立在严格的科学标准和国际合作机制基础上，形成了一个动态更新、不断完善的体系。</p>
+        
+        <div class="highlight">
+            <p><strong>全球界线层型剖面和点位（GSSP）体系</strong></p>
+            <p>GSSP是指特定地区内含有一个专有的标志点的特定岩层序列，藉此构成两个年代地层单位之间界线的定义和识别标准。截至2025年，中国已经建立了11个GSSP，在国际地层学研究中占有重要地位。</p>
+        </div>
+    </div>
+
+    <div class="container" id="conclusion">
+        <h2>结语</h2>
+        <p>通过对地质学和古生物学中宙、代、纪的全面了解，我们不仅掌握了地球46亿年演化历史的时间框架，更重要的是理解了生命与环境协同演化的壮丽历程。从冥古宙的混沌初开到显生宙的生命繁盛，从寒武纪的生命大爆发到人类文明的兴起，每一个地质年代都见证着地球的变迁和生命的奇迹。</p>
+        
+        <p>地质年代表的建立凝聚了几代科学家的智慧和汗水，从斯泰诺的地层三定律到达尔文的进化论，从放射性的发现到高精度质谱仪的应用，科学技术的每一次进步都推动着我们对地球历史认识的深化。</p>
+        
+        <p>随着新的研究方法和技术手段的不断涌现，我们有理由相信，未来的地质年代表将更加精确和完善。但无论如何发展，对地球历史的探索将永远是人类科学研究的重要课题，因为只有了解过去，我们才能更好地走向未来。</p>
+    </div>
+
+    <div class="footer">
+        <p>内容基于地质学和古生物学研究整理 | 最后更新：2025年</p>
+    </div>
+</body>
+</html>
