@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>核反应原理与宇宙元素演化</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            color: var(--secondary-color);
+            margin: 20px 0 10px;
+        }
+        
+        h4 {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin: 15px 0 8px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .chapter {
+            margin-bottom: 30px;
+        }
+        
+        .chapter-title {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chapter-title::after {
+            content: '+';
+            font-size: 1.5rem;
+        }
+        
+        .chapter-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            background-color: white;
+        }
+        
+        .section {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 3px solid var(--secondary-color);
+        }
+        
+        .highlight {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 15px 0;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .element-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .element-item {
+            background-color: var(--light-color);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--secondary-color);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -37px;
+            top: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            border: 3px solid var(--secondary-color);
+        }
+        
+        .reaction {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .figure {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+        }
+        
+        .caption {
+            font-style: italic;
+            margin-top: 5px;
+            color: #666;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .conclusion {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            border-left: 4px solid #4caf50;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>核反应原理与宇宙元素演化</h1>
+        <p>从宇宙大爆炸到现代核技术的完整历程</p>
+    </header>
+    
+    <div class="container">
+        <main class="main-content">
+            <div class="chapter">
+                <div class="chapter-title" onclick="toggleChapter(this)">
+                    <h2>1. 宇宙起源与原初核合成</h2>
+                </div>
+                <div class="chapter-content">
+                    <div class="section">
+                        <h3>1.1 宇宙大爆炸与早期宇宙</h3>
+                        <p>宇宙的故事始于约138亿年前的一个极度炽热、致密的奇点。根据最新的宇宙学观测数据，这个由阿塔卡马宇宙学望远镜（ACT）于2025年3月发布的结果显示，宇宙年龄已被精确确定为138亿年，精度达到0.1%。</p>
+                        <p>宇宙大爆炸并非我们通常理解的那种在空间中发生的爆炸，而是空间本身的急剧膨胀。在爆炸发生后的10^-43秒内，宇宙经历了被称为"普朗克时代"的极早期阶段，这个时间尺度小到我们目前的物理理论还无法完全描述。</p>
+                        <div class="highlight">
+                            <p>随着宇宙的急速膨胀，它开始迅速冷却。在宇宙年龄达到1秒时，温度已经下降到约100亿度。这时，一个关键的转变发生了：原本在高温下自由存在的夸克和胶子开始结合，形成了质子和中子等基本粒子。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>1.2 原初核合成过程</h3>
+                        <p>原初核合成（Primordial Nucleosynthesis）是宇宙演化史上的第一个"元素工厂"，发生在宇宙大爆炸后约1秒到20分钟的时间窗口内。这个过程决定了今天宇宙中90%以上物质的基本组成。</p>
+                        
+                        <div class="element-list">
+                            <div class="element-item">
+                                <strong>氢 (¹H)</strong><br>
+                                约75%
+                            </div>
+                            <div class="element-item">
+                                <strong>氦-4 (⁴He)</strong><br>
+                                约25%
+                            </div>
+                            <div class="element-item">
+                                <strong>氘 (²H)</strong><br>
+                                约0.02%
+                            </div>
+                            <div class="element-item">
+                                <strong>氦-3 (³He)</strong><br>
+                                约0.0001%
+                            </div>
+                        </div>
+                        
+                        <p>原初核合成的主要反应路径是：</p>
+                        <div class="reaction">
+                            1. 一个质子和一个中子结合形成氘核（D）<br>
+                            2. 氘核与另一个质子结合形成氦-3（³He）<br>
+                            3. 两个氦-3核结合形成氦-4（⁴He）并释放两个质子<br>
+                            4. 氘核之间也可以相互反应，生成氦-3并释放一个中子
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>1.3 轻元素的形成与丰度</h3>
+                        <p>宇宙中元素的丰度分布呈现出明显的层次性特征。根据最新的观测数据，按质量计算，今天银河系中氢元素占74%，氦元素占24%，两者合计占宇宙总质量的98%。</p>
+                        <p>锂元素的情况则更为特殊。理论预测的锂-7丰度比观测值高出3-4倍，这就是著名的"宇宙锂问题"。科学家们提出了多种解释，包括早期宇宙中可能存在的额外物理过程、恒星演化对锂的破坏，或者是我们对原初核合成过程的理解还不够完善。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chapter">
+                <div class="chapter-title" onclick="toggleChapter(this)">
+                    <h2>2. 恒星演化与核反应循环</h2>
+                </div>
+                <div class="chapter-content">
+                    <div class="section">
+                        <h3>2.1 主序星阶段：氢聚变</h3>
+                        <p>当宇宙年龄达到约5亿年时，在引力的作用下，由氢原子和氦原子组成的气体云开始聚集收缩。当气体云核心的温度达到1000万度时，氢原子核之间的剧烈碰撞终于克服了它们之间的静电斥力，氢核聚变反应开始了。</p>
+                        
+                        <h4>质子-质子链反应（适用于太阳及质量更小的恒星）</h4>
+                        <div class="reaction">
+                            1. 两个质子碰撞，其中一个通过弱相互作用转化为中子，形成氘核<br>
+                            2. 氘核与另一个质子结合，形成氦-3核<br>
+                            3. 两个氦-3核碰撞，形成氦-4核并释放两个质子
+                        </div>
+                        
+                        <h4>碳氮氧循环（CNO循环，适用于质量大于1.1倍太阳质量的恒星）</h4>
+                        <p>CNO循环是一个催化过程，碳、氮、氧原子核在反应中起到催化剂的作用。</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>2.2 红巨星阶段：氦聚变与三重α过程</h3>
+                        <p>当恒星核心的氢燃料耗尽后，恒星进入了生命的晚期阶段。当红巨星核心温度达到约1亿度时，新的核反应开始了——氦聚变。</p>
+                        
+                        <div class="highlight">
+                            <p>三重α过程包含两个步骤：</p>
+                            <div class="reaction">
+                                1. 两个氦-4核（α粒子）结合形成铍-8核<br>
+                                2. 铍-8与第三个氦-4核碰撞，形成稳定的碳-12核
+                            </div>
+                        </div>
+                        
+                        <p>一旦碳-12形成，它还可以继续与氦-4核反应生成氧-16、氖-20等元素。宇宙中90%的碳和约三分之二的氧都是通过这种方式产生的。</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>2.3 大质量恒星的核燃烧序列</h3>
+                        <p>大质量恒星（质量大于8倍太阳质量）的演化历程远比小质量恒星复杂和壮观。它们不仅能够进行氢和氦的聚变，还能依次点燃更重的元素，形成一个"洋葱"状的分层结构。</p>
+                        
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <strong>氢燃烧（主序星阶段）</strong><br>
+                                核心温度：4×10^7 K<br>
+                                持续时间：700万年（对于20倍太阳质量的恒星）
+                            </div>
+                            <div class="timeline-item">
+                                <strong>氦燃烧（红超巨星阶段）</strong><br>
+                                核心温度：2×10^8 K<br>
+                                持续时间：50万年<br>
+                                主要产物：碳、氧
+                            </div>
+                            <div class="timeline-item">
+                                <strong>碳燃烧</strong><br>
+                                核心温度：6×10^8 K<br>
+                                持续时间：约600年
+                            </div>
+                            <div class="timeline-item">
+                                <strong>硅燃烧</strong><br>
+                                核心温度：2.7×10^9 K<br>
+                                持续时间：仅约1天<br>
+                                最终形成铁-56等铁峰元素
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>2.4 超新星爆发与重元素诞生</h3>
+                        <p>超新星爆发是宇宙中最剧烈的天体物理现象之一，也是比铁更重元素的主要诞生地。</p>
+                        
+                        <h4>r过程（快中子俘获过程）</h4>
+                        <p>在超新星爆发的极端环境中，中子密度达到10^20-10^22 cm^-3，温度高达10^9 K。在这种条件下，原子核可以快速俘获大量中子，形成从铁到铀的所有重元素。</p>
+                        
+                        <h4>s过程（慢中子俘获过程）</h4>
+                        <p>s过程发生在红巨星的氦燃烧阶段，中子密度较低（约10^8-10^10 cm^-3），中子俘获速度较慢。这个过程缓慢而稳定，主要产生原子序数在铅、铋附近的元素。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chapter">
+                <div class="chapter-title" onclick="toggleChapter(this)">
+                    <h2>3. 核反应的基本原理</h2>
+                </div>
+                <div class="chapter-content">
+                    <div class="section">
+                        <h3>3.1 原子核结构与核力</h3>
+                        <p>原子核由质子和中子组成，它们统称为核子。原子核的基本性质包括：</p>
+                        <ul>
+                            <li><strong>原子序数（Z）</strong>：质子数，决定了元素的化学性质</li>
+                            <li><strong>质量数（A）</strong>：质子数+中子数，近似等于原子的质量</li>
+                            <li><strong>中子数（N）</strong>：A-Z，决定了同位素的特性</li>
+                        </ul>
+                        
+                        <h4>核力的特性</h4>
+                        <p>核力是自然界四种基本相互作用之一，具有以下特点：</p>
+                        <ul>
+                            <li><strong>短程力</strong>：核力的作用范围极短，只有约10^-15米</li>
+                            <li><strong>强相互作用</strong>：核力比电磁力强100倍，是自然界最强的力</li>
+                            <li><strong>饱和性</strong>：每个核子只与邻近的核子发生作用</li>
+                            <li><strong>电荷无关性</strong>：核力对质子和中子的作用相同</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>3.2 结合能与质量亏损</h3>
+                        <p>结合能是理解核反应能量来源的关键概念。结合能是指将原子核中的所有核子完全分开所需要的能量，或者反过来，是核子结合成原子核时释放的能量。</p>
+                        
+                        <div class="highlight">
+                            <p>根据爱因斯坦的质能方程E=mc²，质量和能量是等价的。当核子结合成原子核时，会发生质量亏损：</p>
+                            <p>Δm = 核子总质量 - 原子核质量</p>
+                            <p>这个质量亏损Δm通过E=Δmc²转化为结合能释放出来。</p>
+                        </div>
+                        
+                        <p>比结合能曲线揭示了核反应的能量规律：</p>
+                        <ul>
+                            <li><strong>聚变反应</strong>：轻核聚合成中等质量核时，比结合能增加，释放能量</li>
+                            <li><strong>裂变反应</strong>：重核分裂成中等质量核时，比结合能增加，释放能量</li>
+                            <li><strong>铁核的特殊性</strong>：铁-56的比结合能最高，无论是聚变还是裂变都需要吸收能量</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>3.3 核裂变机制</h3>
+                        <p>核裂变是指重原子核分裂成两个或多个中等质量原子核的过程。这个过程最早在1938年由德国科学家奥托·哈恩和弗里茨·斯特拉斯曼发现。</p>
+                        
+                        <h4>裂变的基本过程</h4>
+                        <div class="reaction">
+                            1. 重核（如铀-235）吸收一个中子，形成激发态的复核<br>
+                            2. 复核发生形变，从球形变为椭球形<br>
+                            3. 当形变超过临界值时，核力无法维持原子核的整体，原子核分裂成两个碎片<br>
+                            4. 同时释放2-3个中子和大量能量
+                        </div>
+                        
+                        <p>以铀-235为例，典型的裂变反应为：</p>
+                        <div class="reaction">
+                            ²³⁵U + n → ¹⁴¹Ba + ⁹²Kr + 3n + 200MeV
+                        </div>
+                        
+                        <h4>链式反应</h4>
+                        <p>裂变反应的一个重要特征是能够形成链式反应，这是原子弹和核反应堆的基础。</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>3.4 核聚变机制</h3>
+                        <p>核聚变是指轻原子核结合成一个较重原子核的过程。这是太阳和其他恒星的能量来源，也是未来清洁能源的希望。</p>
+                        
+                        <h4>聚变的基本条件</h4>
+                        <p>要实现核聚变，必须克服两个原子核之间的库仑势垒：</p>
+                        <ul>
+                            <li>需要极高的温度（10^8 K以上）使原子核具有足够的动能</li>
+                            <li>需要足够高的密度和约束时间，使聚变反应能够持续进行</li>
+                        </ul>
+                        
+                        <h4>主要的聚变反应</h4>
+                        <div class="reaction">
+                            1. 氘-氚反应（D-T）：D + T → ⁴He + n + 17.6MeV<br>
+                            2. 氘-氘反应（D-D）：D + D → ³He + n + 3.27MeV<br>
+                            3. 氘-氦-3反应（D-³He）：D + ³He → ⁴He + p + 18.3MeV
+                        </div>
+                        
+                        <h4>最新进展</h4>
+                        <p>2025年，核聚变研究取得了重大突破：</p>
+                        <ul>
+                            <li>中国"东方超环"（EAST）实现1亿摄氏度1066秒稳态等离子体运行</li>
+                            <li>中国环流三号实现原子核温度1.17亿度、电子温度1.6亿度的参数水平</li>
+                            <li>美国国家点火装置（NIF）在2025年4月实现8.6兆焦耳聚变产额，能量增益系数Q值达4.13</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chapter">
+                <div class="chapter-title" onclick="toggleChapter(this)">
+                    <h2>4. 同位素与核稳定性</h2>
+                </div>
+                <div class="chapter-content">
+                    <div class="section">
+                        <h3>4.1 同位素概念与分类</h3>
+                        <p>同位素是指具有相同质子数但中子数不同的原子。它们在元素周期表中占据同一位置，化学性质几乎相同，但物理性质存在差异。</p>
+                        
+                        <h4>同位素的表示方法</h4>
+                        <p>同位素通常用符号表示，如：</p>
+                        <div class="element-list">
+                            <div class="element-item">氢的同位素：<br>¹H（氢）、²H（氘）、³H（氚）</div>
+                            <div class="element-item">碳的同位素：<br>¹²C、¹³C、¹⁴C</div>
+                            <div class="element-item">铀的同位素：<br>²³⁵U、²³⁸U</div>
+                        </div>
+                        
+                        <h4>同位素的分类</h4>
+                        <p>根据稳定性，同位素可分为：</p>
+                        <ul>
+                            <li><strong>稳定同位素</strong>：不会自发衰变的同位素</li>
+                            <li><strong>放射性同位素</strong>：会自发衰变的同位素，具有一定的半衰期</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>4.2 核稳定性规律</h3>
+                        <p>原子核的稳定性遵循一定的规律，这些规律对理解核反应和同位素应用至关重要。</p>
+                        
+                        <h4>决定核稳定性的因素</h4>
+                        <ul>
+                            <li><strong>中子-质子比（N/Z）</strong>：随着Z增加，需要更多的中子来抵消质子间的电磁斥力</li>
+                            <li><strong>幻数效应</strong>：当质子数或中子数为特定数值（2, 8, 20, 28, 50, 82, 126）时，原子核特别稳定</li>
+                            <li><strong>偶奇性</strong>：偶偶核（Z和N均为偶数）最稳定，占稳定核素的58%</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>4.3 同位素的应用</h3>
+                        <p>同位素在科学研究和生产生活中有着广泛的应用。</p>
+                        
+                        <h4>核医学应用</h4>
+                        <ul>
+                            <li><strong>诊断</strong>：¹⁸F-FDG用于PET/CT肿瘤诊断，⁹⁹mTc用于各种器官显像</li>
+                            <li><strong>治疗</strong>：¹³¹I治疗甲状腺癌，¹⁷⁷Lu治疗前列腺癌</li>
+                        </ul>
+                        
+                        <h4>工业应用</h4>
+                        <ul>
+                            <li>γ射线用于检测金属内部缺陷</li>
+                            <li>核子秤用于物料称重</li>
+                            <li>电子束用于高分子材料改性</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>4.4 超重元素探索</h3>
+                        <p>超重元素是指原子序数大于103的元素，它们的合成和研究是核物理和化学的前沿领域。</p>
+                        
+                        <h4>超重元素的合成方法</h4>
+                        <ul>
+                            <li><strong>冷熔合反应</strong>：用重离子轰击锕系元素靶，主要用于合成104-112号元素</li>
+                            <li><strong>热熔合反应</strong>：用⁴⁸Ca轰击重锕系元素靶，成功合成了113-118号元素</li>
+                        </ul>
+                        
+                        <h4>稳定岛理论</h4>
+                        <p>理论预测在Z=114、N=184附近存在一个"稳定岛"，岛上的超重元素可能具有相对较长的半衰期。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chapter">
+                <div class="chapter-title" onclick="toggleChapter(this)">
+                    <h2>5. 核技术的前沿应用与发展</h2>
+                </div>
+                <div class="chapter-content">
+                    <div class="section">
+                        <h3>5.1 可控核聚变技术进展</h3>
+                        <p>可控核聚变被认为是人类未来的终极能源，它具有燃料丰富、清洁环保、安全可靠等诸多优点。</p>
+                        
+                        <h4>磁约束聚变（托卡马克）</h4>
+                        <p>2025年，中国在这一领域取得了世界领先的成就：</p>
+                        <ul>
+                            <li><strong>中国环流三号</strong>：首次实现原子核和电子温度均突破一亿度</li>
+                            <li><strong>东方超环（EAST）</strong>：实现1亿摄氏度1066秒稳态长脉冲高约束模等离子体运行</li>
+                        </ul>
+                        
+                        <h4>惯性约束聚变（激光聚变）</h4>
+                        <p>美国在惯性约束聚变领域保持领先地位：</p>
+                        <ul>
+                            <li><strong>国家点火装置（NIF）的突破</strong>：2025年4月，实现8.6兆焦耳聚变产额，能量增益系数Q值达4.13</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>5.2 先进核裂变技术</h3>
+                        <p>核裂变技术经过70多年的发展，正在向更安全、更高效、更清洁的方向演进。</p>
+                        
+                        <h4>第四代核反应堆</h4>
+                        <p>国际上公认的第四代核反应堆有六种类型：</p>
+                        <ul>
+                            <li><strong>超高温气冷堆（VHTR）</strong>：出口温度高达1000℃，可用于制氢、炼钢等工业过程</li>
+                            <li><strong>钠冷快堆</strong>：利用快中子增殖核燃料，铀资源利用率从1%提高到60%</li>
+                            <li><strong>钍基熔盐堆</strong>：钍资源丰富，是铀的4倍，产生的核废料少，半衰期短</li>
+                        </ul>
+                        
+                        <h4>小型模块化反应堆（SMR）</h4>
+                        <p>SMR是核反应堆小型化、模块化的创新：</p>
+                        <ul>
+                            <li>单堆功率50-300兆瓦</li>
+                            <li>工厂预制，现场组装</li>
+                            <li>建设周期短，投资风险低</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>5.3 核医学与放射性药物</h3>
+                        <p>核医学是核技术在医学领域的重要应用，它将放射性药物与先进的成像技术相结合，实现了疾病的精准诊断和治疗。</p>
+                        
+                        <h4>核医学成像技术</h4>
+                        <ul>
+                            <li><strong>PET/CT成像</strong>：正电子发射断层扫描与计算机断层扫描结合</li>
+                            <li><strong>SPECT/CT成像</strong>：单光子发射计算机断层扫描</li>
+                        </ul>
+                        
+                        <h4>核素治疗的突破</h4>
+                        <ul>
+                            <li><strong>⁹⁰Y微球治疗肝癌</strong>：通过肝动脉将载有⁹⁰Y的微球注入肿瘤</li>
+                            <li><strong>¹⁷⁷Lu治疗前列腺癌</strong>：2024年，诺华的Pluvicto销售额突破13.92亿美元</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>5.4 核技术在其他领域的创新应用</h3>
+                        <p>核技术的应用已经远远超出了传统的能源和医疗领域，在众多行业展现出巨大的创新潜力。</p>
+                        
+                        <h4>核电池与同位素电源</h4>
+                        <p>核电池利用放射性同位素的衰变能产生电力，具有寿命长、环境适应性强等优点：</p>
+                        <ul>
+                            <li><strong>空间应用</strong>：钚-238 RTG为"旅行者"号提供动力，已工作40多年</li>
+                            <li><strong>心脏起搏器</strong>：钯-103核电池可工作10年以上</li>
+                        </ul>
+                        
+                        <h4>环境监测与治理</h4>
+                        <ul>
+                            <li>同位素指纹技术识别污染源</li>
+                            <li>辐照处理工业废水</li>
+                            <li>利用¹²⁹I监测核设施排放</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chapter">
+                <div class="chapter-title" onclick="toggleChapter(this)">
+                    <h2>6. 核安全与社会议题</h2>
+                </div>
+                <div class="chapter-content">
+                    <div class="section">
+                        <h3>6.1 核废料处理与处置</h3>
+                        <p>核废料处理是核能发展面临的重大挑战之一。随着全球核能的快速发展，如何安全、永久地处置核废料成为一个亟待解决的问题。</p>
+                        
+                        <h4>核废料的分类</h4>
+                        <ul>
+                            <li><strong>高放射性废物（HLW）</strong>：主要来自乏燃料和后处理废液，放射性强，半衰期长</li>
+                            <li><strong>中低放射性废物（LLW/ILW）</strong>：包括反应堆构件、防护设备等，放射性较低</li>
+                        </ul>
+                        
+                        <h4>深地质处置</h4>
+                        <p>深地质处置是目前国际公认的高放废物永久处置方案：</p>
+                        <ul>
+                            <li><strong>芬兰Onkalo处置库</strong>：世界首个深地质处置库，2025年开始试运行</li>
+                            <li><strong>中国的努力</strong>：北山地下实验室位于甘肃，计划2050年建成高放废物处置库</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>6.2 核安全文化与监管体系</h3>
+                        <p>核安全是核能发展的生命线。建立完善的核安全文化和监管体系，是确保核能安全、可持续发展的根本保障。</p>
+                        
+                        <h4>国际核安全框架</h4>
+                        <ul>
+                            <li><strong>国际法律文书</strong>：《核安全公约》、《及早通报核事故公约》等</li>
+                            <li><strong>国际原子能机构（IAEA）</strong>：制定核安全标准和导则，开展安全审查和评估</li>
+                        </ul>
+                        
+                        <h4>重大核事故的教训</h4>
+                        <ul>
+                            <li><strong>切尔诺贝利事故（1986年）</strong>：推动国际核安全体系建立</li>
+                            <li><strong>福岛事故（2011年）</strong>：推动全球核安全标准提升</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>6.3 公众接受度与科普教育</h3>
+                        <p>公众对核能的接受度直接影响着核能的未来发展。提高公众对核科学的认知，消除不必要的恐惧，是核能可持续发展的重要条件。</p>
+                        
+                        <h4>科普教育的重要性</h4>
+                        <ul>
+                            <li>提升科学素养，了解核科学基本原理</li>
+                            <li>正确认识辐射的危害与应用</li>
+                            <li>理解风险与收益的平衡</li>
+                        </ul>
+                        
+                        <h4>创新科普方式</h4>
+                        <ul>
+                            <li><strong>数字化科普</strong>：开发互动式科普APP，制作核科学动画和短视频</li>
+                            <li><strong>体验式教育</strong>：建设核科学博物馆，开展核电站公众开放日</li>
+                            <li><strong>媒体合作</strong>：邀请科学家参与科普节目，制作核科学纪录片</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="conclusion">
+                <h2>结语：核反应与人类文明的未来</h2>
+                <p>回顾从宇宙大爆炸到人类文明的漫长历程，核反应始终扮演着关键角色。从宇宙诞生后3分钟内形成的氢、氦元素，到恒星内部锻造出的碳、氧、铁，再到超新星爆发创造的金、银等重元素——我们身边的一切物质，包括我们自己，都源于核反应。</p>
+                <p>进入21世纪，人类对核反应的认识和利用达到了前所未有的高度。可控核聚变技术的突破让我们看到了清洁能源的曙光，第四代核反应堆的安全性大幅提升，核医学在疾病诊疗中发挥着不可替代的作用。</p>
+                <p>展望未来，核技术的发展将呈现以下趋势：</p>
+                <ul>
+                    <li><strong>核能将成为碳中和目标的关键支撑</strong></li>
+                    <li><strong>核医学将实现精准化、个体化</strong></li>
+                    <li><strong>核技术应用将更加多元化</strong></li>
+                    <li><strong>安全性将达到新高度</strong></li>
+                </ul>
+                <p>作为宇宙演化的产物和核反应的受益者，我们有责任也有能力推动核技术的健康发展。相信在科学精神的指引下，核技术必将为人类创造更加美好的明天。</p>
+            </div>
+        </main>
+        
+        <aside class="sidebar">
+            <div class="card">
+                <h3>内容概览</h3>
+                <ul>
+                    <li>宇宙起源与原初核合成</li>
+                    <li>恒星演化与核反应循环</li>
+                    <li>核反应的基本原理</li>
+                    <li>同位素与核稳定性</li>
+                    <li>核技术的前沿应用</li>
+                    <li>核安全与社会议题</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>关键概念</h3>
+                <ul>
+                    <li>大爆炸理论</li>
+                    <li>核聚变与核裂变</li>
+                    <li>结合能与质量亏损</li>
+                    <li>同位素与放射性</li>
+                    <li>链式反应</li>
+                    <li>可控核聚变</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>重要元素丰度</h3>
+                <div class="element-item">氢：约75%</div>
+                <div class="element-item">氦：约25%</div>
+                <div class="element-item">氧：约1%</div>
+                <div class="element-item">碳：约0.5%</div>
+                <div class="element-item">其他：约0.5%</div>
+            </div>
+            
+            <div class="card">
+                <h3>核反应类型</h3>
+                <ul>
+                    <li>原初核合成</li>
+                    <li>恒星核合成</li>
+                    <li>超新星核合成</li>
+                    <li>人工核反应</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>核技术应用</h3>
+                <ul>
+                    <li>能源生产</li>
+                    <li>医学诊断与治疗</li>
+                    <li>工业检测</li>
+                    <li>农业育种</li>
+                    <li>科学研究</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    
+    <footer>
+        <p>核反应原理与宇宙元素演化 | 内容由 AI 生成</p>
+    </footer>
+
+    <script>
+        function toggleChapter(element) {
+            const content = element.nextElementSibling;
+            const isOpen = content.style.display === 'block';
+            
+            // 切换内容显示
+            content.style.display = isOpen ? 'none' : 'block';
+            
+            // 切换图标
+            element.querySelector('h2').style.borderBottom = isOpen ? 'none' : '2px solid var(--secondary-color)';
+            element.style.borderRadius = isOpen ? 'var(--border-radius)' : 'var(--border-radius) var(--border-radius) 0 0';
+            element.innerHTML = element.innerHTML.replace(isOpen ? '-' : '+', isOpen ? '+' : '-');
+        }
+        
+        // 默认展开第一章
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstChapter = document.querySelector('.chapter-title');
+            if (firstChapter) {
+                toggleChapter(firstChapter);
+            }
+        });
+    </script>
+</body>
+</html>

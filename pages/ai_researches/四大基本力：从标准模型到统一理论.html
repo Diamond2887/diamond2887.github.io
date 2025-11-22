@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四大基本力：从标准模型到统一理论</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .tab.active {
+            color: var(--secondary);
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .highlight {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-left: 4px solid var(--warning);
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .force-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .force-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .force-card h3 {
+            display: flex;
+            align-items: center;
+            margin-top: 0;
+        }
+        
+        .force-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .force-properties {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .property {
+            background-color: var(--light);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .property-name {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .collapse {
+            margin: 1rem 0;
+        }
+        
+        .collapse-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .collapse-content {
+            padding: 15px;
+            background-color: white;
+            border-radius: 0 0 5px 5px;
+            display: none;
+        }
+        
+        .collapse-content.active {
+            display: block;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--secondary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--secondary);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            color: #7f8c8d;
+            border-top: 1px solid var(--light);
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: 1px solid var(--light);
+                border-left: 3px solid transparent;
+            }
+            
+            .tab.active {
+                border-left: 3px solid var(--secondary);
+                border-bottom: 1px solid var(--light);
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .force-properties {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>四大基本力：从标准模型到统一理论</h1>
+            <p class="subtitle">探索自然界基本相互作用的奥秘</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="intro">引言</div>
+            <div class="tab" data-tab="forces">四大基本力</div>
+            <div class="tab" data-tab="standard-model">标准模型</div>
+            <div class="tab" data-tab="unification">统一理论</div>
+            <div class="tab" data-tab="experiments">实验成果</div>
+            <div class="tab" data-tab="future">未来展望</div>
+        </div>
+        
+        <div class="tab-content active" id="intro">
+            <h2>引言</h2>
+            <p>自然界的一切现象都可以归结为四种基本相互作用的结果，它们是<strong>强相互作用力、电磁相互作用力、弱相互作用力和引力相互作用力</strong>。这四种基本力不仅决定了微观粒子的行为，还支配着宏观宇宙的演化。</p>
+            
+            <div class="highlight">
+                <p>从牛顿发现万有引力定律，到麦克斯韦统一电磁理论，再到爱因斯坦提出广义相对论，人类对基本力的认识经历了一次又一次的飞跃。</p>
+            </div>
+            
+            <p>20世纪中叶建立的<strong>标准模型</strong>成功统一了电磁力、弱力和强力三种基本力，预言并发现了包括希格斯玻色子在内的多种基本粒子。然而，引力与其他三种力的统一仍然是物理学面临的最大挑战之一。</p>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>2025年重大突破</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>2025年8月，美国圣母大学研究团队宣布了一项震撼性成果：他们首次提出了一个统一的数学框架，将四种基本力浓缩在一个连贯的结构中。与此同时，LIGO-Virgo-KAGRA引力波探测器网络完成了历时两年半的第四次观测运行，探测到的引力波信号数量超过了前三次运行的总和。</p>
+                    <p>江门中微子实验在建成仅两个月后就发布了首个物理成果，将中微子振荡参数的测量精度推向了新的高度。这些最新进展表明，人类对基本力的认识正在进入一个全新的时代。</p>
+                </div>
+            </div>
+            
+            <p>本文将系统介绍四大基本力的基础概念，深入分析统一理论的最新进展，全面梳理2024-2025年期间的重要实验成果和理论突破，并展望未来研究的发展方向。</p>
+        </div>
+        
+        <div class="tab-content" id="forces">
+            <h2>四大基本力的基础概念与特性</h2>
+            
+            <div class="force-card">
+                <h3><span class="force-icon">E</span>电磁相互作用力：光子传递的长程力</h3>
+                <p><strong>电磁相互作用力</strong>是带电荷粒子或具有磁矩粒子通过电磁场传递的相互作用，是处于电场、磁场或电磁场的带电粒子所受到的作用力。在四种基本力中，电磁力的强度仅次于强相互作用力，其相对强度约为强相互作用的1/137。</p>
+                
+                <div class="force-properties">
+                    <div class="property">
+                        <div class="property-name">传递粒子</div>
+                        <div>光子</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">作用距离</div>
+                        <div>无限远</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">相对强度</div>
+                        <div>1/137</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">理论描述</div>
+                        <div>量子电动力学(QED)</div>
+                    </div>
+                </div>
+                
+                <div class="collapse">
+                    <div class="collapse-header">
+                        <span>详细特性</span>
+                        <span>+</span>
+                    </div>
+                    <div class="collapse-content">
+                        <p>电磁力的传递粒子是<strong>光子</strong>，这是一种基本粒子，被视为电磁辐射的量子。光子具有独特的物理性质：它没有静止质量，总是以光速（299792458m/s）在真空中移动，这意味着电磁力可以传播到无限远的距离。</p>
+                        <p>描述电磁相互作用的理论是<strong>量子电动力学（QED）</strong>，这是量子场论中最成熟的分支。QED研究电磁相互作用的量子性质，包括光子的发射和吸收、带电粒子的产生和湮没、带电粒子间的散射、带电粒子与光子间的散射等现象。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="force-card">
+                <h3><span class="force-icon">W</span>弱相互作用力：介导粒子衰变的短程力</h3>
+                <p><strong>弱相互作用力</strong>是亚原子粒子之间负责原子放射性衰变的相互作用机制，在粒子物理学的标准模型中，弱相互作用由W及Z玻色子的交换引起。弱力的强度相对较弱，其耦合常数在10^-7到10^-6之间，约为强相互作用的10^-13倍。</p>
+                
+                <div class="force-properties">
+                    <div class="property">
+                        <div class="property-name">传递粒子</div>
+                        <div>W和Z玻色子</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">作用距离</div>
+                        <div>10^-18到10^-16米</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">相对强度</div>
+                        <div>10^-13</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">理论描述</div>
+                        <div>电弱统一理论</div>
+                    </div>
+                </div>
+                
+                <div class="collapse">
+                    <div class="collapse-header">
+                        <span>详细特性</span>
+                        <span>+</span>
+                    </div>
+                    <div class="collapse-content">
+                        <p>弱相互作用力具有几个独特的性质。首先，它是<strong>唯一能够改变夸克味的相互作用</strong>，允许夸克在六种"味"（上、下、粲、奇、顶、底）之间转换。其次，弱相互作用力是<strong>唯一破坏宇称对称性（P对称）和电荷宇称对称性（CP对称）的基本相互作用</strong>。</p>
+                        <p>1968年，谢尔登·格拉肖、阿卜杜勒·萨拉姆和史蒂芬·温伯格将电磁力和弱相互作用统一起来，证明它们是单个力的两个方面，这个力现在被称为<strong>电弱力</strong>。希格斯机制为W+、W-、Z0三种大质量规范玻色子以及无质量的光子的存在提供了解释。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="force-card">
+                <h3><span class="force-icon">S</span>强相互作用力：夸克禁闭的最强力</h3>
+                <p><strong>强相互作用力</strong>是四种基本力中最强的，其相对强度设定为1，是电磁力的100倍，引力的10^39倍。强相互作用力通过胶子传递，作用距离约为10^-15米，主要负责将夸克结合在一起形成质子、中子等强子，以及将质子和中子束缚在原子核内。</p>
+                
+                <div class="force-properties">
+                    <div class="property">
+                        <div class="property-name">传递粒子</div>
+                        <div>胶子</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">作用距离</div>
+                        <div>约10^-15米</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">相对强度</div>
+                        <div>1</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">理论描述</div>
+                        <div>量子色动力学(QCD)</div>
+                    </div>
+                </div>
+                
+                <div class="collapse">
+                    <div class="collapse-header">
+                        <span>详细特性</span>
+                        <span>+</span>
+                    </div>
+                    <div class="collapse-content">
+                        <p>描述强相互作用的理论是<strong>量子色动力学（QCD）</strong>，它描述带色荷的夸克通过称为胶子的力载体相互作用的强作用力。QCD与描述电磁学的量子电动力学（QED）运作方式相似，但关键区别在于：胶子本身也带有色荷，这导致了与QED中光子完全不同的物理现象。</p>
+                        <p>强相互作用力具有两个最显著的特性：<strong>夸克禁闭</strong>和<strong>渐近自由</strong>。夸克禁闭是指夸克永远不能单独存在，必须以复合态形式（如强子）存在于自然界中。渐近自由则是指在极高能量下，夸克和胶子之间的相互作用变得非常弱，夸克和胶子可以近似自由运动。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="force-card">
+                <h3><span class="force-icon">G</span>引力相互作用力：时空弯曲的长程力</h3>
+                <p><strong>引力相互作用力</strong>是四种基本力中最弱的，其相对强度仅为强相互作用的10^-39倍，但却是作用范围最广的力，可以传播到无限远的距离。与其他三种力不同，引力的本质在爱因斯坦的广义相对论中得到了深刻揭示：<strong>引力不是一种传统意义上的力，而是时空弯曲的表现</strong>。</p>
+                
+                <div class="force-properties">
+                    <div class="property">
+                        <div class="property-name">传递粒子</div>
+                        <div>引力子(假想)</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">作用距离</div>
+                        <div>无限远</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">相对强度</div>
+                        <div>10^-39</div>
+                    </div>
+                    <div class="property">
+                        <div class="property-name">理论描述</div>
+                        <div>广义相对论</div>
+                    </div>
+                </div>
+                
+                <div class="collapse">
+                    <div class="collapse-header">
+                        <span>详细特性</span>
+                        <span>+</span>
+                    </div>
+                    <div class="collapse-content">
+                        <p>在广义相对论中，爱因斯坦场方程描述了物质如何决定时空的弯曲，而时空的弯曲又如何作用于物质。场方程的形式为：Gμν = 8πTμν，其中Gμν是爱因斯坦张量，表示时空的曲率；Tμν是能量-动量张量，表示物质的分布和运动。</p>
+                        <p>根据广义相对论，大质量物体并不通过神秘力量吸引小质量物体，而是通过其质量产生的时空弯曲，使得小质量物体在进入这一弯曲时空后，自然而然地沿着所谓的<strong>测地线</strong>运动。我们所感受到的"引力"，实际上是物体在弯曲时空中沿着测地线运动的表现。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="standard-model">
+            <h2>标准模型的成就与局限</h2>
+            
+            <h3>标准模型的理论框架与成功</h3>
+            <p><strong>标准模型</strong>是粒子物理学中描述强力、弱力和电磁力这三种基本相互作用的理论框架，它的建立是20世纪物理学最伟大的成就之一。标准模型成功地将电磁相互作用和弱相互作用统一为电弱相互作用，这一统一理论在1968年由谢尔登·格拉肖、阿卜杜勒·萨拉姆和史蒂芬·温伯格提出，他们因此获得了1979年诺贝尔物理学奖。</p>
+            
+            <div class="highlight">
+                <p>2012年7月4日，欧洲核子研究中心（CERN）的CMS和ATLAS实验团队独立宣布发现了质量在125-127 GeV/c²之间的新玻色子，这就是理论预言的<strong>希格斯玻色子</strong>。希格斯玻色子的发现不仅完成了标准模型的粒子谱，更重要的是验证了希格斯机制——这是电弱对称性破缺的关键。</p>
+            </div>
+            
+            <h3>标准模型面临的挑战</h3>
+            <p>尽管标准模型取得了巨大成功，但它仍然面临着诸多根本性挑战：</p>
+            <ul>
+                <li><strong>无法纳入引力</strong>：标准模型无法将引力纳入其理论框架，引力与其他三种力在本质上的差异使得引力的量子化成为物理学最大的难题之一。</li>
+                <li><strong>19个自由参数</strong>：标准模型包含了19个自由参数，这些参数不能从理论本身推导出来，必须通过实验测量确定。</li>
+                <li><strong>中微子质量问题</strong>：在标准模型的原始版本中，中微子被假设为无质量粒子。然而，中微子振荡现象的发现确凿地证明了中微子具有非零质量。</li>
+                <li><strong>无法解释暗物质和暗能量</strong>：天文观测表明，可见物质只占宇宙总能量的5%左右，其余95%是我们一无所知的暗物质和暗能量。</li>
+            </ul>
+            
+            <h3>标准模型的扩展方向</h3>
+            <p>面对这些挑战，物理学家们提出了多种扩展标准模型的方案：</p>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>超对称理论</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>超对称理论通过引入超对称伙伴粒子来解决标准模型的等级问题，即为什么希格斯玻色子的质量远小于普朗克质量。超对称理论预言每一个已知粒子都有一个超对称伙伴，这些伙伴粒子可能是暗物质的候选者。</p>
+                </div>
+            </div>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>大统一理论（GUT）</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>大统一理论试图将强、弱、电磁三种相互作用统一在一个更大的规范群中。最著名的SU(5)大统一理论预言了质子衰变，但实验至今未观测到质子衰变，这对SU(5)模型提出了质疑。</p>
+                </div>
+            </div>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>额外维度理论</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>额外维度理论认为我们的宇宙可能有超过四维的时空维度，额外的维度在普朗克尺度上卷曲起来，无法被直接观测。弦理论就是这类理论的典型代表，它需要10个时空维度才能保持理论的一致性。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="unification">
+            <h2>统一理论的最新进展</h2>
+            
+            <h3>2025年统一理论的重大突破</h3>
+            <p>2025年标志着统一理论研究的一个重要转折点。8月23日，美国圣母大学研究团队宣布了一项里程碑式的成果：他们首次提出了一个统一的数学框架，将四种基本力浓缩在一个连贯的结构中。这个被称为<strong>"力的方程（Equation of Forces, EoF）"</strong>的理论框架，在四维重整化群一致的框架内实现了四种基本力的统一，无需引入额外空间维度或推测性构造。</p>
+            
+            <div class="highlight">
+                <p>这一突破的意义在于，它第一次将四种基本力写在一个方程中，并且这个方程在数学上保持一致直到<strong>普朗克尺度</strong>。与弦理论或圈量子引力等先前方法不同，这个框架具有几个显著优势：不需要额外维度、减少了自由参数、能够建立从微观到宏观的桥梁。</p>
+            </div>
+            
+            <h3>量子引力理论的多元化探索</h3>
+            <p>量子引力理论的研究正呈现出多元化发展的趋势，不同的理论路径都在努力解决引力与量子力学的统一问题。</p>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>弦理论</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>弦理论作为最有希望的量子引力候选理论之一，在2024-2025年期间获得了新的实验支持。DESI和DES的观测数据显示，暗能量可能不是一成不变的，而弦理论相关的模型居然是拟合这些数据的最佳选择。</p>
+                </div>
+            </div>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>圈量子引力（LQG）</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>圈量子引力作为弦理论的主要竞争对手，继续在时空量子化方面取得进展。与弦理论不同，圈量子引力不需要额外维度，不要求超对称性，并且具有背景独立性的优势。</p>
+                </div>
+            </div>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>经典引力与量子纠缠的意外联系</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>2025年10月，《自然》杂志发表了一项震撼性研究成果，为量子引力研究开辟了全新方向。英国伦敦大学的研究团队发现，<strong>经典引力场可能直接产生量子纠缠</strong>。这一发现挑战了传统观点，即引力必须被量子化才能产生量子效应。</p>
+                <p>研究表明，即使引力场保持经典特性，也可能具备使物质粒子产生量子纠缠的能力。这意味着引力可能不需要量子化就能产生量子效应，为解决量子引力难题提供了全新的思路。</p>
+                </div>
+            </div>
+            
+            <h3>信息论视角下的统一理论</h3>
+            <p>最新的理论发展还从<strong>信息论</strong>的角度重新审视基本力的本质。一种革命性的观点认为，"力不再是基本的相互作用，而是底层量子信息网络不同模式激发的涌现现象"。</p>
+            
+            <p>在这个框架下，四种基本力不再是平等的、需要被统一的基本元素，而是从更基本的信息结构中涌现出来的现象。引力不再被视为一种力，而是时空的形态；电磁力、弱力和强力则被理解为信息网络中不同激发模式的表现。</p>
+        </div>
+        
+        <div class="tab-content" id="experiments">
+            <h2>最新实验成果与观测发现</h2>
+            
+            <h3>LIGO-Virgo-KAGRA引力波探测的历史性突破</h3>
+            <p>2025年11月18日，标志着引力波天文学进入了一个新纪元。<strong>LIGO-Virgo-KAGRA国际合作组织</strong>成功完成了第四次观测运行（O4），这次历时两年半（2023年5月24日至2025年11月18日）的观测创造了多项纪录。</p>
+            
+            <div class="highlight">
+                <p>O4观测运行的成果超出了所有人的预期。探测器实时观测到约<strong>250个候选信号</strong>，对第一阶段数据的综合分析确认了128个重要事件，比实时公布的数据增加了约50%。更令人震撼的是，O4探测到的信号数量已经超过了前三次观测运行（O1、O2、O3）探测到的90个信号的总和，实现了数量级的飞跃。</p>
+            </div>
+            
+            <h3>江门中微子实验的里程碑式成果</h3>
+            <p>中国的<strong>江门中微子实验</strong>在2025年11月19日发布了其首个物理成果，这距离实验装置建成仅两个月，创造了中微子物理实验的新纪录。通过对2025年8月26日至11月2日共59天有效数据的分析，JUNO合作组取得了令人瞩目的成就。</p>
+            
+            <p>江门中微子实验的核心成果是对<strong>太阳中微子振荡参数</strong>的精确测量。实验测量了混合角θ₁₂和质量平方差Δm²₂₁，其精度比此前实验的最好记录提高了<strong>1.5到1.8倍</strong>。这一精度的飞跃不仅验证了江门中微子实验的卓越性能，也为中微子物理学的发展奠定了坚实基础。</p>
+            
+            <h3>希格斯玻色子物理的最新突破</h3>
+            <p>希格斯玻色子作为标准模型的最后一块拼图，其性质的精确测量一直是粒子物理学的研究重点。2025年，ATLAS和CMS等实验在希格斯玻色子研究方面取得了一系列重要进展。</p>
+            
+            <p>2025年7月22日，ATLAS合作组报告了迄今最精确的希格斯玻色子质量测量结果：<strong>125.11吉电子伏特</strong>。这一测量精度的提升得益于数据分析技术的改进和更多数据的积累，为检验标准模型和寻找新物理提供了更严格的约束。</p>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>希格斯玻色子罕见衰变</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>在希格斯玻色子的罕见衰变研究方面，ATLAS合作组取得了突破性进展。他们宣布发现了<strong>希格斯玻色子衰变为缪子对（H→μμ）</strong>的新证据，观测显著性达到3.4标准差，远超3000分之一的误判概率阈值。这种衰变过程极其罕见，平均每5000次希格斯衰变中仅发生一次。</p>
+                </div>
+            </div>
+            
+            <h3>中微子质量测量的极限突破</h3>
+            <p>中微子质量是粒子物理学中最神秘的参数之一。尽管中微子振荡现象确凿地证明了中微子具有非零质量，但中微子质量的绝对值仍然极其微小。2025年4月，德国卡尔斯鲁厄氚中微子（KATRIN）实验取得了中微子质量测量的重大突破。</p>
+            
+            <p>KATRIN实验通过精密测量氚β衰变过程中电子的能谱，对中微子质量进行了严格限制。他们设定的中微子质量上限为<strong>0.45电子伏特（eV）</strong>，相当于8×10^-37千克，不到电子质量的百万分之一。这一结果在90%置信水平下成立，代表了人类对中微子质量认识的最新极限。</p>
+        </div>
+        
+        <div class="tab-content" id="future">
+            <h2>未来研究方向与技术展望</h2>
+            
+            <h3>新一代粒子对撞机的宏伟蓝图</h3>
+            <p>粒子对撞机作为探索微观世界的"显微镜"，其发展水平直接决定了我们对基本力认识的深度。2025年，多个新一代对撞机项目正在紧锣密鼓地推进，它们将开启粒子物理学研究的新纪元。</p>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>未来环形对撞机（FCC）</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p><strong>未来环形对撞机（FCC）</strong>是欧洲核子研究中心（CERN）主导的旗舰项目。2025年3月31日，CERN发布了FCC的可行性研究报告。FCC采用两阶段建设方案：第一阶段建设FCC-ee（电子-正电子对撞机），作为"希格斯工厂"大规模产生希格斯玻色子供精密研究；第二阶段升级为FCC-hh（强子对撞机），质心能量可达100 TeV，是现有LHC能量的7倍。</p>
+                    <p>FCC的技术规格令人震撼：它将建造一个周长91公里的地下环形隧道，深度在180-400米之间，配备8个地面设施站点和4个实验探测器。这个庞然大物的建设预计需要约210亿欧元的投资，计划在2040年代中期开始运行。</p>
+                </div>
+            </div>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>环形正负电子对撞机（CEPC）</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>中国的<strong>环形正负电子对撞机（CEPC）</strong>项目同样雄心勃勃。2024年1月，CEPC项目进入工程设计报告（EDR）阶段，在加速器和探测器关键技术研发方面取得了重要成果。CEPC的设计能量为240 GeV，主要用于希格斯玻色子的精密测量，但它的隧道设计为未来升级为超级质子-质子对撞机（SppC）预留了空间，升级后能量可达70 TeV。</p>
+                    <p>CEPC在探测器技术方面实现了多项创新突破。在量能器设计中，项目团队引入了基于正交晶体条的电磁量能器和基于高颗粒度闪烁玻璃的强子量能器，两者均适用先进的粒子流算法，大幅度提高了能量测量精度。</p>
+                </div>
+            </div>
+            
+            <h3>引力波天文学的新纪元</h3>
+            <p>LIGO-Virgo-KAGRA第四次观测运行的巨大成功预示着引力波天文学的黄金时代已经到来。展望未来，引力波探测将在多个方面取得革命性进展。</p>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>探测网络的扩展和升级</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p>除了现有的LIGO、Virgo和KAGRA，印度的LIGO-India项目正在建设中，预计将在2030年代初投入运行。这将显著提高引力波事件的定位精度，特别是对于电磁对应体的搜寻。此外，地面探测器的灵敏度还将通过技术升级得到进一步提升，如采用量子非破坏测量技术、压缩光技术等。</p>
+                </div>
+            </div>
+            
+            <div class="collapse">
+                <div class="collapse-header">
+                    <span>空间引力波探测</span>
+                    <span>+</span>
+                </div>
+                <div class="collapse-content">
+                    <p><strong>空间引力波探测</strong>是另一个激动人心的发展方向。欧洲空间局的LISA任务计划在2030年代发射，它将由三个在太空中运行的探测器组成，能够探测频率在0.1毫赫兹到1赫兹之间的低频引力波。LISA的主要目标是探测超大质量黑洞双星系统的并合，这类事件产生的引力波信号可以在数十亿光年的距离上被探测到。</p>
+                </div>
+            </div>
+            
+            <h3>理论物理的未来发展方向</h3>
+            <p>理论物理学正面临着前所未有的机遇和挑战。统一四种基本力仍然是物理学的终极目标，但实现这一目标的路径可能比我们想象的更加复杂和多样。</p>
+            
+            <div class="highlight">
+                <p>从理论发展的角度看，<strong>量子引力理论</strong>的研究将继续是最活跃的领域之一。弦理论和圈量子引力作为两大主要候选理论，都在不断发展和完善。同时，新的理论方法也在涌现，如渐近安全引力、因果动力学三角剖分等。</p>
+            </div>
+            
+            <p><strong>超越标准模型的新物理</strong>研究将继续占据重要地位。暗物质、暗能量、中微子质量、CP破坏等问题都暗示着标准模型之外存在新的物理。未来的研究将通过理论创新和实验检验的结合，逐步揭示这些谜题的答案。</p>
+            
+            <p><strong>计算物理学</strong>的发展将为理论研究提供强大的工具。随着超级计算机性能的提升和算法的改进，我们将能够更精确地求解量子色动力学等强耦合理论，研究有限温度和密度下的强相互作用物质，模拟宇宙早期的演化过程等。</p>
+            
+            <h3>技术创新推动基础研究</h3>
+            <p>基础物理学的每一次重大突破都离不开技术创新的支撑。展望未来，多项关键技术的发展将为基本力研究提供强大动力。</p>
+            
+            <div class="force-properties">
+                <div class="property">
+                    <div class="property-name">超导技术</div>
+                    <div>高温超导材料的应用将降低磁体的运行成本，提高磁场强度。</div>
+                </div>
+                <div class="property">
+                    <div class="property-name">量子技术</div>
+                    <div>量子传感器的灵敏度已经超越了经典传感器的极限，在引力波探测等方面展现出巨大潜力。</div>
+                </div>
+                <div class="property">
+                    <div class="property-name">探测器技术</div>
+                    <div>新型半导体探测器、闪烁体材料等技术的发展将提高粒子探测的精度和效率。</div>
+                </div>
+                <div class="property">
+                    <div class="property-name">数据处理技术</div>
+                    <div>人工智能和机器学习技术在模式识别、事件重建等方面的应用将显著提高实验的灵敏度和精度。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>四大基本力：从标准模型到统一理论的前沿探索</p>
+            <p>内容基于2024-2025年最新研究成果整理</p>
+        </div>
+    </footer>
+
+    <script>
+        // 标签页功能
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有活动标签
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                // 隐藏所有标签内容
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 激活当前标签
+                tab.classList.add('active');
+                // 显示对应内容
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 折叠面板功能
+        document.querySelectorAll('.collapse-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                content.classList.toggle('active');
+                
+                // 切换图标
+                const icon = header.querySelector('span:last-child');
+                icon.textContent = content.classList.contains('active') ? '-' : '+';
+            });
+        });
+    </script>
+</body>
+</html>
