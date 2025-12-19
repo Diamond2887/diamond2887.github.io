@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏引擎选择指南 - 全方位对比分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .engines-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0;
+        }
+        
+        .engine-tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #4a6491;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .subsection {
+            margin-bottom: 25px;
+        }
+        
+        .subsection-title {
+            font-size: 1.4rem;
+            color: #3498db;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .subsection-title:before {
+            content: "▶";
+            margin-right: 8px;
+            font-size: 0.9rem;
+            color: #4a6491;
+        }
+        
+        .highlight {
+            background-color: #fff9e6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f1c40f;
+            margin: 15px 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comparison-table th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .details-container {
+            margin-top: 15px;
+        }
+        
+        details {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        summary {
+            padding: 15px 20px;
+            background-color: #eef5ff;
+            cursor: pointer;
+            font-weight: bold;
+            color: #2c3e50;
+            border-left: 4px solid #3498db;
+        }
+        
+        summary:hover {
+            background-color: #e4eeff;
+        }
+        
+        details[open] summary {
+            border-left-color: #e74c3c;
+        }
+        
+        .details-content {
+            padding: 20px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .engine-feature {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eaeaea;
+        }
+        
+        .engine-feature:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-title {
+            font-weight: bold;
+            min-width: 200px;
+            color: #2c3e50;
+        }
+        
+        .feature-desc {
+            flex: 1;
+        }
+        
+        .conclusion {
+            background-color: #e8f4fc;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #2980b9;
+        }
+        
+        .conclusion-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .conclusion-point {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .conclusion-point:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .rating {
+            display: inline-block;
+            background-color: #2ecc71;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-left: 5px;
+        }
+        
+        .rating-average {
+            background-color: #f39c12;
+        }
+        
+        .rating-low {
+            background-color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .engine-feature {
+                flex-direction: column;
+            }
+            
+            .feature-title {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th, 
+            .comparison-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>游戏引擎的选择对游戏开发项目的影响</h1>
+        <div class="subtitle">对11个主流游戏引擎的全方位对比分析报告：从平台适用性、游戏类型支持到开发者友好度和项目规模适配性</div>
+        <div class="engines-list">
+            <div class="engine-tag">libgdx</div>
+            <div class="engine-tag">Godot</div>
+            <div class="engine-tag">Unity</div>
+            <div class="engine-tag">Unreal</div>
+            <div class="engine-tag">Cocos</div>
+            <div class="engine-tag">O3DE</div>
+            <div class="engine-tag">Bevy</div>
+            <div class="engine-tag">GameMaker</div>
+            <div class="engine-tag">RPG Maker</div>
+            <div class="engine-tag">Flax</div>
+            <div class="engine-tag">Stride</div>
+        </div>
+    </header>
+    
+    <div class="main-content">
+        <div class="section">
+            <h2 class="section-title">一、跨平台支持能力对比</h2>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">1.1 PC平台支持情况</h3>
+                <p>在PC平台支持方面，所有11个游戏引擎都提供了对Windows平台的完整支持，这反映了Windows作为游戏开发主流操作系统的地位。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity、Unreal Engine、Godot、Cocos Creator、GameMaker、Bevy和Flax都实现了对Windows、macOS和Linux三大桌面平台的全面支持。
+                </div>
+                
+                <div class="details-container">
+                    <details>
+                        <summary>详细平台支持信息</summary>
+                        <div class="details-content">
+                            <div class="engine-feature">
+                                <div class="feature-title">Godot</div>
+                                <div class="feature-desc">以其仅8GB的微型编辑器在轻量化方面表现突出，同时提供了完整的2D、3D开发环境。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">O3DE</div>
+                                <div class="feature-desc">根据最新的社区讨论，O3DE不再以Windows为主，而是将Windows和Linux视为平等的主要平台。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">libgdx</div>
+                                <div class="feature-desc">作为基于OpenGL(ES)的跨平台Java游戏开发框架，支持Windows、Linux、macOS、Android、iOS和Web平台。</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">1.2 主机平台支持情况</h3>
+                <p>主机平台的支持是区分不同引擎定位的重要维度，因为主机开发通常需要特殊的认证和授权。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity和Unreal Engine在主机支持方面最为全面，两者都支持超过25个平台，包括PlayStation、Xbox和Nintendo Switch等主流主机。
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>引擎</th>
+                            <th>主机支持情况</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Unity & Unreal</td>
+                            <td>全面支持</td>
+                            <td>支持超过25个平台，包括所有主流主机</td>
+                        </tr>
+                        <tr>
+                            <td>Flax Engine</td>
+                            <td>全面支持</td>
+                            <td>支持PS4、PS5、Xbox One、Xbox Series X/S和Switch</td>
+                        </tr>
+                        <tr>
+                            <td>GameMaker</td>
+                            <td>有限支持</td>
+                            <td>PS5和Xbox Series X/S需要企业版授权</td>
+                        </tr>
+                        <tr>
+                            <td>Godot</td>
+                            <td>官方支持有限</td>
+                            <td>需要额外设置或第三方工具</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">1.3 移动端支持情况</h3>
+                <p>移动端支持能力直接影响游戏的市场覆盖范围，在这方面各引擎表现出不同的技术特色和策略重点。</p>
+                
+                <div class="details-container">
+                    <details>
+                        <summary>移动端支持详细对比</summary>
+                        <div class="details-content">
+                            <div class="engine-feature">
+                                <div class="feature-title">Unity</div>
+                                <div class="feature-desc">在移动端支持方面处于领先地位，支持iOS、Android等所有主流移动平台。根据行业数据，60%的新移动游戏使用Unity进行跨设备发布。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Unreal Engine 5</div>
+                                <div class="feature-desc">在移动端的表现令人惊喜，在iOS、Android和Switch上都实现了稳健的性能表现。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">libgdx</div>
+                                <div class="feature-desc">最低支持Android 2.2（API 8），这是所有引擎中最老的Android版本支持。</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">1.4 网页平台支持情况</h3>
+                <p>网页平台支持在云游戏和即点即玩趋势下变得越来越重要，各引擎在Web技术支持方面展现出不同的技术路线。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Cocos Creator在网页和小游戏平台表现尤为出色，通过优化小游戏启动性能和Web & 小游戏2D渲染性能，使其成为网页游戏开发的优选引擎。
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">1.5 VR/AR设备支持情况</h3>
+                <p>VR/AR技术的快速发展使设备支持能力成为衡量引擎先进性的重要指标。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity在VR/AR支持方面具有无可比拟的优势，支持从PC、主机到移动端的所有主流XR硬件，真正实现了"一次开发，多端部署"。
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">二、游戏类型开发能力对比</h2>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">2.1 2D游戏开发能力</h3>
+                <p>根据综合评估，在2D游戏开发方面表现最优秀的引擎包括Unity、Godot、Cocos Creator和GameMaker。</p>
+                
+                <div class="details-container">
+                    <details>
+                        <summary>各引擎2D开发能力评级</summary>
+                        <div class="details-content">
+                            <div class="engine-feature">
+                                <div class="feature-title">Godot <span class="rating">卓越</span></div>
+                                <div class="feature-desc">在2D开发效率方面表现尤为突出，具有轻量化特点，编辑器仅8GB，拥有模块化设计，支持2D/3D无缝切换。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Cocos Creator <span class="rating">卓越</span></div>
+                                <div class="feature-desc">在2D游戏开发领域享有盛誉，被认为是最优秀的2D游戏引擎之一。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">GameMaker <span class="rating">优秀</span></div>
+                                <div class="feature-desc">拖拽式开发环境允许开发者在几分钟内创建游戏而无需编写任何代码。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Unreal Engine <span class="rating rating-average">一般</span></div>
+                                <div class="feature-desc">2D功能正在不断改进，在4.25版本后引入了Paper2D功能，大幅提升了2D开发能力。</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">2.2 3D游戏开发能力</h3>
+                <p>3D游戏开发能力直接决定了引擎在高端游戏市场的竞争力。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unreal Engine在3D游戏开发方面表现最为卓越，被评为"Exceptional"级别，在图形渲染能力方面处于行业领先地位。
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>引擎</th>
+                            <th>3D能力评级</th>
+                            <th>核心技术特点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Unreal Engine</td>
+                            <td><span class="rating">卓越</span></td>
+                            <td>Nanite虚拟几何体、Lumen实时全局光照</td>
+                        </tr>
+                        <tr>
+                            <td>Unity</td>
+                            <td><span class="rating">优秀</span></td>
+                            <td>可编程渲染管线(SRP)、模块化设计</td>
+                        </tr>
+                        <tr>
+                            <td>Flax Engine</td>
+                            <td><span class="rating">优秀</span></td>
+                            <td>实时全局光照(DDGI)、自定义软件光线追踪</td>
+                        </tr>
+                        <tr>
+                            <td>Godot</td>
+                            <td><span class="rating rating-average">良好</span></td>
+                            <td>Godot 5.0带来新的渲染后端、Vulkan改进</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">2.3 2.5D游戏开发能力</h3>
+                <p>2.5D（等距视角）游戏开发是一个特殊的技术领域，需要在2D游戏逻辑和3D视觉表现之间找到平衡。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity在2.5D游戏开发方面提供了最完善的支持，内置了等距投影工具，可快速构建轴测视角。
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">三、开发者体验和学习曲线分析</h2>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">3.1 初学者友好度对比</h3>
+                <p>对于初学者而言，引擎的学习难度和入门门槛是选择的关键因素。</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>引擎</th>
+                            <th>初学者友好度</th>
+                            <th>学习曲线</th>
+                            <th>主要特点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RPG Maker</td>
+                            <td><span class="rating">极高</span></td>
+                            <td>非常平缓</td>
+                            <td>可视化事件系统，无需编程</td>
+                        </tr>
+                        <tr>
+                            <td>GameMaker</td>
+                            <td><span class="rating">极高</span></td>
+                            <td>平缓</td>
+                            <td>拖拽式开发环境，可视化编程</td>
+                        </tr>
+                        <tr>
+                            <td>Godot</td>
+                            <td><span class="rating">高</span></td>
+                            <td>平缓</td>
+                            <td>GDScript类似Python，社区友好</td>
+                        </tr>
+                        <tr>
+                            <td>Unity</td>
+                            <td><span class="rating">良好</span></td>
+                            <td>中等</td>
+                            <td>庞大教程基础，C#语言</td>
+                        </tr>
+                        <tr>
+                            <td>Unreal Engine</td>
+                            <td><span class="rating rating-low">中等</span></td>
+                            <td>陡峭</td>
+                            <td>复杂性高，需要深入理解C++</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">3.2 中级开发者体验对比</h3>
+                <p>中级开发者通常已经掌握了基本的游戏开发概念，需要更高效的开发工具和更丰富的功能支持。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity在中级开发者支持方面表现最佳，其编辑器相对轻量化，可编程渲染管线(SRP)允许中级开发者通过C#脚本自定义渲染流程。
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">3.3 高级开发者支持对比</h3>
+                <p>高级开发者通常需要对引擎有更深的控制能力，包括底层优化、自定义渲染和高级功能开发。</p>
+                
+                <div class="details-container">
+                    <details>
+                        <summary>高级开发者支持详情</summary>
+                        <div class="details-content">
+                            <div class="engine-feature">
+                                <div class="feature-title">Unreal Engine</div>
+                                <div class="feature-desc">在高级开发者支持方面表现最为出色，其强大的C++ API使高级开发者能够优化关键代码路径。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Godot</div>
+                                <div class="feature-desc">为高级开发者提供了完整的源代码访问权限，作为开源引擎，允许开发者深入引擎底层进行定制和优化。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Bevy Engine</div>
+                                <div class="feature-desc">Rust的所有权和借用规则使并发代码更加安全，特别适合需要大量并行处理的现代游戏。</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">3.4 社区支持和资源对比</h3>
+                <p>社区支持是评估引擎长期发展潜力和开发者体验的重要指标。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity拥有最庞大的全球社区，提供了丰富的Asset Store资源和大量教程。Godot的社区虽然规模较小但非常活跃且支持性强。
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">四、项目规模适配性分析</h2>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">4.1 个人项目适配性</h3>
+                <p>个人项目通常面临预算有限、开发资源稀缺的挑战，因此引擎的成本效益和易用性成为关键考量因素。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Godot被强烈推荐为最佳选择，其完全免费开源的特性和轻量化设计特别适合预算有限的个人开发者。
+                </div>
+                
+                <div class="details-container">
+                    <details>
+                        <summary>个人项目推荐引擎</summary>
+                        <div class="details-content">
+                            <div class="engine-feature">
+                                <div class="feature-title">Godot</div>
+                                <div class="feature-desc">完全免费开源，轻量化设计，特别适合预算有限的个人开发者。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">RPG Maker & GameMaker</div>
+                                <div class="feature-desc">非常适合个人项目，特别是那些没有编程经验的个人开发者。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Unity Personal</div>
+                                <div class="feature-desc">为年收入低于20万美元的个人开发者提供了完全免费的使用权限。</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">4.2 中小型团队适配性</h3>
+                <p>中小型团队项目通常指预算在200万-2000万美元之间、团队规模在10-100人之间的开发项目。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity在中小型团队支持方面表现最为全面，其跨平台开发能力、广泛的Asset Store资源和成熟的工具链使其成为中小型团队的首选。
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">4.3 大型商业项目适配性</h3>
+                <p>大型商业项目通常指预算超过2000万美元、团队规模超过100人、开发周期为3-6年的AAA级项目。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> Unity和Unreal Engine是大型商业项目的主要选择，Unreal Engine在大型商业项目中占据主导地位，特别是在需要顶级图形表现的AAA级游戏开发中。
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">4.4 授权费用结构对比</h3>
+                <p>不同引擎的授权费用结构直接影响项目的成本控制和商业模式选择。</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>引擎</th>
+                            <th>基础授权</th>
+                            <th>商业授权</th>
+                            <th>版税政策</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Unity</td>
+                            <td>Personal免费（年收入<$20万）</td>
+                            <td>Plus $40/月，Pro $170/月</td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>Unreal Engine</td>
+                            <td>免费使用</td>
+                            <td>无</td>
+                            <td>5%（收入>$100万后）</td>
+                        </tr>
+                        <tr>
+                            <td>Godot</td>
+                            <td>完全免费开源（MIT许可）</td>
+                            <td>无</td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>Cocos Creator</td>
+                            <td>完全免费开源</td>
+                            <td>无</td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>GameMaker</td>
+                            <td>免费版有限制</td>
+                            <td>Studio $599</td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>RPG Maker</td>
+                            <td>MV $59.99，MZ $79.99</td>
+                            <td>无</td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>Flax Engine</td>
+                            <td>非商业免费</td>
+                            <td>商业使用</td>
+                            <td>4%（收入>$25万/季度）</td>
+                        </tr>
+                        <tr>
+                            <td>libgdx</td>
+                            <td>完全免费开源（Apache 2.0）</td>
+                            <td>无</td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>其他开源引擎</td>
+                            <td>完全免费开源</td>
+                            <td>无</td>
+                            <td>无</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">五、技术特点深度对比</h2>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">5.1 编程语言支持对比</h3>
+                <p>编程语言的选择直接影响开发效率、团队技能要求和项目的技术路线。</p>
+                
+                <div class="details-container">
+                    <details open>
+                        <summary>各引擎编程语言支持</summary>
+                        <div class="details-content">
+                            <div class="engine-feature">
+                                <div class="feature-title">C#</div>
+                                <div class="feature-desc">是最广泛使用的游戏引擎语言，被Unity、Flax Engine和Stride等多个引擎采用。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">C++</div>
+                                <div class="feature-desc">主要用于Unreal Engine等高端引擎，提供了最高的性能控制能力。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">GDScript</div>
+                                <div class="feature-desc">是Godot引擎的专用语言，具有类似Python的语法，简单易读，特别适合初学者。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Rust</div>
+                                <div class="feature-desc">在Bevy Engine中得到应用，在内存安全和并发处理方面具有显著优势。</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">5.2 开源协议分析</h3>
+                <p>开源协议的选择直接影响项目的商业应用、修改权限和分发自由。</p>
+                
+                <div class="highlight">
+                    <strong>关键发现：</strong> 在11个引擎中，7个采用了宽松的开源协议，包括Godot（MIT许可）、Cocos Creator、libgdx、O3DE、Bevy Engine、Stride和Flax Engine。
+                </div>
+            </div>
+            
+            <div class="subsection">
+                <h3 class="subsection-title">5.3 性能优化和渲染技术</h3>
+                <p>性能优化能力直接决定了游戏在不同硬件上的表现和用户体验。</p>
+                
+                <div class="details-container">
+                    <details>
+                        <summary>各引擎性能特点</summary>
+                        <div class="details-content">
+                            <div class="engine-feature">
+                                <div class="feature-title">Unity</div>
+                                <div class="feature-desc">在性能优化方面采用了先进的技术，其即时编译器在运行时优化代码，实现更快的加载时间和更流畅的游戏体验。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Godot</div>
+                                <div class="feature-desc">在现代硬件上表现出色，其基于Vulkan的渲染器能够显著提升性能。</div>
+                            </div>
+                            <div class="engine-feature">
+                                <div class="feature-title">Unreal Engine</div>
+                                <div class="feature-desc">在高端硬件上能够稳定维持60fps，以其高质量图形著称。</div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h2 class="conclusion-title">核心结论与选型建议</h2>
+            
+            <div class="conclusion-point">
+                <strong>对于个人开发者和小型团队：</strong> Godot、RPG Maker和GameMaker是最佳选择，它们提供了极低的入门门槛和零成本的开发环境。
+            </div>
+            
+            <div class="conclusion-point">
+                <strong>对于中小型商业项目：</strong> Unity和Cocos Creator表现最为均衡。Unity凭借其完善的工具链、庞大的社区和跨平台能力成为最受欢迎的选择。
+            </div>
+            
+            <div class="conclusion-point">
+                <strong>对于大型商业项目和AAA级游戏：</strong> Unreal Engine 5无疑是最佳选择，其在图形渲染、物理模拟和视觉效果方面的技术领先优势无可替代。
+            </div>
+            
+            <div class="conclusion-point">
+                <strong>技术选型的关键考量因素：</strong> 包括项目类型（2D/3D）、目标平台、团队技能、预算限制和长期发展需求。开发者应根据具体项目需求权衡各引擎的优势，选择最适合的技术栈。
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background-color: white; border-radius: 8px;">
+                <p><strong>注意：</strong> 随着游戏行业的快速发展，引擎技术也在不断演进。云游戏、AI集成、WebGPU等新技术的出现为游戏开发带来了新的机遇和挑战。开发者在选择引擎时，不仅要考虑当前的技术需求，还应关注引擎的技术路线图和未来发展潜力，以确保项目的长期成功。</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>游戏引擎选择指南 - 全方位对比分析报告</p>
+        <p>本报告基于对11个主流游戏引擎的技术分析，涵盖平台适用性、游戏类型支持、开发者友好度、项目规模适配性以及技术特点五个核心维度</p>
+        <p style="margin-top: 15px; font-style: italic;">内容由 AI 生成 | 2025年游戏引擎对比分析</p>
+    </footer>
+</body>
+</html>
