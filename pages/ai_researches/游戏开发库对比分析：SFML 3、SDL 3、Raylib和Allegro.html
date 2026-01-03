@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏开发库对比分析：SFML 3、SDL 3、Raylib和Allegro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a2a6c, #2a3f8f);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .summary-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+        
+        .library-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            flex: 1;
+            min-width: 250px;
+            max-width: 280px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid;
+        }
+        
+        .library-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .sfml { border-color: #e63946; }
+        .sdl { border-color: #457b9d; }
+        .raylib { border-color: #2a9d8f; }
+        .allegro { border-color: #e9c46a; }
+        
+        .library-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .library-version {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .library-highlight {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        
+        .content-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #1a2a6c;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin: 25px 0 15px 0;
+            color: #2a3f8f;
+        }
+        
+        h4 {
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+            color: #3d5a80;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #1a2a6c;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #f1f7ff;
+        }
+        
+        .rating {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .rating-high {
+            background-color: #e7f7ef;
+            color: #0a6640;
+        }
+        
+        .rating-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .rating-low {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .platform-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .platform-tag {
+            background-color: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .platform-tag.highlight {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        details {
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        summary {
+            padding: 15px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            font-weight: 600;
+            color: #1a2a6c;
+            outline: none;
+        }
+        
+        summary:hover {
+            background-color: #e9ecef;
+        }
+        
+        .details-content {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .recommendation-box {
+            background-color: #f0f7ff;
+            border-left: 5px solid #3d5a80;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .recommendation-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #1a2a6c;
+        }
+        
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .point-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid;
+        }
+        
+        .point-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .point-content {
+            color: #555;
+        }
+        
+        .final-recommendations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .final-card {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-top: 6px solid;
+        }
+        
+        .final-card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .final-card-content {
+            color: #555;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .summary-cards, .final-recommendations {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .library-card, .final-card {
+                max-width: 100%;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>游戏开发库对比分析</h1>
+        <p class="subtitle">全面对比SFML 3、SDL 3、Raylib和Allegro四个游戏开发库，从跨平台支持、渲染能力、性能表现到开发效率等多个维度，为您提供详细的选型指南。</p>
+    </header>
+    
+    <section class="summary-cards">
+        <div class="library-card sfml">
+            <div class="library-name">SFML 3</div>
+            <div class="library-version">版本：3.0.2 (2025年4月发布)</div>
+            <p class="library-highlight">最佳2D游戏开发库，面向对象设计</p>
+            <p>主要面向C++开发者，提供C语言绑定。专为2D游戏设计，网络功能完善，适合初学者。</p>
+        </div>
+        
+        <div class="library-card sdl">
+            <div class="library-name">SDL 3</div>
+            <div class="library-version">版本：3.0 (2025年1月发布)</div>
+            <p class="library-highlight">最广泛平台支持，高性能渲染</p>
+            <p>跨语言支持，支持现代图形API(Vulkan、Direct3D、Metal)，社区生态最完善，适合有经验的开发者。</p>
+        </div>
+        
+        <div class="library-card raylib">
+            <div class="library-name">Raylib</div>
+            <div class="library-version">版本：5.5 (支持SDL 3)</div>
+            <p class="library-highlight">最简单易用，强大3D支持</p>
+            <p>完全用C99编写，设计简洁，3D功能全面，支持WebAssembly，适合新手和快速原型开发。</p>
+        </div>
+        
+        <div class="library-card allegro">
+            <div class="library-name">Allegro 5</div>
+            <div class="library-version">版本：5.2.10.1 (最新稳定版)</div>
+            <p class="library-highlight">功能丰富，模块化设计</p>
+            <p>主要面向C++开发者，提供C语言绑定，2D功能丰富，支持MIDI音频，但性能相对较弱。</p>
+        </div>
+    </section>
+    
+    <section class="content-section">
+        <h2>一、各库最新版本状态与基础信息</h2>
+        <p>首先需要明确各库的当前版本状态。<strong>SFML 3.0.2</strong>是最新版本，于2025年4月23日发布，这是一个包含bug修复和构建配置增强的版本。<strong>SDL 3.0</strong>正式发布于2025年1月21日，这是SDL库多年来的重大更新。<strong>Raylib 5.5</strong>是当前最新版本，该版本特别增加了对SDL 3的支持。<strong>Allegro 5.2.10.1</strong>是最新的稳定版本。</p>
+        
+        <p>从语言支持来看，SFML和Allegro主要面向C++开发者，同时提供C语言绑定。Raylib完全用C99编写，语法风格混合了PascalCase和驼峰命名法。SDL 3则提供了跨语言的支持能力。</p>
+    </section>
+    
+    <section class="content-section">
+        <h2>二、跨平台支持情况对比</h2>
+        
+        <h3>2.1 桌面平台支持</h3>
+        <p>四个库在桌面平台上都提供了广泛的支持。<strong>Windows、macOS和Linux</strong>三大主流桌面操作系统均得到原生支持。</p>
+        
+        <div class="platform-list">
+            <div class="platform-tag highlight">Windows</div>
+            <div class="platform-tag highlight">macOS</div>
+            <div class="platform-tag highlight">Linux</div>
+            <div class="platform-tag">FreeBSD</div>
+            <div class="platform-tag">Haiku OS</div>
+            <div class="platform-tag">树莓派(RPi)</div>
+        </div>
+        
+        <h3>2.2 移动平台支持</h3>
+        <p>移动平台支持方面，各库表现出不同程度的差异：</p>
+        
+        <details>
+            <summary>SFML 3 移动平台支持情况</summary>
+            <div class="details-content">
+                <p>SFML 3对移动平台的支持存在一定限制。虽然官方提到支持Android和iOS，但标注了"(with limitations)"（有限制）。从GitHub上的讨论来看，SFML 3移除了sfml-activity模块，这导致一些旧设备无法正常工作。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>SDL 3 移动平台支持情况</summary>
+            <div class="details-content">
+                <p>SDL 3在移动平台上表现更为全面，官方明确支持Android和iOS平台。从实际开发案例来看，SDL 3可以通过Android Studio的Ninja构建系统进行编译，支持x86、x64、arm、arm64等多种架构。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>Raylib 移动平台支持情况</summary>
+            <div class="details-content">
+                <p>Raylib的移动平台支持最为广泛，包括Android、iOS等移动操作系统。特别值得一提的是，Raylib还支持HTML5/WebAssembly平台，这意味着可以将游戏直接发布到网页上运行。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>Allegro 5 移动平台支持情况</summary>
+            <div class="details-content">
+                <p>Allegro 5从5.1版本开始增加了对Android的支持，同时继续支持iOS（iPhone）平台。其Android支持要求API级别13（Android 3.1 Honeycomb）或更高版本。</p>
+            </div>
+        </details>
+    </section>
+    
+    <section class="content-section">
+        <h2>三、渲染能力深度对比</h2>
+        
+        <h3>3.1 渲染API支持</h3>
+        <p>四个库在渲染API支持方面呈现出明显的技术路线差异：</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>库名称</th>
+                    <th>OpenGL</th>
+                    <th>Vulkan</th>
+                    <th>Direct3D</th>
+                    <th>Metal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SFML 3</strong></td>
+                    <td>✓ 支持</td>
+                    <td>✗ 不支持</td>
+                    <td>✗ 不支持</td>
+                    <td>✗ 不支持</td>
+                </tr>
+                <tr>
+                    <td><strong>SDL 3</strong></td>
+                    <td>✓ 支持</td>
+                    <td>✓ 原生支持</td>
+                    <td>✓ 支持11/12</td>
+                    <td>✓ 支持</td>
+                </tr>
+                <tr>
+                    <td><strong>Raylib</strong></td>
+                    <td>✓ 广泛支持</td>
+                    <td>✗ 不支持</td>
+                    <td>✗ 不支持</td>
+                    <td>✗ 不支持</td>
+                </tr>
+                <tr>
+                    <td><strong>Allegro 5</strong></td>
+                    <td>✓ 支持</td>
+                    <td>✗ 不支持</td>
+                    <td>✓ 可选后端</td>
+                    <td>✗ 不支持</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>3.2 渲染特性支持</h3>
+        <div class="key-points">
+            <div class="point-card" style="border-top-color: #e63946;">
+                <div class="point-title">SFML 3：专注2D渲染</div>
+                <div class="point-content">主要专注于2D图形渲染，提供了基本的2D硬件加速功能，包括精灵、多边形和文本渲染。虽然SFML本身不提供原生的3D渲染支持，但开发者可以通过在SFML窗口中直接使用OpenGL调用来实现3D效果。</div>
+            </div>
+            
+            <div class="point-card" style="border-top-color: #457b9d;">
+                <div class="point-title">SDL 3：现代图形API支持</div>
+                <div class="point-content">引入了全新的GPU抽象层，支持多种现代图形API。在2025年11月实现了重大更新，为Direct3D、Metal和Vulkan添加了渲染批处理功能，显著提升复杂场景的渲染性能。</div>
+            </div>
+            
+            <div class="point-card" style="border-top-color: #2a9d8f;">
+                <div class="point-title">Raylib：全面3D支持</div>
+                <div class="point-content">渲染特性最为丰富和现代，支持3D形状、模型、骨骼动画、灵活的材质系统（包括PBR），全面支持着色器，内置强大的数学模块。</div>
+            </div>
+            
+            <div class="point-card" style="border-top-color: #e9c46a;">
+                <div class="point-title">Allegro 5：有限3D能力</div>
+                <div class="point-content">主要专注于2D图形渲染，提供了基本的2D图形、图像操作、文本输出等功能。虽然声称支持3D图形，但实际上其3D支持非常有限。</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="content-section">
+        <h2>四、性能与内存占用分析</h2>
+        
+        <h3>4.1 性能表现对比</h3>
+        <p>根据学术研究和实际测试，各库在渲染性能方面表现出明显差异：</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>库名称</th>
+                    <th>性能表现</th>
+                    <th>稳定性</th>
+                    <th>综合评价</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SDL 3</strong></td>
+                    <td><span class="rating rating-high">优秀</span></td>
+                    <td><span class="rating rating-high">高</span></td>
+                    <td>桌面计算机上表现最强，特别是在渲染大量图像时</td>
+                </tr>
+                <tr>
+                    <td><strong>SFML 3</strong></td>
+                    <td><span class="rating rating-medium">良好</span></td>
+                    <td><span class="rating rating-high">很高</span></td>
+                    <td>整体表现最佳，在不同性能的机器上都能保持稳定的表现</td>
+                </tr>
+                <tr>
+                    <td><strong>Raylib</strong></td>
+                    <td><span class="rating rating-high">优秀</span></td>
+                    <td><span class="rating rating-high">高</span></td>
+                    <td>在某些测试中表现出色，性能超过MonoGame项目</td>
+                </tr>
+                <tr>
+                    <td><strong>Allegro 5</strong></td>
+                    <td><span class="rating rating-low">较差</span></td>
+                    <td><span class="rating rating-medium">中等</span></td>
+                    <td>性能最差，帧率不到SDL或SFML的一半，且性能波动较大</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>4.2 内存管理机制</h3>
+        <p>内存管理的效率直接影响游戏的稳定性和可扩展性：</p>
+        
+        <details>
+            <summary>SFML 3 内存管理</summary>
+            <div class="details-content">
+                <p>采用现代C++的内存管理方式，使用智能指针和RAII（资源获取即初始化）原则来管理内存。这种设计大大减少了内存泄漏的可能性，提高了代码的安全性。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>SDL 3 内存管理</summary>
+            <div class="details-content">
+                <p>在内存管理方面进行了改进，特别是在纹理和资源管理方面。有开发者反馈，迁移到SDL 3后，游戏的启动速度有所提升，加载纹理和字体并打包到纹理图集的速度变快了。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>Raylib 内存管理</summary>
+            <div class="details-content">
+                <p>内存管理设计简单直接。Raylib的设计哲学是"最小化依赖"，所有需要的库都包含在Raylib内部，没有外部依赖。这种设计不仅简化了编译和部署，也有助于更好地控制内存使用。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>Allegro 5 内存管理</summary>
+            <div class="details-content">
+                <p>使用传统的C风格内存管理，需要开发者手动分配和释放内存。虽然这种方式给开发者提供了最大的控制权，但也增加了内存泄漏和悬空指针的风险。</p>
+            </div>
+        </details>
+    </section>
+    
+    <section class="content-section">
+        <h2>五、开发效率与上手难度评估</h2>
+        
+        <h3>5.1 学习曲线分析</h3>
+        <p>对于不同经验水平的开发者，各库的学习难度存在显著差异：</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>难度排名</th>
+                    <th>库名称</th>
+                    <th>学习曲线</th>
+                    <th>适合人群</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1 (最容易)</td>
+                    <td><strong>Raylib</strong></td>
+                    <td><span class="rating rating-high">平缓</span></td>
+                    <td>新手、快速原型开发、教育用途</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>SFML 3</strong></td>
+                    <td><span class="rating rating-high">较平缓</span></td>
+                    <td>C++初学者、2D游戏开发者</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><strong>SDL 3</strong></td>
+                    <td><span class="rating rating-medium">较陡</span></td>
+                    <td>有经验的开发者、需要底层控制</td>
+                </tr>
+                <tr>
+                    <td>4 (最困难)</td>
+                    <td><strong>Allegro 5</strong></td>
+                    <td><span class="rating rating-low">陡峭</span></td>
+                    <td>已有Allegro经验、需要特定功能</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>5.2 API设计哲学对比</h3>
+        <div class="key-points">
+            <div class="point-card" style="border-top-color: #e63946;">
+                <div class="point-title">SFML 3：面向对象设计</div>
+                <div class="point-content">采用面向对象的设计理念，将各种功能封装在类中，提供了清晰的层次结构。这种设计使得代码结构清晰，易于理解和维护。</div>
+            </div>
+            
+            <div class="point-card" style="border-top-color: #457b9d;">
+                <div class="point-title">SDL 3：底层灵活设计</div>
+                <div class="point-content">API设计更加底层和灵活，提供了接近硬件层的接口，让开发者能够直接控制各种硬件特性。SDL 3在保持底层控制能力的同时，也在努力改善API的一致性。</div>
+            </div>
+            
+            <div class="point-card" style="border-top-color: #2a9d8f;">
+                <div class="point-title">Raylib：简单而强大</div>
+                <div class="point-content">设计哲学是"简单而强大"，API设计极其简洁，力求用最少的函数实现最强大的功能。使得开发者可以快速上手，用很少的代码就能实现复杂的功能。</div>
+            </div>
+            
+            <div class="point-card" style="border-top-color: #e9c46a;">
+                <div class="point-title">Allegro 5：功能丰富设计</div>
+                <div class="point-content">API设计介于SFML的面向对象和SDL的过程式之间。提供了一套功能丰富的函数库，既有面向对象的元素，也有传统的过程式函数。</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="content-section">
+        <h2>六、2D与3D游戏开发支持度</h2>
+        
+        <h3>6.1 2D游戏开发能力对比</h3>
+        <p>对于2D游戏开发，四个库都提供了基本的支持，但在功能深度和易用性上存在差异：</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>库名称</th>
+                    <th>2D支持度</th>
+                    <th>关键特性</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SFML 3</strong></td>
+                    <td><span class="rating rating-high">优秀</span></td>
+                    <td>专门为2D设计，精灵系统、字体渲染、粒子系统</td>
+                </tr>
+                <tr>
+                    <td><strong>SDL 3</strong></td>
+                    <td><span class="rating rating-medium">良好</span></td>
+                    <td>硬件加速2D渲染，渲染批处理，性能优异</td>
+                </tr>
+                <tr>
+                    <td><strong>Raylib</strong></td>
+                    <td><span class="rating rating-high">优秀</span></td>
+                    <td>硬件加速2D渲染，精灵批处理，内置简单UI系统</td>
+                </tr>
+                <tr>
+                    <td><strong>Allegro 5</strong></td>
+                    <td><span class="rating rating-medium">良好</span></td>
+                    <td>基本2D图形绘制，图像操作，精灵表动画</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>6.2 3D游戏开发能力对比</h3>
+        <p>在3D游戏开发支持方面，各库的差异更加明显：</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>库名称</th>
+                    <th>3D支持度</th>
+                    <th>关键特性</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SFML 3</strong></td>
+                    <td><span class="rating rating-low">有限</span></td>
+                    <td>不提供原生3D支持，需通过OpenGL调用</td>
+                </tr>
+                <tr>
+                    <td><strong>SDL 3</strong></td>
+                    <td><span class="rating rating-medium">良好</span></td>
+                    <td>支持现代3D渲染，着色器、纹理、光照</td>
+                </tr>
+                <tr>
+                    <td><strong>Raylib</strong></td>
+                    <td><span class="rating rating-high">优秀</span></td>
+                    <td>完整3D渲染管线，骨骼动画，PBR材质系统</td>
+                </tr>
+                <tr>
+                    <td><strong>Allegro 5</strong></td>
+                    <td><span class="rating rating-low">极有限</span></td>
+                    <td>3D支持基本不可用，主要专注于2D开发</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <section class="content-section">
+        <h2>七、网络功能对比</h2>
+        
+        <h3>8.1 网络模块设计</h3>
+        <p>网络功能对于现代游戏越来越重要，各库在网络支持方面呈现出明显差异：</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>库名称</th>
+                    <th>网络支持</th>
+                    <th>协议支持</th>
+                    <th>适合场景</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SFML 3</strong></td>
+                    <td><span class="rating rating-high">完善</span></td>
+                    <td>TCP、UDP、HTTP、FTP</td>
+                    <td>多人游戏，从简单高分表到MMO</td>
+                </tr>
+                <tr>
+                    <td><strong>SDL 3</strong></td>
+                    <td><span class="rating rating-medium">基础</span></td>
+                    <td>TCP、UDP</td>
+                    <td>简单多人游戏，需要底层控制</td>
+                </tr>
+                <tr>
+                    <td><strong>Raylib</strong></td>
+                    <td><span class="rating rating-low">无内置</span></td>
+                    <td>需第三方库</td>
+                    <td>单机游戏，或需自行集成网络</td>
+                </tr>
+                <tr>
+                    <td><strong>Allegro 5</strong></td>
+                    <td><span class="rating rating-medium">基础</span></td>
+                    <td>TCP、UDP</td>
+                    <td>简单网络应用</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="recommendation-box">
+            <div class="recommendation-title">网络功能选型建议</div>
+            <p>如果您计划开发多人游戏，<strong>SFML 3</strong>提供了最完善的网络模块，支持TCP、UDP、HTTP和FTP协议，适合从简单多人游戏到大型多人在线游戏的各种场景。如果您的项目对网络要求不高，可以选择SDL 3或Allegro 5的基本网络功能。对于Raylib，您需要自行集成第三方网络库。</p>
+        </div>
+    </section>
+    
+    <section class="content-section">
+        <h2>八、综合对比总结与选型建议</h2>
+        
+        <h3>10.1 综合评分对比表</h3>
+        <p>基于全面分析，为四个库在各个维度进行了综合评分（满分5分）：</p>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>对比维度</th>
+                    <th>SFML 3</th>
+                    <th>SDL 3</th>
+                    <th>Raylib</th>
+                    <th>Allegro 5</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>跨平台支持</td>
+                    <td><span class="rating rating-medium">4.0</span></td>
+                    <td><span class="rating rating-high">5.0</span></td>
+                    <td><span class="rating rating-high">4.5</span></td>
+                    <td><span class="rating rating-medium">3.5</span></td>
+                </tr>
+                <tr>
+                    <td>渲染能力</td>
+                    <td><span class="rating rating-medium">3.0</span></td>
+                    <td><span class="rating rating-high">4.5</span></td>
+                    <td><span class="rating rating-high">5.0</span></td>
+                    <td><span class="rating rating-low">2.0</span></td>
+                </tr>
+                <tr>
+                    <td>性能表现</td>
+                    <td><span class="rating rating-medium">4.0</span></td>
+                    <td><span class="rating rating-high">4.5</span></td>
+                    <td><span class="rating rating-high">4.5</span></td>
+                    <td><span class="rating rating-low">2.0</span></td>
+                </tr>
+                <tr>
+                    <td>开发效率</td>
+                    <td><span class="rating rating-medium">4.0</span></td>
+                    <td><span class="rating rating-medium">3.5</span></td>
+                    <td><span class="rating rating-high">5.0</span></td>
+                    <td><span class="rating rating-medium">3.0</span></td>
+                </tr>
+                <tr>
+                    <td>2D游戏支持</td>
+                    <td><span class="rating rating-high">5.0</span></td>
+                    <td><span class="rating rating-medium">4.0</span></td>
+                    <td><span class="rating rating-high">4.5</span></td>
+                    <td><span class="rating rating-medium">3.5</span></td>
+                </tr>
+                <tr>
+                    <td>3D游戏支持</td>
+                    <td><span class="rating rating-low">2.0</span></td>
+                    <td><span class="rating rating-medium">4.0</span></td>
+                    <td><span class="rating rating-high">5.0</span></td>
+                    <td><span class="rating rating-low">1.0</span></td>
+                </tr>
+                <tr>
+                    <td>网络功能</td>
+                    <td><span class="rating rating-high">4.5</span></td>
+                    <td><span class="rating rating-medium">3.0</span></td>
+                    <td><span class="rating rating-low">1.0</span></td>
+                    <td><span class="rating rating-medium">2.5</span></td>
+                </tr>
+                <tr>
+                    <td>社区生态</td>
+                    <td><span class="rating rating-medium">4.0</span></td>
+                    <td><span class="rating rating-high">5.0</span></td>
+                    <td><span class="rating rating-medium">4.0</span></td>
+                    <td><span class="rating rating-low">2.5</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>10.3 选型建议</h3>
+        <p>根据不同的项目需求，给出以下选型建议：</p>
+        
+        <div class="final-recommendations">
+            <div class="final-card" style="border-top-color: #457b9d;">
+                <div class="final-card-title">最佳全能选择：SDL 3</div>
+                <div class="final-card-content">
+                    <p><strong>适合：</strong>有经验的开发者，需要全面功能的项目</p>
+                    <p><strong>理由：</strong>平台支持最广，性能优秀，生态完善，支持现代图形API</p>
+                </div>
+            </div>
+            
+            <div class="final-card" style="border-top-color: #2a9d8f;">
+                <div class="final-card-title">最佳初学者选择：Raylib</div>
+                <div class="final-card-content">
+                    <p><strong>适合：</strong>新手入门，小型项目，快速原型开发</p>
+                    <p><strong>理由：</strong>最简单易用，示例丰富，功能强大，3D支持全面</p>
+                </div>
+            </div>
+            
+            <div class="final-card" style="border-top-color: #e63946;">
+                <div class="final-card-title">最佳2D游戏选择：SFML 3</div>
+                <div class="final-card-content">
+                    <p><strong>适合：</strong>2D游戏开发，特别是独立游戏</p>
+                    <p><strong>理由：</strong>专为2D设计，面向对象，网络功能完善，学习曲线平缓</p>
+                </div>
+            </div>
+            
+            <div class="final-card" style="border-top-color: #e9c46a;">
+                <div class="final-card-title">不推荐：Allegro 5</div>
+                <div class="final-card-content">
+                    <p><strong>除非：</strong>您特别需要MIDI支持或已经熟悉该库</p>
+                    <p><strong>否则建议：</strong>选择其他三个库中的一个</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="recommendation-box">
+            <div class="recommendation-title">最终建议</div>
+            <p>最终的选择应该基于您的具体项目需求、团队技术水平和个人偏好。建议您可以先下载各库的示例代码，亲自体验一下，然后根据实际感受做出选择。记住，最好的库是最适合您和您项目的库，而不是某个维度评分最高的库。</p>
+        </div>
+    </section>
+    
+    <footer>
+        <p>游戏开发库对比分析 | 基于SFML 3、SDL 3、Raylib和Allegro全面对比</p>
+        <p>本页面内容基于各库官方文档、学术研究和实际测试数据生成</p>
+    </footer>
+</body>
+</html>
