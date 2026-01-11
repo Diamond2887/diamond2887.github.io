@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>词法分析器深度解析：原理、实现与应用</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #7c3aed;
+            --accent-color: #10b981;
+            --text-color: #1f2937;
+            --light-bg: #f9fafb;
+            --border-color: #e5e7eb;
+            --code-bg: #1e293b;
+            --code-color: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #ffffff;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 25px 0 12px;
+        }
+        
+        h4 {
+            color: var(--accent-color);
+            margin: 20px 0 10px;
+        }
+        
+        section {
+            margin-bottom: 40px;
+            background-color: var(--light-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            color: var(--code-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.5;
+        }
+        
+        .token-example {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .token-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--accent-color);
+        }
+        
+        .token-type {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .token-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f1f5f9;
+            padding: 3px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .fa-diagram {
+            display: block;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .state-node {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background-color: var(--light-bg);
+            border-radius: 50%;
+            margin: 10px;
+            font-weight: bold;
+        }
+        
+        .state-accept {
+            background-color: #d1fae5;
+            color: var(--accent-color);
+        }
+        
+        .state-start {
+            background-color: #dbeafe;
+            color: var(--primary-color);
+        }
+        
+        .comparison-table {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .comparison-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .application-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .conclusion {
+            background-color: #eff6ff;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+            border-left: 6px solid var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            section {
+                padding: 20px 15px;
+            }
+            
+            .code-block {
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>词法分析器深度解析</h1>
+        <div class="subtitle">原理、实现与应用 - 从理论到实践的完整认知链路</div>
+    </header>
+    
+    <section id="introduction">
+        <h2>1. 引言</h2>
+        <p>词法分析器（Lexer，亦称扫描器 Scanner）是编译原理与文本处理领域的核心组件，其核心职责是将线性字符流转换为结构化的词法单元（Token）序列——这一过程是后续语法分析、语义分析及其他高级处理的基础。</p>
+        <p>从编译器前端到文本编辑器的语法高亮，从搜索引擎的分词到大语言模型的提示词安全检测，词法分析器的作用无处不在。本文将系统阐述其工作原理、实现方法、应用场景，并提供可落地的代码示例，构建从理论到实践的完整认知链路。</p>
+    </section>
+    
+    <section id="principles">
+        <h2>2. 词法分析器的基本原理</h2>
+        <p>词法分析的本质是模式识别：根据预定义的词法规则（正则文法），从输入字符流中识别出具有独立语义的最小单元（Token），同时过滤无意义字符（如空格、注释）。其核心逻辑基于状态转换与正则表达式，遵循严格的匹配规则以确保准确性。</p>
+        
+        <h3>2.1 核心概念定义</h3>
+        <p>在深入原理前，需明确几个关键术语：</p>
+        <ul>
+            <li><strong>字符流（Character Stream）</strong>：输入的原始文本序列（如源代码、自然语言句子）。</li>
+            <li><strong>词素（Lexeme）</strong>：字符流中匹配某一词法规则的连续字符片段（如<code>int</code>、<code>123</code>）。</li>
+            <li><strong>词法单元（Token）</strong>：词素的抽象表示，通常包含类型（如<code>KEYWORD</code>、<code>NUMBER</code>）和属性值（如<code>int</code>、<code>123</code>），是后续处理的标准输入格式。</li>
+            <li><strong>模式（Pattern）</strong>：描述某类Token的规则（通常用正则表达式表示，如标识符的模式为<code>[a-zA-Z_][a-zA-Z0-9_]*</code>）。</li>
+        </ul>
+        
+        <p>例如，对于C语言代码片段<code>int x = 42;</code>，词法分析器会将其拆分为以下Token序列：</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>词素</th>
+                    <th>Token类型</th>
+                    <th>属性值</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>int</code></td>
+                    <td>KEYWORD</td>
+                    <td>"int"</td>
+                </tr>
+                <tr>
+                    <td><code>x</code></td>
+                    <td>IDENTIFIER</td>
+                    <td>"x"</td>
+                </tr>
+                <tr>
+                    <td><code>=</code></td>
+                    <td>OPERATOR</td>
+                    <td>"="</td>
+                </tr>
+                <tr>
+                    <td><code>42</code></td>
+                    <td>NUMBER</td>
+                    <td>"42"</td>
+                </tr>
+                <tr>
+                    <td><code>;</code></td>
+                    <td>PUNCTUATION</td>
+                    <td>";"</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="token-example">
+            <div class="token-card">
+                <div class="token-type">关键字</div>
+                <div><span class="token-value">int</span> → 类型: KEYWORD</div>
+            </div>
+            <div class="token-card">
+                <div class="token-type">标识符</div>
+                <div><span class="token-value">x</span> → 类型: IDENTIFIER</div>
+            </div>
+            <div class="token-card">
+                <div class="token-type">数字</div>
+                <div><span class="token-value">42</span> → 类型: NUMBER</div>
+            </div>
+        </div>
+        
+        <h3>2.2 状态转换机制</h3>
+        <p>词法分析器的核心工作机制是<strong>有限状态自动机（Finite Automaton, FA）</strong>，通过状态转移实现字符流到Token的识别。其执行流程可概括为：</p>
+        <ol>
+            <li><strong>初始化</strong>：从初始状态（Start State）开始，读取第一个字符。</li>
+            <li><strong>状态转移</strong>：根据当前状态与输入字符，通过状态转换函数跳转到下一个状态；若无法跳转，则终止当前Token识别。</li>
+            <li><strong>Token输出</strong>：当到达接受状态（Accept State）或无法继续转移时，输出当前匹配的Token，并重置状态为初始状态。</li>
+        </ol>
+        
+        <div class="fa-diagram">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <strong>标识符识别的状态转换</strong>
+            </div>
+            <div style="text-align: center;">
+                <div class="state-node state-start">S</div>
+                <span style="font-size: 1.5rem;">→</span>
+                <div class="state-node">字母/下划线</div>
+                <span style="font-size: 1.5rem;">→</span>
+                <div class="state-node state-accept">ID</div>
+                <span style="font-size: 1.5rem;">→</span>
+                <div class="state-node">字母/数字/下划线</div>
+                <span style="font-size: 1.5rem;">→</span>
+                <div class="state-node state-accept">ID</div>
+            </div>
+            <div style="text-align: center; margin-top: 10px; color: #666; font-size: 0.9rem;">
+                <div>初始状态(S) → 遇到字母/下划线 → 标识符状态(ID) → 继续字母/数字/下划线 → 保持标识符状态</div>
+                <div>遇到其他字符(如运算符、空格) → 输出Token → 返回初始状态</div>
+            </div>
+        </div>
+        
+        <h3>2.3 关键算法与规则</h3>
+        <h4>2.3.1 最长匹配原则（Maximal Munch）</h4>
+        <p>最长匹配原则是词法分析的核心冲突消解规则：在多个规则均可匹配当前字符序列时，优先选择匹配长度最长的规则。</p>
+        <p>例如，对于输入<code>&gt;=</code>，应识别为单个<code>GE</code>（大于等于）Token，而非<code>GT</code>（大于）+<code>ASSIGN</code>（等于）两个Token。</p>
+        
+        <h4>2.3.2 优先级匹配原则</h4>
+        <p>当最长匹配结果对应多个Token类型时，需通过优先级规则消解冲突：</p>
+        <ol>
+            <li><strong>关键字优先</strong>：若匹配结果为语言保留字（如<code>int</code>、<code>if</code>），则优先标记为关键字，而非标识符。例如<code>int</code>会被识别为关键字，而<code>intA</code>会被识别为标识符。</li>
+            <li><strong>特殊规则优先</strong>：特殊模式（如多字符运算符<code>&gt;=</code>）的优先级高于通用模式（如<code>&gt;</code>）。在工具生成的分析器中，这一规则通常通过正则表达式的定义顺序实现——优先级高的规则需前置。</li>
+        </ol>
+        
+        <h3>2.4 词法错误处理</h3>
+        <p>词法错误指无法匹配任何Token模式的字符序列，常见类型包括非法字符（如C语言中的<code>@</code>）、未闭合字符串（如<code>"hello</code>）、非法数字格式（如<code>123.45.67</code>）。</p>
+        <p>分析器的错误恢复策略需在准确性与可用性间平衡，常见策略包括：</p>
+        <ul>
+            <li><strong>跳过非法字符</strong>：忽略当前非法字符，继续分析后续内容，避免单个错误终止整个过程。</li>
+            <li><strong>报错并恢复</strong>：记录错误位置与类型，然后跳过错误序列直到下一个合法Token起始处。</li>
+            <li><strong>恐慌模式恢复</strong>：跳过当前行或代码块，直到找到安全的同步点（如分号、右括号），适用于严重错误场景。</li>
+        </ul>
+    </section>
+    
+    <section id="implementation">
+        <h2>3. 词法分析器的实现方法</h2>
+        <p>词法分析器的实现方式分为<strong>手工编码</strong>与<strong>工具生成</strong>两类，二者各有优劣，适用于不同场景。</p>
+        
+        <h3>3.1 实现流程概述</h3>
+        <p>无论采用何种方式，词法分析器的核心实现流程均为：</p>
+        <ol>
+            <li><strong>定义Token模式</strong>：使用正则表达式描述每种Token的规则。</li>
+            <li><strong>构建有限自动机</strong>：将正则表达式转换为NFA，再通过子集构造法转换为DFA。</li>
+            <li><strong>实现状态转移逻辑</strong>：通过代码模拟DFA的状态转移过程，读取字符流并输出Token。</li>
+            <li><strong>错误处理</strong>：添加错误检测与恢复逻辑，确保分析器鲁棒性。</li>
+        </ol>
+        
+        <h3>3.2 手工编码实现</h3>
+        <p>手工编码适用于需要高度定制化（如特定错误处理、性能优化）的场景，核心是通过状态机模拟DFA的执行。</p>
+        
+        <h4>C语言实现（性能优先）</h4>
+        <p>C语言适用于编译器等性能敏感场景，通常通过字符数组与状态机结合实现：</p>
+        
+        <div class="code-block">
+// C语言词法分析器核心代码片段
+typedef enum { KEYWORD, IDENTIFIER, NUMBER, OPERATOR, PUNCTUATION } TokenType;
+
+TokenType get_token(FILE* fp) {
+    char c;
+    // 跳过空白字符
+    while ((c = fgetc(fp)) != EOF && isspace(c));
+    
+    if (isalpha(c) || c == '_') {
+        // 识别标识符或关键字
+        token_buffer[buffer_pos++] = c;
+        while ((c = fgetc(fp)) != EOF && (isalnum(c) || c == '_')) {
+            token_buffer[buffer_pos++] = c;
+        }
+        ungetc(c, fp);
+        return check_keyword(token_buffer); // 检查是否为关键字
+    } else if (isdigit(c)) {
+        // 识别数字
+        token_buffer[buffer_pos++] = c;
+        while ((c = fgetc(fp)) != EOF && isdigit(c)) {
+            token_buffer[buffer_pos++] = c;
+        }
+        ungetc(c, fp);
+        return NUMBER;
+    }
+    // 其他Token类型处理...
+}
+        </div>
+        
+        <h4>Python实现（快速原型）</h4>
+        <p>Python适用于快速原型开发，通常通过正则表达式模块实现：</p>
+        
+        <div class="code-block">
+# Python词法分析器核心代码片段
+import re
+
+TOKEN_SPECS = [
+    ('KEYWORD',   r'\b(int|if|else|while)\b'),
+    ('IDENTIFIER', r'[a-zA-Z_][a-zA-Z0-9_]*'),
+    ('NUMBER',    r'\d+'),
+    ('OPERATOR',  r'==|!=|<=|>=|\+|-|\*|/|%|='),
+    ('PUNCTUATION', r';|\(|\)|\{|\}'),
+]
+
+def lex(source_code):
+    token_regex = '|'.join(f'(?P&lt;{name}&gt;{pattern})' for name, pattern in TOKEN_SPECS)
+    for match in re.finditer(token_regex, source_code):
+        kind = match.lastgroup
+        value = match.group()
+        if kind != 'WHITESPACE':
+            yield (kind, value)
+        </div>
+        
+        <h3>3.3 自动生成工具</h3>
+        <p>为降低开发复杂度，工业界通常使用自动生成工具：开发者只需定义正则表达式规则，工具会自动生成词法分析器代码。</p>
+        
+        <div class="comparison-table">
+            <div class="comparison-card">
+                <div class="comparison-title">Flex (C/C++)</div>
+                <p>开源，兼容Lex，生成高效DFA代码，支持起始条件（上下文敏感匹配）。</p>
+                <p><strong>适用场景：</strong>编译器、系统级工具开发。</p>
+            </div>
+            <div class="comparison-card">
+                <div class="comparison-title">ANTLR4 (多语言)</div>
+                <p>支持EBNF文法，可同时生成词法/语法分析器，支持访客模式（Visitor Pattern）。</p>
+                <p><strong>适用场景：</strong>复杂语言解析、领域特定语言（DSL）开发。</p>
+            </div>
+            <div class="comparison-card">
+                <div class="comparison-title">PLY (Python)</div>
+                <p>Lex/Yacc的Python实现，语法简洁，支持调试与错误处理。</p>
+                <p><strong>适用场景：</strong>Python快速原型开发、教学演示。</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="applications">
+        <h2>4. 词法分析器的应用场景</h2>
+        <p>词法分析器不仅是编译器的核心组件，还广泛应用于文本处理、信息检索等领域，其作用是将非结构化字符流转换为结构化Token，为后续处理提供基础。</p>
+        
+        <div class="application-card">
+            <h3>4.1 编译器前端</h3>
+            <p>在编译器中，词法分析器是前端的第一个阶段，其核心作用是：</p>
+            <ul>
+                <li><strong>预处理协同</strong>：与预处理器配合处理宏展开，将展开后的代码转换为Token流。</li>
+                <li><strong>Token流输出</strong>：为语法分析器提供结构化输入。</li>
+                <li><strong>性能优化</strong>：现代编译器通过增量词法分析与并行化提升编译速度。</li>
+            </ul>
+        </div>
+        
+        <div class="application-card">
+            <h3>4.2 文本处理与编辑器</h3>
+            <p>在文本编辑器（如VS Code）与文本处理工具中，词法分析器的核心应用是语法高亮与结构化解析：</p>
+            <ul>
+                <li><strong>语法高亮</strong>：通过正则表达式定义Token规则，将Token类型映射为主题颜色。</li>
+                <li><strong>结构化解析</strong>：用于Markdown转JSON、JSON校验等场景。</li>
+            </ul>
+        </div>
+        
+        <div class="application-card">
+            <h3>4.3 信息检索与搜索引擎</h3>
+            <p>在Elasticsearch等搜索引擎中，词法分析器（分词器）是文本分析的核心组件：</p>
+            <ul>
+                <li><strong>英文分词</strong>：默认使用Standard Analyzer，按空格/标点分割，小写转换。</li>
+                <li><strong>中文分词</strong>：中文无空格分隔，需使用专用分词器（如IK Analyzer）。</li>
+            </ul>
+        </div>
+        
+        <div class="application-card">
+            <h3>4.4 新兴场景：大语言模型与静态代码检查</h3>
+            <p>随着AI与DevOps的发展，词法分析器的应用场景不断扩展：</p>
+            <ul>
+                <li><strong>LLM提示词安全检测</strong>：识别恶意Token，检测提示词中的权限提升指令。</li>
+                <li><strong>静态代码检查</strong>：通过词法分析获取Token流，识别代码异味。</li>
+                <li><strong>代码生成辅助</strong>：在LLM生成代码的场景中，校验生成代码的语法正确性。</li>
+            </ul>
+        </div>
+    </section>
+    
+    <section id="examples">
+        <h2>5. 词法分析器示例代码</h2>
+        <p>以下是三个不同复杂度的词法分析器示例，覆盖基础原理、工具生成与实战场景。</p>
+        
+        <h3>5.1 示例1：基础计算器词法分析器（Python）</h3>
+        <p>该示例实现了简单算术表达式的词法分析，支持整数、四则运算符与括号。</p>
+        
+        <div class="code-block">
+class Lexer:
+    def __init__(self, text):
+        self.text = text
+        self.pos = 0
+        self.current_char = self.text[self.pos] if self.text else None
+    
+    def get_next_token(self):
+        """获取下一个Token"""
+        while self.current_char is not None:
+            if self.current_char.isspace():
+                self.skip_whitespace()
+                continue
+            
+            if self.current_char.isdigit():
+                return Token('NUMBER', self.number())
+            
+            if self.current_char in '+-*/':
+                op = self.current_char
+                self.advance()
+                return Token('OPERATOR', op)
+            
+            if self.current_char == '(':
+                self.advance()
+                return Token('LPAREN', '(')
+            
+            if self.current_char == ')':
+                self.advance()
+                return Token('RPAREN', ')')
+        
+        return Token('EOF', None)
+        </div>
+        
+        <h3>5.2 示例2：Flex生成的C语言词法分析器</h3>
+        <p>该示例使用Flex生成C语言词法分析器，支持关键字、标识符、数字、运算符与标点符号。</p>
+        
+        <div class="code-block">
+/* Flex规则文件示例 */
+%option noyywrap
+
+IDENTIFIER  [a-zA-Z_][a-zA-Z0-9_]*
+NUMBER      [0-9]+
+OPERATOR    ==|!=|<=|>=|\+\+|--|\+|-|\*|/|%|=|<<|>>|&|\||!|<|>|^|~
+
+%%
+{IDENTIFIER} {
+    if (is_keyword(yytext)) {
+        printf("KEYWORD: %s\n", yytext);
+    } else {
+        printf("IDENTIFIER: %s\n", yytext);
+    }
+}
+{NUMBER}     { printf("NUMBER: %s\n", yytext); }
+{OPERATOR}   { printf("OPERATOR: %s\n", yytext); }
+.           { printf("非法字符: %s\n", yytext); }
+%%
+        </div>
+        
+        <h3>5.3 示例3：JSON词法分析器（Java）</h3>
+        <p>该示例实现了JSON的词法分析，支持字符串、数字、布尔值、空值与标点符号。</p>
+        
+        <div class="code-block">
+public List&lt;Token&gt; tokenize() {
+    List&lt;Token&gt; tokens = new ArrayList&lt;&gt;();
+    while (currentChar != '\0') {
+        if (Character.isWhitespace(currentChar)) {
+            skipWhitespace();
+            continue;
+        }
+        
+        if (currentChar == '{') {
+            tokens.add(new Token(TokenType.LBRACE, "{"));
+            advance();
+        } else if (currentChar == '"') {
+            tokens.add(new Token(TokenType.STRING, string()));
+        } else if (currentChar == '-' || Character.isDigit(currentChar)) {
+            tokens.add(new Token(TokenType.NUMBER, number()));
+        } else if (input.startsWith("true", pos)) {
+            tokens.add(new Token(TokenType.TRUE, "true"));
+            pos += 4;
+            advance();
+        }
+        // 其他Token类型处理...
+    }
+    return tokens;
+}
+        </div>
+    </section>
+    
+    <section id="conclusion" class="conclusion">
+        <h2>6. 结论与展望</h2>
+        <p>词法分析器是连接原始字符流与高级语言处理的关键桥梁，其核心原理基于有限状态自动机与正则表达式，通过最长匹配、优先级匹配等规则确保Token识别的正确性。</p>
+        <p>实现方式上，手工编码适用于定制化场景，工具生成适用于高效开发，二者在工业界均有广泛应用。</p>
+        <p>随着AI与大语言模型的兴起，词法分析器的应用场景正不断扩展：从传统的编译器与文本处理，延伸至提示词安全检测、代码异味识别等新兴领域。</p>
+        <p>未来，词法分析器将朝着<strong>多模态支持</strong>（处理图像中的文本、语音转写文本）、<strong>自适应优化</strong>（根据输入内容动态调整规则）、<strong>实时性</strong>（边缘设备上的实时分词）等方向发展，成为自然语言处理与代码智能领域的核心基础设施。</p>
+        <p style="margin-top: 20px; font-style: italic;">通过本文的理论阐述与示例代码，读者可系统掌握词法分析器的核心知识，并能根据实际需求选择合适的实现方式，快速构建自己的词法分析器。</p>
+    </section>
+    
+    <footer style="text-align: center; margin-top: 50px; padding: 20px; color: #666; border-top: 1px solid var(--border-color);">
+        <p>词法分析器深度解析 - 从理论到实践的完整指南</p>
+        <p style="font-size: 0.9rem; margin-top: 5px;">本文内容涵盖词法分析器的原理、实现方法与应用场景</p>
+    </footer>
+</body>
+</html>
