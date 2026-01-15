@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java全面知识体系详解</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e5799 0%, #207cca 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        h2 {
+            color: #1e5799;
+            border-left: 5px solid #207cca;
+            padding-left: 15px;
+            margin: 30px 0 15px;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            margin: 20px 0 10px;
+            font-size: 1.4rem;
+        }
+        
+        h4 {
+            color: #34495e;
+            margin: 15px 0 8px;
+            font-size: 1.2rem;
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #207cca;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #1e5799;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #f1f7fd;
+        }
+        
+        .highlight {
+            background-color: #fff9e6;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .note {
+            background-color: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background-color: #fff3e6;
+            border-left: 4px solid #e67e22;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .comparison-table {
+            overflow-x: auto;
+        }
+        
+        .chapter-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .chapter-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .chapter-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .active-section {
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .section {
+                padding: 15px;
+            }
+            
+            .code-block {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Java全面知识体系详解</h1>
+        <div class="subtitle">从语法基础到企业级开发，全面掌握Java核心技术</div>
+    </header>
+    
+    <div class="chapter-nav">
+        <button class="chapter-btn" onclick="showSection('syntax')">1. 语法基础</button>
+        <button class="chapter-btn" onclick="showSection('oop')">2. 面向对象编程</button>
+        <button class="chapter-btn" onclick="showSection('spring')">3. Spring框架</button>
+        <button class="chapter-btn" onclick="showSection('scenarios')">4. 应用场景</button>
+        <button class="chapter-btn" onclick="showSection('optimization')">5. 性能优化</button>
+        <button class="chapter-btn" onclick="showSection('comparison')">6. 语言对比</button>
+        <button class="chapter-btn" onclick="showSection('summary')">7. 学习路径</button>
+    </div>
+    
+    <!-- 语法基础部分 -->
+    <section id="syntax" class="content-section active-section">
+        <div class="section">
+            <h2>1. 语法基础</h2>
+            <p>Java作为面向对象的编程语言，其语法基础是构建所有复杂应用的基石。本章将从语言特性、基础数据类型、运算符、流程控制、数组及字符串等核心模块展开讲解。</p>
+            
+            <h3>1.1 Java语言概述与开发环境</h3>
+            <p>Java由Sun Microsystems（后被Oracle收购）于1995年推出，核心特性是"一次编写，到处运行"，依托Java虚拟机（JVM）实现跨平台兼容。</p>
+            
+            <div class="note">
+                <p><strong>版本信息：</strong>截至2026年1月，官方支持的稳定版本为Java 21（长期支持LTS版）和Java 22（非LTS版）。</p>
+            </div>
+            
+            <h3>1.2 基础数据类型</h3>
+            <p>Java的数据类型分为两类：基本数据类型与引用数据类型。</p>
+            
+            <h4>1.2.1 基本数据类型详解</h4>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>类型</th>
+                            <th>占用空间</th>
+                            <th>取值范围</th>
+                            <th>默认值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>byte</td>
+                            <td>1字节</td>
+                            <td>-128 ~ 127</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>short</td>
+                            <td>2字节</td>
+                            <td>-32768 ~ 32767</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>int</td>
+                            <td>4字节</td>
+                            <td>-2³¹ ~ 2³¹-1</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>long</td>
+                            <td>8字节</td>
+                            <td>-2⁶³ ~ 2⁶³-1</td>
+                            <td>0L</td>
+                        </tr>
+                        <tr>
+                            <td>float</td>
+                            <td>4字节</td>
+                            <td>±3.40282347E+38F</td>
+                            <td>0.0f</td>
+                        </tr>
+                        <tr>
+                            <td>double</td>
+                            <td>8字节</td>
+                            <td>±1.7976931348623157E+308</td>
+                            <td>0.0d</td>
+                        </tr>
+                        <tr>
+                            <td>char</td>
+                            <td>2字节</td>
+                            <td>'\u0000' ~ '\uffff'</td>
+                            <td>'\u0000'</td>
+                        </tr>
+                        <tr>
+                            <td>boolean</td>
+                            <td>1字节</td>
+                            <td>true / false</td>
+                            <td>false</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h4>1.2.2 包装类与自动装箱/拆箱</h4>
+            <p>为实现基本数据类型与引用类型的转换，Java为每种基本类型提供了对应的包装类。</p>
+            
+            <div class="code-block">
+// 自动装箱示例
+Integer boxedInt = 100;  // 等价于 Integer.valueOf(100)
+
+// 自动拆箱示例
+int unboxedInt = boxedInt;  // 等价于 boxedInt.intValue()
+
+// 缓存池优化示例
+Integer a = 127;
+Integer b = 127;
+System.out.println(a == b);  // true（复用缓存对象）
+
+Integer c = 128;
+Integer d = 128;
+System.out.println(c == d);  // false（新建对象）
+            </div>
+            
+            <div class="warning">
+                <p><strong>常见陷阱：</strong></p>
+                <ol>
+                    <li><strong>空指针异常：</strong>拆箱时若包装类对象为null，会抛出NullPointerException。</li>
+                    <li><strong>性能损耗：</strong>频繁装箱拆箱会创建大量临时对象，增加GC压力。</li>
+                    <li><strong>对象比较误区：</strong>==比较包装类对象的内存地址，equals()比较数值。</li>
+                </ol>
+            </div>
+            
+            <h3>1.3 运算符</h3>
+            <p>Java提供丰富的运算符，按功能可分为算术、关系、逻辑、位、赋值与条件运算符六大类。</p>
+            
+            <h4>1.3.1 算术运算符</h4>
+            <p>用于数值计算，包括+（加）、-（减）、*（乘）、/（除）、%（取余）、++（自增）、--（自减）。</p>
+            
+            <h4>1.3.2 关系运算符</h4>
+            <p>用于比较两个值的关系，返回boolean类型结果，包括>、<、>=、<=、==（等于）、!=（不等于）。</p>
+            
+            <h4>1.3.3 逻辑运算符</h4>
+            <p>用于连接布尔表达式，返回boolean类型结果，包括&&（短路与）、||（短路或）、!（非）。</p>
+            
+            <div class="note">
+                <p><strong>短路特性：</strong>&&若第一个操作数为false，则不执行第二个操作数；||若第一个操作数为true，则不执行第二个操作数。</p>
+            </div>
+            
+            <h3>1.4 流程控制语句</h3>
+            <p>流程控制用于控制程序的执行顺序，分为分支语句、循环语句与跳转语句三类。</p>
+            
+            <h4>1.4.1 分支语句</h4>
+            <p>分支语句根据条件执行不同代码块，包括if-else与switch。</p>
+            
+            <div class="code-block">
+// if-else示例
+int score = 85;
+if (score >= 90) {
+    System.out.println("优秀");
+} else if (score >= 80) {
+    System.out.println("良好");
+} else {
+    System.out.println("及格");
+}
+
+// switch示例（Java 21+）
+Object obj = "Hello, Java 21";
+String result = switch (obj) {
+    case Integer i -> "Integer: " + i;
+    case String s && s.length() > 5 -> "Long String: " + s;
+    case String s -> "String: " + s;
+    default -> "Unknown";
+};
+            </div>
+            
+            <h4>1.4.2 循环语句</h4>
+            <p>循环语句用于重复执行代码块，包括for、while、do-while三类。</p>
+            
+            <div class="code-block">
+// 传统for循环
+for (int i = 0; i < 10; i++) {
+    System.out.println(i);
+}
+
+// 增强型for循环
+int[] arr = {1, 2, 3};
+for (int num : arr) {
+    System.out.println(num);
+}
+
+// while循环
+int i = 0;
+while (i < 10) {
+    System.out.println(i);
+    i++;
+}
+            </div>
+            
+            <h3>1.5 数组</h3>
+            <p>数组是相同类型元素的有序集合，在内存中连续存储，长度固定。</p>
+            
+            <div class="code-block">
+// 数组的声明与初始化
+int[] scores;  // 方式1（推荐）
+int scores[];  // 方式2（兼容C/C++）
+
+// 静态初始化
+int[] arr1 = {1, 2, 3};
+
+// 动态初始化
+int[] arr3 = new int[3];
+arr3[0] = 1;
+arr3[1] = 2;
+arr3[2] = 3;
+
+// 多维数组
+int[][] matrix1 = {{1, 2}, {3, 4}, {5, 6}};
+            </div>
+            
+            <h3>1.6 字符串与异常处理</h3>
+            <h4>1.6.1 String类</h4>
+            <p>String类是Java中最常用的类之一，用于表示不可变的字符序列。</p>
+            
+            <div class="code-block">
+// 字符串池示例
+String s1 = "abc";
+String s2 = new String("abc");
+System.out.println(s1 == s2);  // false（s1在池，s2在堆）
+System.out.println(s1 == s2.intern());  // true（s2.intern()返回池中的对象）
+
+// StringBuilder示例（可变字符串）
+StringBuilder sb = new StringBuilder("Hello");
+sb.append(" World");
+System.out.println(sb.toString());  // 输出: Hello World
+            </div>
+            
+            <h4>1.6.2 异常处理</h4>
+            <p>异常是程序运行时的错误事件，Java通过异常处理机制保障程序稳定性。</p>
+            
+            <div class="code-block">
+// try-catch-finally示例
+try {
+    // 可能抛出异常的代码
+    int result = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("除数不能为零: " + e.getMessage());
+} finally {
+    System.out.println("无论是否异常，都会执行");
+}
+
+// try-with-resources示例（Java 7+）
+try (FileReader reader = new FileReader("file.txt")) {
+    // 自动关闭资源
+} catch (IOException e) {
+    e.printStackTrace();
+}
+            </div>
+        </div>
+    </section>
+    
+    <!-- 面向对象编程部分 -->
+    <section id="oop" class="content-section">
+        <div class="section">
+            <h2>2. 面向对象编程</h2>
+            <p>面向对象编程（OOP）是Java的核心范式，通过封装、继承、多态三大特性，将现实世界的事物抽象为类与对象。</p>
+            
+            <h3>2.1 类与对象</h3>
+            <p>类是对象的模板，定义了对象的属性与行为；对象是类的实例。</p>
+            
+            <div class="code-block">
+// 类的定义
+public class Person {
+    // 成员变量（属性）
+    private String name;
+    private int age;
+    
+    // 构造方法
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    // 普通方法（行为）
+    public void eat() {
+        System.out.println(name + " is eating.");
+    }
+    
+    // Getter与Setter方法
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+}
+
+// 对象的创建与使用
+Person person1 = new Person("Alice", 25);
+person1.eat();  // 输出: Alice is eating.
+            </div>
+            
+            <h3>2.2 封装</h3>
+            <p>封装是将对象的属性与行为封装在类中，隐藏内部实现细节，仅对外暴露可控接口。</p>
+            
+            <div class="note">
+                <p><strong>JavaBean规范：</strong>遵循特定规范的Java类，用于封装数据，是企业级开发中传输数据的核心载体。</p>
+            </div>
+            
+            <h3>2.3 继承</h3>
+            <p>继承是子类继承父类的属性与方法，并可新增或重写方法，核心目的是代码复用。</p>
+            
+            <div class="code-block">
+// 父类
+public class Animal {
+    protected String name;
+    public void eat() {
+        System.out.println(name + " is eating.");
+    }
+}
+
+// 子类继承父类
+public class Dog extends Animal {
+    private String breed;
+    
+    // 构造方法
+    public Dog(String name, String breed) {
+        super(name);  // 调用父类的构造方法
+        this.breed = breed;
+    }
+    
+    // 重写父类方法
+    @Override
+    public void eat() {
+        super.eat();  // 调用父类的eat方法
+        System.out.println("Dog " + name + " is eating bone.");
+    }
+}
+            </div>
+            
+            <h3>2.4 多态</h3>
+            <p>多态是同一行为的不同表现形式，核心分为编译时多态（方法重载）与运行时多态（方法重写+向上转型）。</p>
+            
+            <div class="code-block">
+// 向上转型与运行时多态
+Animal animal = new Dog("Buddy", "Golden Retriever");  // 向上转型
+animal.eat();  // 调用Dog类的eat方法（运行时多态）
+
+// 方法重载（编译时多态）
+public class Calculator {
+    public int add(int a, int b) { return a + b; }
+    public double add(double a, double b) { return a + b; }
+    public int add(int a, int b, int c) { return a + b + c; }
+}
+            </div>
+            
+            <h3>2.5 抽象类与接口</h3>
+            <p>抽象类与接口是实现抽象编程的核心机制，用于定义规范并约束子类的实现。</p>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>维度</th>
+                            <th>抽象类（Abstract Class）</th>
+                            <th>接口（Interface）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>设计意图</td>
+                            <td>抽取同类事物的共性（is-a关系），用于代码复用</td>
+                            <td>定义行为规范（has-a关系），用于解耦与多实现</td>
+                        </tr>
+                        <tr>
+                            <td>继承限制</td>
+                            <td>单继承（一个类只能继承一个抽象类）</td>
+                            <td>多实现（一个类可实现多个接口）</td>
+                        </tr>
+                        <tr>
+                            <td>方法实现</td>
+                            <td>可包含抽象方法与具体方法</td>
+                            <td>Java 8+可包含抽象方法、默认方法、静态方法与私有方法</td>
+                        </tr>
+                        <tr>
+                            <td>成员变量</td>
+                            <td>可包含任意类型的成员变量</td>
+                            <td>只能包含常量（默认public static final）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>2.6 Java 21+面向对象新特性</h3>
+            <h4>2.6.1 Record类</h4>
+            <p>Record类是Java 16引入、Java 21正式稳定的不可变数据载体类，用于替代传统的POJO类。</p>
+            
+            <div class="code-block">
+// Record类定义
+public record Point(int x, int y) {}
+
+// 使用Record类
+Point p = new Point(10, 20);
+System.out.println(p.x());  // 自动生成的Getter方法
+System.out.println(p.y());
+System.out.println(p.toString());  // 自动生成的toString()
+            </div>
+            
+            <h4>2.6.2 Sealed Classes（密封类）</h4>
+            <p>Sealed Classes是Java 15引入预览、Java 17正式稳定的特性，用于限制类的继承层次。</p>
+            
+            <div class="code-block">
+// 密封类：指定允许继承的子类
+public sealed class Shape permits Circle, Square, Rectangle {
+    public abstract double area();
+}
+
+// 允许继承的子类需明确声明继承状态
+public final class Circle extends Shape {
+    private double radius;
+    @Override public double area() { return Math.PI * radius * radius; }
+}
+            </div>
+            
+            <h3>2.7 内部类</h3>
+            <p>内部类是定义在另一个类内部的类，核心用于实现类的逻辑分组、隐藏实现细节。</p>
+            
+            <div class="code-block">
+// 非静态内部类
+public class Outer {
+    private String message = "Hello";
+    
+    public class Inner {
+        public void printMessage() {
+            System.out.println(message);  // 访问外部类非静态成员
+        }
+    }
+}
+
+// 使用内部类
+Outer outer = new Outer();
+Outer.Inner inner = outer.new Inner();
+inner.printMessage();
+            </div>
+        </div>
+    </section>
+    
+    <!-- Spring框架部分 -->
+    <section id="spring" class="content-section">
+        <div class="section">
+            <h2>3. Spring框架</h2>
+            <p>Spring是Java企业级开发的核心框架，核心解决了业务逻辑层与其他层的耦合问题，通过控制反转（IoC）与面向切面编程（AOP）两大核心机制，简化了企业级应用的开发。</p>
+            
+            <h3>3.1 Spring Framework核心原理</h3>
+            <h4>3.1.1 控制反转（IoC）与依赖注入（DI）</h4>
+            <p>控制反转（IoC）是Spring的核心思想：将对象的创建、依赖注入与生命周期管理交给Spring容器。</p>
+            
+            <div class="code-block">
+// 构造器注入（推荐）
+public class UserService {
+    private final UserRepository userRepository;
+    
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+}
+
+// Setter注入
+public class UserService {
+    private UserRepository userRepository;
+    
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+}
+
+// 字段注入（不推荐）
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+}
+            </div>
+            
+            <h4>3.1.2 面向切面编程（AOP）</h4>
+            <p>AOP用于将横切关注点（如日志、事务、权限控制）从业务逻辑中分离出来，通过切面统一管理。</p>
+            
+            <div class="code-block">
+// 定义切面
+@Aspect
+@Component
+public class LoggingAspect {
+    // 定义切点：匹配所有service层方法
+    @Pointcut("execution(* com.example.service.*.*(..))")
+    public void serviceMethods() {}
+    
+    // 前置通知
+    @Before("serviceMethods()")
+    public void logBefore(JoinPoint joinPoint) {
+        System.out.println("Method " + joinPoint.getSignature().getName() + " started.");
+    }
+}
+            </div>
+            
+            <h3>3.2 Spring Boot</h3>
+            <p>Spring Boot是基于Spring Framework的快速开发框架，核心特性为自动配置、起步依赖与内嵌服务器。</p>
+            
+            <div class="code-block">
+// Spring Boot主类
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+
+// REST控制器
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+    private final UserService userService;
+    
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+    
+    @GetMapping
+    public List<User> getUsers() {
+        return userService.getUsers();
+    }
+}
+            </div>
+            
+            <h3>3.3 Spring MVC</h3>
+            <p>Spring MVC是Spring Framework的Web模块，基于MVC设计模式，用于开发Web应用与RESTful API。</p>
+            
+            <div class="code-block">
+// RESTful API示例
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
+    }
+    
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+}
+            </div>
+            
+            <h3>3.4 Spring生态系统</h3>
+            <p>Spring生态系统围绕Spring Framework扩展，提供了覆盖企业级开发全流程的解决方案：</p>
+            <ul>
+                <li><strong>Spring Cloud：</strong>基于Spring Boot的微服务框架</li>
+                <li><strong>Spring Data：</strong>简化数据访问的框架</li>
+                <li><strong>Spring Security：</strong>认证与授权框架</li>
+                <li><strong>Spring Batch：</strong>批处理框架</li>
+                <li><strong>Spring Integration：</strong>企业级集成框架</li>
+            </ul>
+        </div>
+    </section>
+    
+    <!-- 应用场景部分 -->
+    <section id="scenarios" class="content-section">
+        <div class="section">
+            <h2>4. Java应用场景</h2>
+            <p>Java凭借跨平台、稳定、安全的特性，在多个领域占据核心地位。</p>
+            
+            <h3>4.1 企业级应用开发</h3>
+            <p>Java是企业级应用开发的首选语言，尤其适用于高并发、大规模数据处理、复杂业务逻辑的场景。</p>
+            
+            <div class="note">
+                <p><strong>典型场景：</strong></p>
+                <ul>
+                    <li><strong>ERP系统：</strong>企业资源规划系统，管理财务、人力资源、供应链等核心业务</li>
+                    <li><strong>金融系统：</strong>银行、证券等领域的核心交易系统</li>
+                    <li><strong>电商平台：</strong>支持海量用户访问与订单处理的后端服务</li>
+                    <li><strong>内容管理系统：</strong>管理网站内容与文档</li>
+                </ul>
+                <p><strong>技术栈：</strong>Spring Boot + Spring Cloud + Spring Data JPA + Redis + MySQL/Kafka</p>
+            </div>
+            
+            <h3>4.2 移动开发</h3>
+            <p>Java在移动开发领域的核心应用是Android原生开发。</p>
+            
+            <div class="note">
+                <p><strong>Android开发现状：</strong></p>
+                <ul>
+                    <li>Android Studio（官方开发工具）默认推荐Kotlin，但仍完全支持Java</li>
+                    <li>Android 14（2024年发布）仍将Java作为核心开发语言之一</li>
+                    <li>现有Android应用中约60%使用Java开发</li>
+                </ul>
+                <p><strong>技术栈：</strong>Android SDK + Java + Kotlin（混合开发）+ Retrofit + Room</p>
+            </div>
+            
+            <h3>4.3 大数据与云计算</h3>
+            <p>Java是大数据生态的核心编程语言，多数主流大数据框架使用Java开发或提供Java API。</p>
+            
+            <div class="note">
+                <p><strong>典型场景：</strong></p>
+                <ul>
+                    <li><strong>大数据处理：</strong>Apache Hadoop、Apache Spark、Apache Flink等框架</li>
+                    <li><strong>云计算：</strong>云原生应用、Serverless函数、容器编排</li>
+                    <li><strong>数据仓库：</strong>Apache Hive、Apache HBase等</li>
+                </ul>
+                <p><strong>技术栈：</strong>Hadoop + Spark + Flink + Kafka + HBase</p>
+            </div>
+            
+            <h3>4.4 其他场景</h3>
+            <ul>
+                <li><strong>桌面应用：</strong>使用Swing或JavaFX开发桌面应用</li>
+                <li><strong>嵌入式系统：</strong>使用Java ME开发智能卡、机顶盒、车载系统等嵌入式设备</li>
+                <li><strong>游戏开发：</strong>使用LibGDX等框架开发2D/3D游戏</li>
+            </ul>
+        </div>
+    </section>
+    
+    <!-- 性能优化部分 -->
+    <section id="optimization" class="content-section">
+        <div class="section">
+            <h2>5. Java性能优化</h2>
+            <p>Java性能优化是企业级开发的核心技能，需从代码、JVM、数据库、架构等多维度入手。</p>
+            
+            <h3>5.1 代码级优化</h3>
+            <h4>5.1.1 避免频繁的对象创建</h4>
+            <ul>
+                <li><strong>String优化：</strong>使用StringBuilder/StringBuffer替代+拼接字符串</li>
+                <li><strong>自动装箱优化：</strong>优先使用基本类型而非包装类</li>
+                <li><strong>对象复用：</strong>使用对象池复用频繁创建销毁的对象</li>
+            </ul>
+            
+            <h4>5.1.2 优化算法与数据结构</h4>
+            <ul>
+                <li><strong>选择合适的集合：</strong>ArrayList适用于随机访问，LinkedList适用于频繁插入删除</li>
+                <li><strong>算法优化：</strong>使用时间复杂度更低的算法</li>
+            </ul>
+            
+            <h4>5.1.3 多线程优化</h4>
+            <ul>
+                <li><strong>减少锁粒度：</strong>使用ConcurrentHashMap替代Hashtable</li>
+                <li><strong>线程池优化：</strong>使用ThreadPoolExecutor自定义线程池</li>
+                <li><strong>避免死锁：</strong>按顺序获取锁，使用tryLock()设置超时时间</li>
+            </ul>
+            
+            <h3>5.2 JVM优化</h3>
+            <h4>5.2.1 内存分配优化</h4>
+            <ul>
+                <li><strong>堆内存设置：</strong>根据应用类型设置合适的堆内存大小</li>
+                <li><strong>线程栈优化：</strong>设置合适的线程栈大小</li>
+                <li><strong>直接内存优化：</strong>限制直接内存大小，避免直接内存溢出</li>
+            </ul>
+            
+            <h4>5.2.2 垃圾回收（GC）优化</h4>
+            <div class="note">
+                <p><strong>GC收集器选择：</strong></p>
+                <ul>
+                    <li><strong>串行收集器：</strong>适用于单线程、小堆内存场景</li>
+                    <li><strong>并行收集器：</strong>适用于多线程、高吞吐量场景</li>
+                    <li><strong>G1收集器：</strong>Java 9+默认收集器，适用于大堆内存、低延迟场景</li>
+                    <li><strong>ZGC/Shenandoah：</strong>Java 11+引入的低延迟收集器</li>
+                </ul>
+            </div>
+            
+            <h3>5.3 数据库与I/O优化</h3>
+            <ul>
+                <li><strong>数据库连接池优化：</strong>使用连接池复用数据库连接</li>
+                <li><strong>SQL优化：</strong>避免SELECT *，使用索引优化查询</li>
+                <li><strong>缓存优化：</strong>使用Redis/Memcached缓存热点数据</li>
+                <li><strong>I/O优化：</strong>使用NIO替代传统I/O，使用缓冲流减少I/O次数</li>
+            </ul>
+        </div>
+    </section>
+    
+    <!-- 语言对比部分 -->
+    <section id="comparison" class="content-section">
+        <div class="section">
+            <h2>6. Java与其他语言的对比</h2>
+            <p>Java与其他主流编程语言在语法、性能、应用场景上存在显著差异。</p>
+            
+            <h3>6.1 Java vs Python</h3>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>维度</th>
+                            <th>Java</th>
+                            <th>Python</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>语言类型</td>
+                            <td>编译型（字节码）+ 解释型</td>
+                            <td>解释型（CPython）/JIT编译型</td>
+                        </tr>
+                        <tr>
+                            <td>性能</td>
+                            <td>高（JVM优化后接近C++）</td>
+                            <td>低（动态类型与解释执行）</td>
+                        </tr>
+                        <tr>
+                            <td>语法</td>
+                            <td>严谨、verbose（需显式声明类型）</td>
+                            <td>简洁、灵活（动态类型）</td>
+                        </tr>
+                        <tr>
+                            <td>并发处理</td>
+                            <td>成熟（synchronized、Lock、线程池）</td>
+                            <td>受限（GIL全局解释锁）</td>
+                        </tr>
+                        <tr>
+                            <td>生态系统</td>
+                            <td>企业级开发、大数据、Android</td>
+                            <td>人工智能、数据分析、脚本开发</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="note">
+                <p><strong>总结：</strong>Java适用于高性能、大规模、企业级应用；Python适用于快速原型开发、数据分析与AI场景。</p>
+            </div>
+            
+            <h3>6.2 Java vs C++</h3>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>维度</th>
+                            <th>Java</th>
+                            <th>C++</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>内存管理</td>
+                            <td>自动GC（无需手动释放内存）</td>
+                            <td>手动管理（new/delete）</td>
+                        </tr>
+                        <tr>
+                            <td>指针</td>
+                            <td>无（仅引用，安全）</td>
+                            <td>有（灵活但易导致内存泄漏）</td>
+                        </tr>
+                        <tr>
+                            <td>多继承</td>
+                            <td>单继承+接口多实现</td>
+                            <td>多继承（易导致菱形继承问题）</td>
+                        </tr>
+                        <tr>
+                            <td>运行环境</td>
+                            <td>依赖JVM（跨平台）</td>
+                            <td>直接编译为机器码（平台相关）</td>
+                        </tr>
+                        <tr>
+                            <td>安全性</td>
+                            <td>高（数组边界检查、GC、沙箱机制）</td>
+                            <td>低（无自动检查，易导致缓冲区溢出）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="note">
+                <p><strong>总结：</strong>Java适用于跨平台、企业级应用；C++适用于对性能要求极高的系统级开发。</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 学习路径部分 -->
+    <section id="summary" class="content-section">
+        <div class="section">
+            <h2>7. 总结与学习路径建议</h2>
+            <p>Java是一门成熟、稳定、跨平台的编程语言，拥有庞大的生态系统，是企业级开发、大数据、Android等领域的核心技术栈。</p>
+            
+            <h3>学习路径建议</h3>
+            <ol>
+                <li>
+                    <strong>阶段一：语法基础</strong>
+                    <p>掌握基础数据类型、运算符、流程控制、数组、字符串与异常处理；通过LeetCode等平台练习编程题，巩固语法。</p>
+                </li>
+                <li>
+                    <strong>阶段二：面向对象</strong>
+                    <p>深入理解类与对象、封装、继承、多态；掌握抽象类、接口、内部类与Java 21+新特性；阅读《Effective Java》等经典书籍。</p>
+                </li>
+                <li>
+                    <strong>阶段三：框架与生态</strong>
+                    <p>学习Spring Framework（IoC、AOP）、Spring Boot、Spring MVC；通过Spring Initializr创建项目，实践RESTful API、数据库访问等功能。</p>
+                </li>
+                <li>
+                    <strong>阶段四：高级特性</strong>
+                    <p>学习多线程、JVM调优、设计模式；阅读《Java并发编程实战》《深入理解Java虚拟机》等经典书籍。</p>
+                </li>
+                <li>
+                    <strong>阶段五：实战与扩展</strong>
+                    <p>参与企业级项目或开源项目，实践微服务、大数据等场景；学习Spring Cloud、Spark等框架，扩展技术广度。</p>
+                </li>
+            </ol>
+            
+            <div class="note">
+                <p>通过系统化的学习与实践，可逐步掌握Java的核心技术，并在实际项目中灵活应用。</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>Java全面知识体系详解 - 静态网页版</p>
+        <p>内容基于最新Java技术（截至2026年1月）整理，涵盖Java语法基础、面向对象编程、Spring框架、应用场景、性能优化及语言对比等核心知识。</p>
+    </footer>
+
+    <script>
+        // 显示指定章节，隐藏其他章节
+        function showSection(sectionId) {
+            // 隐藏所有内容部分
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active-section');
+            });
+            
+            // 显示选中的内容部分
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.add('active-section');
+            }
+            
+            // 更新按钮样式
+            const buttons = document.querySelectorAll('.chapter-btn');
+            buttons.forEach(btn => {
+                btn.style.backgroundColor = '#3498db';
+            });
+            
+            // 高亮当前章节按钮
+            const activeButton = document.querySelector(`.chapter-btn[onclick="showSection('${sectionId}')"]`);
+            if (activeButton) {
+                activeButton.style.backgroundColor = '#2980b9';
+            }
+            
+            // 滚动到顶部
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        
+        // 初始化页面，确保只有第一个章节显示
+        document.addEventListener('DOMContentLoaded', function() {
+            showSection('syntax');
+        });
+    </script>
+</body>
+</html>
