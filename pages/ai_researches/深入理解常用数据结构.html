@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深入理解常用数据结构</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a2a6c, #2a4ba0);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .intro {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: #2c3e50;
+            padding: 10px;
+        }
+        
+        .nav-tab {
+            padding: 12px 24px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            border-radius: 6px;
+            margin: 5px;
+        }
+        
+        .nav-tab:hover {
+            background-color: #34495e;
+        }
+        
+        .nav-tab.active {
+            background-color: #3498db;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+            background-color: #f9fbfd;
+            border-radius: 0 8px 8px 0;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .section:hover {
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+        
+        h2 {
+            color: #1a2a6c;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eaeef2;
+        }
+        
+        h3 {
+            color: #2a4ba0;
+            font-size: 1.4rem;
+            margin: 20px 0 10px;
+        }
+        
+        h4 {
+            color: #3498db;
+            font-size: 1.2rem;
+            margin: 15px 0 8px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 18px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .code-block code {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .complexity-table, .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .complexity-table th, .comparison-table th {
+            background-color: #3498db;
+            color: white;
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .complexity-table td, .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        .complexity-table tr:nth-child(even), .comparison-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        .complexity-table tr:hover, .comparison-table tr:hover {
+            background-color: #edf2f7;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .feature-box {
+            background-color: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .feature-box h4 {
+            margin-top: 0;
+            color: #1a2a6c;
+        }
+        
+        .data-structure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .ds-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid #3498db;
+            transition: transform 0.3s;
+        }
+        
+        .ds-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .ds-card h4 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .ds-card .ds-type {
+            color: #3498db;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .ds-card .ds-complexity {
+            background-color: #f0f8ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eaeef2;
+            margin-top: 40px;
+        }
+        
+        .algorithm-visual {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2ecc71;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            header {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .data-structure-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                margin: 3px 0;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>深入理解常用数据结构</h1>
+            <div class="subtitle">原理、C++实现与应用场景</div>
+            <div class="intro">
+                数据结构是计算机科学的基石，它定义了数据的组织、存储和操作方式，直接决定了算法的效率与可扩展性。本报告将深入剖析数组、链表、树、图、哈希表等核心数据结构，从逻辑结构、物理实现、算法复杂度到工程实践进行全方位解读。
+            </div>
+        </header>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('linear')">线性结构</div>
+            <div class="nav-tab" onclick="showSection('tree')">树结构</div>
+            <div class="nav-tab" onclick="showSection('graph')">图结构</div>
+            <div class="nav-tab" onclick="showSection('hash')">哈希表</div>
+            <div class="nav-tab" onclick="showSection('comparison')">对比总结</div>
+        </div>
+        
+        <div class="content">
+            <!-- 引言部分 -->
+            <div class="section">
+                <h2>引言</h2>
+                <p>数据结构是计算机科学的基石，它定义了数据的组织、存储和操作方式，直接决定了算法的效率与可扩展性。无论是操作系统、数据库还是人工智能框架，高效的数据结构选型都是系统性能优化的核心。</p>
+                <p>本报告将深入剖析数组、链表（单向/双向）、树（二叉树、红黑树、AVL树、四叉树、八叉树）、图、哈希表等核心数据结构，从逻辑结构、物理实现、算法复杂度到工程实践进行全方位解读。</p>
+            </div>
+            
+            <!-- 线性数据结构部分 -->
+            <div id="linear" class="section">
+                <h2>1. 线性数据结构</h2>
+                <p>线性结构的元素间存在一对一的逻辑关系，是构建复杂数据结构的基础。</p>
+                
+                <h3>1.1 数组（Array）</h3>
+                <p>数组是最基础的线性结构，其元素在内存中连续存储，通过索引实现随机访问。</p>
+                
+                <h4>原理与分类</h4>
+                <p>数组的核心特征是<strong class="highlight">连续内存空间</strong>与<strong class="highlight">相同数据类型</strong>，逻辑上的线性关系直接通过物理上的相邻位置实现。</p>
+                <ul>
+                    <li><strong>静态数组</strong>：编译时确定大小，栈内存分配（或全局数据区），如<code>int arr[5];</code></li>
+                    <li><strong>动态数组（原生）</strong>：运行时通过<code>new</code>分配堆内存，大小可动态指定</li>
+                    <li><strong>标准容器数组</strong>：C++11引入<code>std::array</code>（栈内存、固定大小）与<code>std::vector</code>（堆内存、动态扩容）</li>
+                </ul>
+                
+                <h4>实现与核心特性</h4>
+                <p><code>std::vector</code>是C++动态数组的标准实现，其核心机制是<strong class="highlight">动态扩容</strong>：</p>
+                <ul>
+                    <li><strong>扩容触发</strong>：当实际元素数量<code>size</code>等于预分配容量<code>capacity</code>时，触发扩容</li>
+                    <li><strong>增长策略</strong>：主流实现（如GCC）采用2倍增长，MSVC采用1.5倍增长</li>
+                    <li><strong>内存预分配</strong>：<code>reserve(n)</code>可提前分配至少<code>n</code>个元素的容量</li>
+                </ul>
+                
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>操作</th>
+                            <th>时间复杂度</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>随机访问</td>
+                            <td>O(1)</td>
+                            <td>通过索引直接定位内存地址</td>
+                        </tr>
+                        <tr>
+                            <td>尾部插入/删除</td>
+                            <td>O(1)（均摊）</td>
+                            <td>可能需要扩容/缩容</td>
+                        </tr>
+                        <tr>
+                            <td>中间/头部插入/删除</td>
+                            <td>O(n)</td>
+                            <td>需移动后续所有元素</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="feature-box">
+                    <h4>数组优缺点与应用场景</h4>
+                    <p><strong>优点</strong>：随机访问效率高（O(1)）；连续内存符合CPU缓存局部性原则，缓存命中率高；空间开销小（仅存储数据）。</p>
+                    <p><strong>缺点</strong>：中间/头部插入删除效率低（O(n)）；静态数组大小固定，动态数组扩容有性能开销；堆内存分配存在碎片化风险。</p>
+                    <p><strong>应用场景</strong>：频繁随机访问、数据量固定或可预测、缓存友好的场景，如矩阵运算、哈希表桶存储、前缀和区间查询。</p>
+                </div>
+                
+                <h3>1.2 链表（Linked List）</h3>
+                <p>链表是一种非连续存储的线性结构，元素通过指针连接，无需预先分配连续内存，插入删除操作高效。</p>
+                
+                <h4>单向链表（Singly Linked List）</h4>
+                <p>单向链表的每个节点包含<strong class="highlight">数据域</strong>与<strong class="highlight">指向下一节点的指针</strong>，仅支持正向遍历。</p>
+                <div class="code-block">
+<code>// 节点结构定义
+template &lt;typename T&gt;
+struct ListNode {
+    T data;
+    ListNode* next;
+    ListNode(const T& val) : data(val), next(nullptr) {}
+};</code>
+                </div>
+                
+                <h4>双向链表（Doubly Linked List）</h4>
+                <p>双向链表的每个节点额外包含<strong class="highlight">指向前驱节点的指针</strong>，支持双向遍历，插入删除操作更灵活。</p>
+                <div class="code-block">
+<code>// 双向链表节点结构
+template &lt;typename T&gt;
+struct DListNode {
+    T data;
+    DListNode* prev;
+    DListNode* next;
+    DListNode(const T& val) : data(val), prev(nullptr), next(nullptr) {}
+};</code>
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>链表类型</th>
+                            <th>优点</th>
+                            <th>缺点</th>
+                            <th>应用场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>单向链表</td>
+                            <td>实现简单、内存开销小（每个节点仅一个指针）</td>
+                            <td>仅支持正向遍历、中间删除需遍历前驱</td>
+                            <td>内存受限场景、栈/队列实现</td>
+                        </tr>
+                        <tr>
+                            <td>双向链表</td>
+                            <td>支持双向遍历、已知节点删除O(1)、操作灵活</td>
+                            <td>内存开销大（每个节点两个指针）、实现复杂</td>
+                            <td>LRU缓存、双向队列、Undo/Redo功能</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 树结构部分 -->
+            <div id="tree" class="section" style="display:none;">
+                <h2>2. 树结构</h2>
+                <p>树是典型的非线性结构，元素间存在一对多的层次关系，广泛应用于索引、空间划分等场景。</p>
+                
+                <h3>2.1 二叉树（Binary Tree）</h3>
+                <p>二叉树的每个节点最多有两个子节点（左子节点、右子节点），是树结构的基础。</p>
+                
+                <h4>原理与遍历</h4>
+                <p>二叉树的核心操作是<strong class="highlight">遍历</strong>，即按特定顺序访问所有节点，常见方式有四种：</p>
+                <ul>
+                    <li><strong>前序遍历</strong>：根→左→右</li>
+                    <li><strong>中序遍历</strong>：左→根→右（对于二叉搜索树可得到有序序列）</li>
+                    <li><strong>后序遍历</strong>：左→右→根</li>
+                    <li><strong>层序遍历</strong>：按层级访问（BFS，队列实现）</li>
+                </ul>
+                
+                <h3>2.2 平衡二叉搜索树（Balanced BST）</h3>
+                <p>二叉搜索树（BST）的左子树节点值均小于根节点，右子树节点值均大于根节点，但在频繁插入删除时易退化为链表。平衡二叉树通过自动调整结构，确保树高始终为O(log n)。</p>
+                
+                <h4>AVL树</h4>
+                <p>AVL树是<strong class="highlight">严格平衡</strong>的二叉搜索树，每个节点的<strong class="highlight">平衡因子</strong>（左子树高度-右子树高度）绝对值不超过1。</p>
+                
+                <div class="algorithm-visual">
+                    <h4>平衡维护：旋转操作</h4>
+                    <p>当插入/删除导致平衡因子超出±1时，通过旋转恢复平衡，核心旋转方式有四种：</p>
+                    <ul>
+                        <li><strong>LL（左子树的左子树过高）</strong>：右单旋</li>
+                        <li><strong>RR（右子树的右子树过高）</strong>：左单旋</li>
+                        <li><strong>LR（左子树的右子树过高）</strong>：左右双旋</li>
+                        <li><strong>RL（右子树的左子树过高）</strong>：右左双旋</li>
+                    </ul>
+                </div>
+                
+                <h4>红黑树（Red-Black Tree）</h4>
+                <p>红黑树是<strong class="highlight">近似平衡</strong>的二叉搜索树，通过颜色规则（节点为红/黑）与旋转维持平衡，是C++标准库<code>std::set</code>/<code>std::map</code>的底层实现。</p>
+                
+                <div class="feature-box">
+                    <h4>核心颜色规则</h4>
+                    <ol>
+                        <li>根节点为黑色</li>
+                        <li>红色节点的子节点必须为黑色（无连续红节点）</li>
+                        <li>从任意节点到其所有叶子节点的黑色节点数相同（黑高一致）</li>
+                    </ol>
+                </div>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>AVL树</th>
+                            <th>红黑树</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>平衡策略</td>
+                            <td>严格高度平衡（平衡因子±1）</td>
+                            <td>颜色规则+近似平衡</td>
+                        </tr>
+                        <tr>
+                            <td>旋转次数</td>
+                            <td>多（插入平均1.02次）</td>
+                            <td>少（插入/删除最多2次）</td>
+                        </tr>
+                        <tr>
+                            <td>查询效率</td>
+                            <td>更高（树高更优）</td>
+                            <td>略低（树高略大）</td>
+                        </tr>
+                        <tr>
+                            <td>适用场景</td>
+                            <td>静态数据、频繁查询</td>
+                            <td>动态数据、频繁插入删除</td>
+                        </tr>
+                        <tr>
+                            <td>标准库应用</td>
+                            <td>无原生支持</td>
+                            <td><code>std::set</code>/<code>std::map</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>2.3 空间划分树（四叉树与八叉树）</h3>
+                <p>空间划分树用于高维空间的数据管理，通过递归划分空间减少遍历开销，是游戏开发、计算机图形学的核心工具。</p>
+                
+                <h4>四叉树（Quadtree）</h4>
+                <p>四叉树将<strong class="highlight">二维空间</strong>递归划分为四个象限（子区域），每个节点最多有四个子节点。</p>
+                <p><strong>应用场景</strong>：二维碰撞检测（如游戏中的物体碰撞）、地理信息系统（GIS）、图像分割。</p>
+                
+                <h4>八叉树（Octree）</h4>
+                <p>八叉树是四叉树的三维扩展，将<strong class="highlight">三维空间</strong>递归划分为八个八分体（子区域），每个节点最多有八个子节点。</p>
+                <p><strong>应用场景</strong>：3D游戏场景管理、点云数据压缩、体素化渲染。</p>
+            </div>
+            
+            <!-- 图结构部分 -->
+            <div id="graph" class="section" style="display:none;">
+                <h2>3. 图结构</h2>
+                <p>图是最复杂的非线性结构，元素（顶点）间存在多对多的关系，用于描述实体间的复杂关联。</p>
+                
+                <h3>3.1 原理与分类</h3>
+                <p>图由<strong class="highlight">顶点集V</strong>与<strong class="highlight">边集E</strong>组成，核心分类：</p>
+                <ul>
+                    <li><strong>无向图</strong>：边无方向（如社交网络中的朋友关系）</li>
+                    <li><strong>有向图</strong>：边有方向（如网页链接、任务依赖）</li>
+                    <li><strong>加权图</strong>：边带有权重（如地图中的路径长度）</li>
+                </ul>
+                
+                <h3>3.2 存储方式</h3>
+                <h4>邻接矩阵</h4>
+                <p>使用N×N的二维数组存储顶点间的连接关系：</p>
+                <ul>
+                    <li><strong>优点</strong>：随机访问边的时间复杂度O(1)，适合稠密图</li>
+                    <li><strong>缺点</strong>：空间复杂度O(N²)，稀疏图会造成大量空间浪费</li>
+                </ul>
+                
+                <h4>邻接表</h4>
+                <p>使用数组+链表（或动态数组）存储：数组元素为顶点，每个顶点对应一个链表，存储其邻接顶点。</p>
+                <ul>
+                    <li><strong>优点</strong>：空间复杂度O(V+E)，适合稀疏图</li>
+                    <li><strong>缺点</strong>：查询边是否存在需遍历链表，时间复杂度O(E)</li>
+                </ul>
+                
+                <h3>3.3 核心算法</h3>
+                <div class="algorithm-visual">
+                    <h4>深度优先搜索（DFS）与广度优先搜索（BFS）</h4>
+                    <p><strong>DFS</strong>通过栈（递归/迭代）实现，优先遍历深度方向，适合路径查找、拓扑排序。</p>
+                    <p><strong>BFS</strong>通过队列实现，优先遍历广度方向，是无权图最短路径的唯一解法。</p>
+                </div>
+                
+                <h4>最短路径算法</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>算法</th>
+                            <th>适用场景</th>
+                            <th>时间复杂度</th>
+                            <th>核心思想</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dijkstra</td>
+                            <td>加权图（非负权）、单源最短路径</td>
+                            <td>O((V+E)log V)</td>
+                            <td>贪心策略，使用优先队列</td>
+                        </tr>
+                        <tr>
+                            <td>Floyd-Warshall</td>
+                            <td>多源最短路径</td>
+                            <td>O(V³)</td>
+                            <td>动态规划，三重循环更新</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>最小生成树（MST）</h4>
+                <p>MST是连通加权无向图中边权和最小的生成树，核心算法有两种：</p>
+                <ul>
+                    <li><strong>Kruskal</strong>：按边权排序，使用并查集选边（避免环），适合稀疏图</li>
+                    <li><strong>Prim</strong>：从顶点出发，维护<code>key</code>数组选最小权边，适合稠密图</li>
+                </ul>
+            </div>
+            
+            <!-- 哈希表部分 -->
+            <div id="hash" class="section" style="display:none;">
+                <h2>4. 哈希表（Hash Table）</h2>
+                <p>哈希表通过<strong class="highlight">哈希函数</strong>将键映射到内存地址，实现平均O(1)的插入、删除与查找，是工程中查询效率最优的数据结构之一。</p>
+                
+                <h3>4.1 原理</h3>
+                <p>哈希表的核心是<strong class="highlight">键→值</strong>的直接映射，核心组件包括：</p>
+                <ul>
+                    <li><strong>哈希函数</strong>：将键映射为哈希码，需满足均匀性（减少冲突）与高效性</li>
+                    <li><strong>桶数组</strong>：存储键值对的数组，每个元素为链表（链地址法）或开放地址</li>
+                    <li><strong>冲突解决</strong>：链地址法（冲突节点存入链表）、开放地址法（线性探测、二次探测）</li>
+                </ul>
+                <p>C++标准库<code>std::unordered_map</code>采用<strong class="highlight">链地址法</strong>，负载因子默认0.75。</p>
+                
+                <div class="code-block">
+<code>// C++哈希表示例
+#include &lt;unordered_map&gt;
+#include &lt;string&gt;
+
+int main() {
+    // 初始化哈希表
+    std::unordered_map&lt;std::string, int&gt; hashMap = {{"apple", 5}, {"banana", 3}};
+    
+    // 插入元素
+    hashMap["orange"] = 4;
+    
+    // 查找元素
+    auto it = hashMap.find("apple");
+    if (it != hashMap.end()) {
+        std::cout << "apple: " << it->second << "\n";
+    }
+    
+    return 0;
+}</code>
+                </div>
+                
+                <div class="feature-box">
+                    <h4>哈希表优缺点与应用场景</h4>
+                    <p><strong>优点</strong>：平均O(1)的插入、删除、查找效率；支持快速键值对映射。</p>
+                    <p><strong>缺点</strong>：哈希函数设计不当会导致冲突（退化为O(n)）；无序存储；空间开销较大（负载因子需小于1）。</p>
+                    <p><strong>应用场景</strong>：缓存系统、数据库索引、键值对存储（如用户ID→信息映射）。</p>
+                </div>
+            </div>
+            
+            <!-- 对比总结部分 -->
+            <div id="comparison" class="section" style="display:none;">
+                <h2>5. 总结与横向对比</h2>
+                <p>为方便工程选型，以下是各数据结构的核心特性与适用场景对比：</p>
+                
+                <div class="data-structure-grid">
+                    <div class="ds-card">
+                        <h4>数组</h4>
+                        <div class="ds-type">线性结构，连续存储</div>
+                        <div class="ds-complexity">随机访问：O(1)，插入删除：O(n)</div>
+                        <p><strong>核心优势</strong>：随机访问效率高、缓存友好</p>
+                        <p><strong>适用场景</strong>：频繁查询、矩阵运算、缓存友好场景</p>
+                    </div>
+                    
+                    <div class="ds-card">
+                        <h4>链表</h4>
+                        <div class="ds-type">线性结构，非连续存储</div>
+                        <div class="ds-complexity">插入删除：O(1)，访问：O(n)</div>
+                        <p><strong>核心优势</strong>：插入删除高效、动态大小</p>
+                        <p><strong>适用场景</strong>：频繁修改、内存受限、栈/队列实现</p>
+                    </div>
+                    
+                    <div class="ds-card">
+                        <h4>红黑树</h4>
+                        <div class="ds-type">非线性结构，平衡BST</div>
+                        <div class="ds-complexity">所有操作：O(log n)</div>
+                        <p><strong>核心优势</strong>：有序存储、自平衡</p>
+                        <p><strong>适用场景</strong>：动态有序数据、索引、C++标准库map/set</p>
+                    </div>
+                    
+                    <div class="ds-card">
+                        <h4>四叉树/八叉树</h4>
+                        <div class="ds-type">非线性结构，空间划分树</div>
+                        <div class="ds-complexity">查询：O(log n) ~ O(n)</div>
+                        <p><strong>核心优势</strong>：空间划分、高维数据管理</p>
+                        <p><strong>适用场景</strong>：游戏碰撞检测、图形学、GIS</p>
+                    </div>
+                    
+                    <div class="ds-card">
+                        <h4>图</h4>
+                        <div class="ds-type">非线性结构，网络</div>
+                        <div class="ds-complexity">算法依赖具体实现</div>
+                        <p><strong>核心优势</strong>：描述多对多关系</p>
+                        <p><strong>适用场景</strong>：社交网络、路径规划、任务调度</p>
+                    </div>
+                    
+                    <div class="ds-card">
+                        <h4>哈希表</h4>
+                        <div class="ds-type">集合/映射，连续+链存储</div>
+                        <div class="ds-complexity">平均操作：O(1)，最坏：O(n)</div>
+                        <p><strong>核心优势</strong>：平均O(1)查询、键值映射</p>
+                        <p><strong>适用场景</strong>：缓存、数据库索引、键值存储</p>
+                    </div>
+                </div>
+                
+                <h3>6. 结论</h3>
+                <p>数据结构的选型是工程效率的核心决定因素，需结合场景的核心需求进行决策：</p>
+                <ul>
+                    <li>若需<strong class="highlight">快速随机访问</strong>：优先选择数组或<code>std::vector</code></li>
+                    <li>若需<strong class="highlight">频繁插入删除</strong>：优先选择链表或红黑树</li>
+                    <li>若需<strong class="highlight">键值对映射</strong>：优先选择哈希表（无序）或红黑树（有序）</li>
+                    <li>若需<strong class="highlight">高维空间管理</strong>：优先选择四叉树（2D）或八叉树（3D）</li>
+                    <li>若需<strong class="highlight">描述多对多关系</strong>：优先选择图结构</li>
+                </ul>
+                <p>通过本报告的学习，读者应能从理论、实现与工程实践三个维度掌握常用数据结构的核心逻辑，并在实际项目中做出最优选型。</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>深入理解常用数据结构：原理、C++实现与应用场景</p>
+            <p>内容涵盖数组、链表、树、图、哈希表等核心数据结构</p>
+            <p>© 2023 数据结构学习指南 | 本页面为静态HTML展示</p>
+        </footer>
+    </div>
+
+    <script>
+        // 简单的标签切换功能
+        function showSection(sectionId) {
+            // 隐藏所有内容部分
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // 显示选中的部分
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+            
+            // 更新标签状态
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 找到并激活当前标签
+            const activeTab = Array.from(tabs).find(tab => 
+                tab.getAttribute('onclick') && 
+                tab.getAttribute('onclick').includes(sectionId)
+            );
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+        }
+        
+        // 初始化：显示线性结构部分
+        document.addEventListener('DOMContentLoaded', function() {
+            // 默认显示线性结构部分
+            const linearSection = document.getElementById('linear');
+            if (linearSection) {
+                linearSection.style.display = 'block';
+            }
+            
+            // 确保线性结构标签激活
+            const linearTab = document.querySelector('.nav-tab[onclick*="linear"]');
+            if (linearTab) {
+                linearTab.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
