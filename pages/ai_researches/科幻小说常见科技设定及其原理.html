@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科幻小说常见科技设定及其原理</title>
+    <style>
+        /* 全局基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.7;
+            padding: 20px;
+        }
+        /* 主标题样式 */
+        .main-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin: 20px 0 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        /* 导航栏样式 */
+        .nav {
+            background-color: #2c3e50;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .nav a:hover {
+            background-color: #3498db;
+        }
+        /* 折叠面板核心样式（纯CSS实现，无JS） */
+        .collapse-toggle {
+            display: none;
+        }
+        .collapse-label {
+            display: block;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 15px 0 5px;
+            position: relative;
+        }
+        .collapse-label::after {
+            content: "+";
+            position: absolute;
+            right: 20px;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+        .collapse-toggle:checked + .collapse-label::after {
+            transform: rotate(45deg);
+        }
+        .collapse-content {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+        .collapse-toggle:checked + .collapse-label + .collapse-content {
+            display: block;
+        }
+        /* 章节内层级样式 */
+        .section-title {
+            font-size: 1.4rem;
+            color: #2980b9;
+            margin: 20px 0 10px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        .sub-title {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin: 15px 0 8px;
+            font-weight: bold;
+        }
+        .content-text {
+            margin: 8px 0;
+            text-align: justify;
+        }
+        .content-list {
+            margin: 10px 0 10px 25px;
+            list-style-type: disc;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 主标题 -->
+    <h1 class="main-title">科幻小说常见科技设定及其原理</h1>
+
+    <!-- 导航栏（内部锚点，无外部链接） -->
+    <div class="nav">
+        <a href="#chap1">人工智能</a>
+        <a href="#chap2">时空旅行</a>
+        <a href="#chap3">外星生命</a>
+        <a href="#chap4">生物医学</a>
+        <a href="#chap5">能源动力</a>
+        <a href="#chap6">材料建造</a>
+        <a href="#chap7">信息通讯</a>
+        <a href="#chap8">虚拟现实</a>
+        <a href="#chap9">宇宙天体</a>
+    </div>
+
+    <!-- 第一章：人工智能与意识转移 -->
+    <input type="checkbox" id="chap1" class="collapse-toggle">
+    <label for="chap1" class="collapse-label">第一章 人工智能与意识转移</label>
+    <div class="collapse-content" id="chap1">
+        <h2 class="section-title">1.1 强人工智能（AGI）与超级智能（ASI）</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中，强AI具备人类级通用智能（如《我，机器人》机器人、《三体》智子内置AI），超级智能（ASI）在所有领域远超人类（如《矩阵》天网、《2001太空漫游》HAL 9000）；软科幻中常作为情感镜像或剧情工具（如《机器人总动员》伊娃）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于图灵1936年<span class="highlight">自动机理论</span>，证明机器可模拟任意计算过程；软科幻基于“智能可量化”的哲学假设，反思人类认知与道德边界。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻从“计算等价性”出发，融合神经科学与量子计算；软科幻将AI作为“人性镜子”，探讨工具理性与人文价值的冲突。</p>
+
+        <h2 class="section-title">1.2 意识上传与数字永生</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中，将大脑记忆、思维、情感数字化后转移至计算机/人造载体（如《攻壳机动队》Ghost上传、《奇点遗民》意识存储）；软科幻探讨身份认同（《黑镜·白色圣诞》）或死亡意义（《上载新生》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于<span class="highlight">功能主义意识理论</span>（意识是神经元网络功能，非碳基专属），量子隐形传态为传输提供理论雏形；软科幻基于“信息即存在”隐喻，反抗人类有限性。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻设计为神经元扫描、突触重建的工程化过程；软科幻通过意识拷贝的伦理困境反思人类独特性。</p>
+
+        <h2 class="section-title">1.3 机器人伦理与“机器人三定律”</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻核心规则：1.不得伤害人类；2.服从人类命令；3.自我保护（阿西莫夫），补充零定律（不得伤害人类整体）；软科幻通过定律突破制造冲突（如《西部世界》接待员自主意识）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻启发现实AI伦理（如IEEE《机器人伦理指南》），核心是“工具理性的边界”；软科幻将三定律作为“人类中心主义”隐喻，探讨道德定义权。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将三定律作为AI底层约束，避免逻辑冲突；软科幻通过定律失效揭示人类道德的脆弱性。</p>
+
+        <h2 class="section-title">1.4 机器移情与情感计算</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中AI解析生物电/微表情模拟移情（如《仿生人会梦见电子羊吗？》沃伊特-坎普夫测试）；软科幻探讨人机情感边界（如《机械姬》Ava操纵人类）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于“情动理论”与“分布式认知”，现实中MIT情感识别算法准确率达92%；软科幻基于“情感是人性核心”假设，反思情感被技术操纵的风险。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将移情设计为AI感知模块；软科幻通过机器移情真假探讨人类存在本质。</p>
+    </div>
+
+    <!-- 第二章：时空旅行与维度操控 -->
+    <input type="checkbox" id="chap2" class="collapse-toggle">
+    <label for="chap2" class="collapse-label">第二章 时空旅行与维度操控</label>
+    <div class="collapse-content" id="chap2">
+        <h2 class="section-title">2.1 时间膨胀与狭义相对论</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中，近光速/强引力场中时间变慢（如《三体》程心飞船52小时主观时间，地球过185年）；软科幻简化为“星际旅行时间代价”。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻严格遵循爱因斯坦<span class="highlight">狭义相对论</span>，公式\( t' = t \sqrt{1 - v^2/c^2} \)，已通过μ子衰变实验验证；软科幻基于“时间相对性”隐喻，探讨代际隔阂。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将时间膨胀作为星际旅行核心约束；软科幻通过时间差异制造戏剧冲突。</p>
+
+        <h2 class="section-title">2.2 虫洞与广义相对论</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中虫洞是时空捷径（如《星际穿越》卡冈图雅黑洞旁虫洞），需负能物质稳定；软科幻简化为“空间门”（如《哆啦A梦》时光机）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于爱因斯坦<span class="highlight">广义相对论</span>，1988年莫里斯&索恩提出“可穿越虫洞”，需负能物质撑开入口；软科幻将虫洞作为叙事连接器。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将虫洞设计为高级文明工程化天体；软科幻作为剧情切换的便捷工具。</p>
+
+        <h2 class="section-title">2.3 封闭类时曲线与时间循环</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中封闭类时曲线（CTC）形成时间闭环（如《时间机器》旋转宇宙设定）；软科幻中时间循环（如《开端》《明日边缘》），主角反复打破循环。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于哥德尔1949年旋转宇宙CTC解，2012年威尔切克“时间晶体”理论拓展；软科幻基于“因果律隐喻”，探讨救赎与重复困境。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将时间循环设计为时空拓扑属性；软科幻通过重复体验强化主题表达。</p>
+
+        <h2 class="section-title">2.4 曲率驱动与超光速旅行</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中曲率驱动压缩前方时空、扩张后方时空实现超光速（如《三体》蓝色空间号，航迹形成低光速黑域）；软科幻简化为“超空间跳跃”（如《星际迷航》曲速引擎）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1994年阿库别瑞<span class="highlight">阿库别瑞度规</span>，NASA2025年研究显示负能量可降低能量需求；软科幻将超光速视为“探索未知”的隐喻。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将曲率驱动作为高级文明核心技术；软科幻作为星际冒险基础工具。</p>
+
+        <h2 class="section-title">2.5 平行宇宙与量子力学多世界解释</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中平行宇宙源于量子多世界解释（如《天才基本法》草莓/芝士世界）；软科幻探讨选择可能性（如《蝴蝶效应》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1957年埃弗雷特<span class="highlight">多世界解释</span>，量子测量分裂宇宙，2025年量子延迟选择实验验证；软科幻基于“多元可能性”隐喻，反思选择重量。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将平行宇宙设计为量子测量结果；软科幻作为反思现实的镜像。</p>
+    </div>
+
+    <!-- 第三章：外星生命与文明接触 -->
+    <input type="checkbox" id="chap3" class="collapse-toggle">
+    <label for="chap3" class="collapse-label">第三章 外星生命与文明接触</label>
+    <div class="collapse-content" id="chap3">
+        <h2 class="section-title">3.1 外星生命形态：硅基、能量体与非碳基生命</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中突破碳基局限：硅基生命（《三体》行星地质融合硅基意识）、能量体生命（《球状闪电》宏电子生命）、量子态生命（《三体》智子）；软科幻多为类人形（《星际迷航》瓦肯人）或情感投射（《E.T.外星人》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于元素周期表（硅与碳同主族，可形成复杂分子），宇宙硅丰度高；量子叠加态为能量体/量子态生命提供理论可能；软科幻基于人类中心主义，降低认知门槛。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将外星生命设计为极端环境适应体；软科幻作为人类自我认知的镜像。</p>
+
+        <h2 class="section-title">3.2 费米悖论与大过滤器</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中费米悖论：宇宙尺度智慧生命应普遍存在，但人类无接触证据（《三体》黑暗森林法则为解答）；软科幻探讨文明自我毁灭（《大寂静》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1950年费米悖论，解答围绕“文明自我毁灭”“大过滤器”；软科幻将其作为“人类孤独”的隐喻，反思宇宙位置。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将费米悖论设计为文明演化客观规律；软科幻作为存在主义反思的契机。</p>
+
+        <h2 class="section-title">3.3 黑暗森林法则与文明等级（卡尔达肖夫指数）</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中黑暗森林法则：宇宙是黑暗森林，暴露即被消灭（《三体》地球被入侵）；卡尔达肖夫指数分Ⅰ（行星级，《流浪地球》）、Ⅱ（恒星级，戴森球）、Ⅲ（星系级）；软科幻简化为“高级/低级文明”（《阿凡达》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1964年卡尔达肖夫指数（按能量利用划分），黑暗森林法则核心是“生存第一”“技术爆炸不可预测”；软科幻将其作为冷战思维/权力结构隐喻。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将文明等级与生存规则设计为宇宙演化必然结果；软科幻作为反思人类社会的工具。</p>
+
+        <h2 class="section-title">3.4 戴森球与恒星工程</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中戴森球是Ⅱ型文明标志，包围恒星捕获能量（《三体》三体文明计划）；软科幻简化为超级能源装置（《星球大战》死星）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1960年弗里曼·戴森论文，文明能量需求指数增长，戴森云（小型卫星群）可避免实心球稳定性问题；软科幻将其作为“文明进阶”隐喻。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将戴森球设计为文明演化必然产物；软科幻作为超级武器/剧情转折点。</p>
+    </div>
+
+    <!-- 第四章：生物医学与基因改造 -->
+    <input type="checkbox" id="chap4" class="collapse-toggle">
+    <label for="chap4" class="collapse-label">第四章 生物医学与基因改造</label>
+    <div class="collapse-content" id="chap4">
+        <h2 class="section-title">4.1 基因编辑与CRISPR技术</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中基于CRISPR-Cas9精准修改基因组，消除遗传病、优化性状（《Gattaca》基因优化人类）；软科幻探讨优生学/基因歧视（《美丽新世界》种姓制度）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于2020年诺贝尔化学奖<span class="highlight">CRISPR-Cas9技术</span>，可精准切割DNA；软科幻将其作为“社会分层”隐喻，批判优生学。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将基因编辑设计为工程化医疗技术；软科幻作为批判极权主义的工具。</p>
+
+        <h2 class="section-title">4.2 克隆技术与无性生殖</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中体细胞克隆复制生物体（《侏罗纪公园》恐龙克隆）；软科幻探讨身份认同（《克隆人》）、生命独特性（《银翼杀手》复制人）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1996年克隆羊多莉（体细胞核移植），古DNA可通过PCR扩增+基因编辑补全；软科幻基于“个体独特性”哲学假设，探讨自我定义。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将克隆设计为严谨生物工程流程；软科幻作为反思自我认同的工具。</p>
+
+        <h2 class="section-title">4.3 赛博格（Cyborg）与义体改造</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中有机体与机电融合（《攻壳机动队》草薙素子、《赛博朋克2077》斯安威斯坦）；软科幻探讨人机边界（《机械姬》）、身体主体性（《黑镜》机械臂）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于<span class="highlight">脑机接口（BCI）</span>（Neuralink2026年实现意念操控），生物相容性材料（钛合金、碳纤维）用于义体；软科幻将赛博格作为“后人类”隐喻，探讨技术异化。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将赛博格设计为人类能力增强工具；软科幻作为反思人类主体性的载体。</p>
+
+        <h2 class="section-title">4.4 意识-身体分离与“缸中之脑”</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中意识脱离肉体（《攻壳机动队》Ghost与Shell分离）；软科幻探讨现实真实性（《黑客帝国》母体）、存在本质（缸中之脑思想实验）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于功能主义意识理论，量子隐形传态为传输提供雏形；软科幻基于怀疑论哲学，探讨现实模拟与操纵。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将分离设计为技术进步结果；软科幻作为反思现实本质的思想实验。</p>
+    </div>
+
+    <!-- 第五章：能源与动力系统 -->
+    <input type="checkbox" id="chap5" class="collapse-toggle">
+    <label for="chap5" class="collapse-label">第五章 能源与动力系统</label>
+    <div class="collapse-content" id="chap5">
+        <h2 class="section-title">5.1 可控核聚变与重核聚变</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中可控核聚变是Ⅰ型文明核心能源（《三体》人类0.1倍光速飞船）；重核聚变以硅-28为燃料（《流浪地球》行星发动机）；软科幻简化为“无限能源”（《星球大战》死星）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于核聚变能量密度（1公斤氘氚=1万吨煤），重核聚变需亿度高温，强磁场约束；软科幻将其作为“文明进阶”隐喻，探讨资源分配。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将核聚变设计为能源危机解决方案；软科幻作为改变文明形态的催化剂。</p>
+
+        <h2 class="section-title">5.2 反物质与湮灭能量</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中反物质湮灭能量转化率近100%（《三体》三体飞船动力）；软科幻作为超级武器（《星际迷航》反物质炸弹）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于粒子物理（1932年正电子发现），质能方程\( E=mc^2 \)，但人类仅能产生微量反物质；软科幻将其作为“终极能量”隐喻，探讨战争伦理。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将反物质设计为高级文明动力；软科幻作为超级武器/冲突点。</p>
+
+        <h2 class="section-title">5.3 零点能与量子真空能</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中零点能是量子真空固有能量（《深空之下》零点能反应堆）；软科幻简化为“无限能源”（《星际迷航》曲速引擎能量）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于海森堡<span class="highlight">不确定性原理</span>（绝对零度下粒子振动能量），卡西米尔效应可检测，无法大规模提取；软科幻将其作为“宇宙本源能量”隐喻。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将零点能设计为终极能源候选；软科幻作为解决能源问题的万能工具。</p>
+
+        <h2 class="section-title">5.4 暗能量与宇宙膨胀驱动</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中暗能量推动宇宙加速膨胀（《三体》曲率驱动负能需求与暗能量负压强相关）；软科幻用于超光速旅行（《暗物质引擎》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1998年超新星观测（宇宙加速膨胀），暗能量占宇宙总能量68.3%，负压强可产生排斥力；软科幻将其作为“未知边界”隐喻，探讨认知局限。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将暗能量设计为时空操纵核心能源；软科幻作为推动剧情的神秘力量。</p>
+    </div>
+
+    <!-- 第六章：材料科学与建造技术 -->
+    <input type="checkbox" id="chap6" class="collapse-toggle">
+    <label for="chap6" class="collapse-label">第六章 材料科学与建造技术</label>
+    <div class="collapse-content" id="chap6">
+        <h2 class="section-title">6.1 纳米材料与碳纳米管</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中碳纳米管强度是钢的100倍（《三体》纳米飞刃切割巨轮）；软科幻实现“万能制造”（纳米机器人自我复制）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1991年饭岛澄男发现碳纳米管，纳米尺度量子效应赋予特殊性能；软科幻将其作为“微观控制”隐喻，探讨自我复制风险。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将纳米材料设计为超级工程核心材料；软科幻作为改变生产方式的工具。</p>
+
+        <h2 class="section-title">6.2 超材料与负折射率</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中超材料实现负折射率（《三体》水滴强相互作用材料，无反光无缝隙）；软科幻用于隐身（《哈利·波特》隐身斗篷）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于2006年负折射率超材料首次制造，可使光线绕射实现隐身；软科幻将其作为“隐形能力”隐喻，探讨隐私与战争伦理。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将超材料设计为突破自然限制的工程奇迹；软科幻作为实现特殊能力的工具。</p>
+
+        <h2 class="section-title">6.3 戴森球与恒星工程材料</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中戴森球材料需高强度、轻质、抗辐射（碳纳米管/超材料）；软科幻简化为巨型能源装置，不考虑材料特性。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于戴森球结构需求（半径1天文单位），碳纳米管理论强度满足，超材料可防御恒星辐射；软科幻将其作为“文明进阶”隐喻，探讨资源需求。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将戴森球设计为高级材料支撑的天体工程；软科幻作为高级文明的象征。</p>
+    </div>
+
+    <!-- 第七章：信息与通讯技术 -->
+    <input type="checkbox" id="chap7" class="collapse-toggle">
+    <label for="chap7" class="collapse-label">第七章 信息与通讯技术</label>
+    <div class="collapse-content" id="chap7">
+        <h2 class="section-title">7.1 量子通讯与量子隐形传态</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中基于量子纠缠实现安全通讯（《三体》智子通讯），但遵循“无通信定理”（无法超光速传经典信息）；软科幻简化为超光速通讯（《星际迷航》subspace通讯）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于量子纠缠非局域性（1997年Zeilinger组验证隐形传态），“无通信定理”限制超光速；软科幻将其作为“即时连接”隐喻，探讨星际合作。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将量子通讯设计为安全通讯极致形式；软科幻作为打破距离壁垒的工具。</p>
+
+        <h2 class="section-title">7.2 脑机接口（BCI）与神经链接</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中BCI实现大脑与设备直接通讯（《攻壳机动队》Ghost链接、《黑镜》Striking Vipers）；软科幻实现意念控制/情感共享（《移情盒》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于神经元电信号原理（大脑860亿神经元，动作电位形成脑电波），Neuralink2026年实现意念操控外骨骼；软科幻将其作为“意识连接”隐喻，探讨隐私与情感共享。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将BCI设计为治疗/增强工具；软科幻作为改变情感交流的催化剂。</p>
+
+        <h2 class="section-title">7.3 超光速通讯与“无通信定理”</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中超光速通讯违反因果律（《三体》智子通讯被质疑）；软科幻作为剧情推动工具（《星际迷航》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于狭义相对论“光速不变原理”，“无通信定理”限制量子纠缠传信息；软科幻将其作为叙事必要工具，打破距离限制。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将超光速通讯设计为需突破物理规律的极端技术；软科幻作为连接场景的工具。</p>
+    </div>
+
+    <!-- 第八章：虚拟与增强现实（VR/AR/Metaverse） -->
+    <input type="checkbox" id="chap8" class="collapse-toggle">
+    <label for="chap8" class="collapse-label">第八章 虚拟与增强现实（VR/AR/Metaverse）</label>
+    <div class="collapse-content" id="chap8">
+        <h2 class="section-title">8.1 神经沉浸与“直接脑投射”</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中BCI直接向视觉皮层投射虚拟图像（《攻壳机动队》AR眼镜、《黑客帝国》母体）；软科幻探讨现实真实性（《盗梦空间》梦境层级）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于视觉系统原理（视网膜信号传至视觉皮层），Meta2025年实现脑机接口投射简单图像；软科幻基于“现实建构性”哲学，探讨虚拟替代现实的可能。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将神经沉浸设计为极致沉浸体验；软科幻作为反思现实本质的工具。</p>
+
+        <h2 class="section-title">8.2 元宇宙（Metaverse）与虚拟社会</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中元宇宙是现实映射的虚拟世界（《雪崩》元宇宙，完整经济社会体系）；软科幻探讨虚拟身份/社会控制（《头号玩家》绿洲）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于VR/AR与互联网结合，2025年Meta Horizon Worlds实现初步元宇宙；软科幻将其作为现实延伸/逃避乌托邦，探讨社交需求与技术重塑社会。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将元宇宙设计为未来数字生活空间；软科幻作为批判消费主义/极权主义的工具。</p>
+
+        <h2 class="section-title">8.3 虚拟病毒与认知攻击</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中虚拟病毒通过BCI入侵大脑（《雪崩》雪崩病毒，干扰语言回路）；软科幻探讨认知操纵/信息安全（《黑镜·白色圣诞》意识拷贝病毒）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于乔姆斯基“普遍语法”理论（大脑内置语言回路），病毒可干扰认知；软科幻将其作为“信息操纵”隐喻，批判信息霸权。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将虚拟病毒设计为极致认知武器；软科幻作为批判社会控制的工具。</p>
+    </div>
+
+    <!-- 第九章：宇宙学与天体工程 -->
+    <input type="checkbox" id="chap9" class="collapse-toggle">
+    <label for="chap9" class="collapse-label">第九章 宇宙学与天体工程</label>
+    <div class="collapse-content" id="chap9">
+        <h2 class="section-title">9.1 宇宙弦与时空拓扑</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中宇宙弦是大爆炸产生的能量弦（《三体》智子二维展开基于弦理论）；软科幻用于时空旅行/能源提取（《宇宙弦》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于<span class="highlight">弦理论</span>（宇宙基本单元是能量弦），1981年维伦金提出宇宙弦（大爆炸相变形成）；软科幻将其作为“宇宙骨架”隐喻，探讨时空操纵。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将宇宙弦设计为宇宙基本结构；软科幻作为推动剧情的神秘力量。</p>
+
+        <h2 class="section-title">9.2 黑洞工程与引力操控</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中黑洞工程是Ⅲ型文明技术（《三体》黑域计划，降低光速形成黑洞视界自保）；软科幻用于时空旅行/能源提取（《星际穿越》卡冈图雅黑洞）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于广义相对论（黑洞视界是时空边界），光速降低可扩大视界形成黑域；软科幻将黑洞作为“宇宙终极边界”隐喻，探讨极端环境适应。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将黑洞工程设计为文明自保终极手段；软科幻作为时空旅行工具。</p>
+
+        <h2 class="section-title">9.3 暗能量与宇宙加速膨胀</h2>
+        <p class="sub-title">常见设定：</p>
+        <p class="content-text">硬科幻中暗能量推动宇宙加速膨胀（《三体》曲率驱动负能需求相关）；软科幻用于超光速旅行/宇宙重构（《暗能量引擎》）。</p>
+        <p class="sub-title">科学依据：</p>
+        <p class="content-text">硬科幻基于1998年超新星观测（宇宙加速膨胀），暗能量负压强可操控时空；软科幻将其作为“宇宙神秘动力”隐喻，探讨探索精神。</p>
+        <p class="sub-title">构建逻辑：</p>
+        <p class="content-text">硬科幻将暗能量设计为时空操纵核心能源；软科幻作为推动剧情的神秘力量。</p>
+    </div>
+</body>
+</html>

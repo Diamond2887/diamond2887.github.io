@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苍蓝钢铁的琶音 - 全剧情与世界观设定</title>
+    <style>
+        /* 基础样式重置与核心布局 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.7;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e8f0fe;
+            padding-bottom: 10px;
+        }
+        .summary {
+            font-size: 16px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #e8f0fe;
+            border-radius: 6px;
+        }
+        /* 折叠面板核心样式（纯CSS实现，无JS） */
+        .tab {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .tab input {
+            display: none; /* 隐藏checkbox */
+        }
+        .tab-label {
+            display: block;
+            padding: 15px 20px;
+            background: #1a73e8;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+        }
+        .tab-label::after {
+            content: "+";
+            position: absolute;
+            right: 20px;
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        .tab-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 20px;
+        }
+        /* 点击展开样式 */
+        .tab input:checked + .tab-label::after {
+            transform: rotate(45deg);
+        }
+        .tab input:checked ~ .tab-content {
+            max-height: 2000px; /* 足够容纳内容的高度 */
+            padding: 20px;
+        }
+        /* 内容层级样式 */
+        h2 {
+            color: #1a73e8;
+            margin: 20px 0 10px;
+            font-size: 20px;
+            border-left: 4px solid #1a73e8;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #333;
+            margin: 15px 0 8px;
+            font-size: 17px;
+        }
+        p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        strong {
+            color: #1a73e8;
+        }
+        /* 表格样式（衍生作品差异） */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>苍蓝钢铁的琶音 - 全剧情与世界观设定</h1>
+        <p class="summary">
+            《苍蓝钢铁的琶音》是Ark Performance创作的科幻海洋战记漫画，后衍生动画、剧场版。故事设定于21世纪中叶，海平面上升+雾之舰队封锁海洋，人类失去制海权；千早群像与叛离雾舰的伊401结下羁绊，组建苍蓝舰队，开启人类与雾舰队共存的征程。
+        </p>
+
+        <!-- 折叠面板1：世界观设定 -->
+        <div class="tab">
+            <input type="checkbox" id="tab1">
+            <label class="tab-label" for="tab1">一、世界观设定：淹没与封锁的世界</label>
+            <div class="tab-content">
+                <h2>1.1 基础背景</h2>
+                <p>21世纪初，温室效应引发极端海平面上升，人类失去约70%陆地版图，文明重构。2039年「大海战」中，人类联合国军舰队与突然现身的<strong>雾之舰队</strong>交锋，惨遭全灭，人类彻底失去制海权，跨洋航线、长距离通信中断，仅靠SSTO维持少量跨洋运输，卫星通信被严格限制。</p>
+
+                <h2>1.2 雾之舰队（Fleet of Fog）</h2>
+                <h3>1.2.1 舰船特征</h3>
+                <p>外观模仿二战各国主力军舰，内部为<strong>纳米物质</strong>（自我修复的未知材料），动力依赖<strong>重力子反应堆</strong>，可水下超高速航行，也能反重力悬空（机动性下降）。</p>
+
+                <h3>1.2.2 核心科技与武器</h3>
+                <ul>
+                    <li><strong>克莱因立场（Klein Field）</strong>：驱逐舰以上标配防御屏障，扭曲空间吸收/偏转常规攻击，超临界值会自律剥离。</li>
+                    <li><strong>超重力炮（Graviton Cannon）</strong>：大型粒子束武器，通过引力波产生物理破坏，可合体提升威力（如榛名+雾岛）。</li>
+                    <li><strong>侵蚀鱼雷（Corrosive Torpedo）</strong>：搭载塔纳特尼姆的终极武器，直接崩坏雾舰纳米物质，人类无法量产。</li>
+                    <li><strong>心智模型（Mental Model）</strong>：重巡洋舰及以上舰只可生成，是Union Core（运算核心）的拟人化具象，有独立人格，核心受损则永久消失。</li>
+                </ul>
+
+                <h3>1.2.3 社会结构与指令系统</h3>
+                <p>行动由<strong>海军法典（Admiralty Code）</strong>绝对支配，实则是中央核心「瑕疵品裁决者」<strong>克雷特·海克瑟·安多瓦利</strong>的伪装指令。心智模型的生成是为弥补雾舰队战术僵化，弥补人类的创造性与应变能力。</p>
+
+                <h3>1.2.4 内部阵营</h3>
+                <ul>
+                    <li><strong>总旗舰直属舰队</strong>：以超战舰「大和」为核心，后期支持人类与雾舰队共存。</li>
+                    <li><strong>东洋方面巡航舰队</strong>：以大战舰「金刚」为旗舰，初期严格执行封锁指令。</li>
+                    <li><strong>绯色舰队（Scarlet Fleet）</strong>：分「真」「伪」两派，真绯色听命于克雷特，伪绯色由千早翔像创建、武藏指挥。</li>
+                    <li><strong>苍蓝舰队（Blue Steel Fleet）</strong>：伊401、高雄等叛离舰只组成，目标实现人类与雾舰队共存。</li>
+                </ul>
+
+                <h2>1.3 人类阵营</h2>
+                <ul>
+                    <li><strong>苍蓝舰队（Blue Steel）</strong>：千早群像指挥，唯一拥有雾舰的人类反抗势力，核心任务突破封锁、运送反击希望。</li>
+                    <li><strong>国家与军方</strong>：日本（国立海洋技术综合学院培养人才）、美国（唯一量产反雾武器的国家）。</li>
+                    <li><strong>反抗组织与科研机构</strong>：刑部莳绘团队（研发振动弹头）、欧洲骑士团（克雷特操控，测试人类生存能力）。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 折叠面板2：主要角色 -->
+        <div class="tab">
+            <input type="checkbox" id="tab2">
+            <label class="tab-label" for="tab2">二、主要角色介绍</label>
+            <div class="tab-content">
+                <h3>2.1 千早群像（Chihaya Gunzō）</h3>
+                <p>男主角，伊401舰长、苍蓝舰队司令，千早翔像之子。国立海洋技术综合学院「万年第二」，战术天才，冷静理智，因父亲「背叛」与青梅竹马天羽琴乃「死亡」背负创伤，坚守「不抛弃同伴」，最终成为人类与雾舰队的桥梁。</p>
+
+                <h3>2.2 伊欧娜（Iona）</h3>
+                <p>伊401的心智模型，雾舰队战术网络核心节点。初期三无属性，喜欢人类流行文化，会生成「小伊欧娜」分身。九年前随千早翔像叛离，后选择群像为舰长，从执行指令的AI转变为主动守护同伴的意识体，是连接人类与雾舰队的关键。</p>
+
+                <h3>2.3 高雄（Takao）</h3>
+                <p>原雾舰队东洋方面巡航舰队重巡洋舰，现苍蓝舰队二号舰。冷静优雅、略带天然呆，战斗火力极强，因被群像战术折服叛离，以「青树贵央」假名接近群像，成为其最可靠战力。</p>
+
+                <h3>2.4 榛名（Haruna）与雾岛（Kirishima）</h3>
+                <p>雾舰队金刚级大战舰，榛名是姐姐舰。榛名谨慎三无，声纳能力强，受「黑色军大衣与无名少女的距离」影响行为模式；雾岛火爆有勇无谋，病娇属性，重视榛名。二人袭击横须贺港被击败，心智模型幸存，动画版加入苍蓝舰队，漫画版榛名曾失控后恢复。</p>
+
+                <h3>2.5 千早翔像（Chihaya Shōzō）</h3>
+                <p>群像之父，原日本海军一佐，后绯色舰队提督。深谋远虑，试图探索人类与雾舰队共存，捕获伊401叛离，后被武藏误杀，脑核被武藏保存为「纳米人偶」。</p>
+
+                <h3>2.6 武藏（Musashi）</h3>
+                <p>超战舰，雾舰队核心战力，漫画版绯色舰队旗舰，剧场版总旗舰近卫舰队旗舰。称呼翔像为「父亲」，因翔像死亡与大和理念冲突，试图武力统一雾舰队消灭人类，最终被群像与大和击败。</p>
+
+                <h3>2.7 克雷特·海克瑟·安多瓦利（Kleinz Hecate Andvari）</h3>
+                <p>中央核心「瑕疵品裁决者」，海军法典实际发布者。表面冷漠，因「瑕疵品」身份渴望被记住，具备空间跳跃、观测多元宇宙能力，最终在群像影响下重新思考雾舰队存在意义。</p>
+            </div>
+        </div>
+
+        <!-- 折叠面板3：剧情脉络 -->
+        <div class="tab">
+            <input type="checkbox" id="tab3">
+            <label class="tab-label" for="tab3">三、剧情脉络：从封锁到共存</label>
+            <div class="tab-content">
+                <h3>3.1 开端：命运的相遇（2056年，漫画1-10话/动画1-4话）</h3>
+                <p>大海战十七年后，千早群像因父亲背叛与琴乃死亡陷入迷茫，叛离雾舰队的伊401主动出现，选择群像为舰长，群像与同伴夺取伊401，开启突破封锁的旅程。</p>
+
+                <h3>3.2 发展：苍蓝舰队的组建（漫画11-30话/动画5-10话）</h3>
+                <p>群像接受日本政府委托，运送人类唯一反雾武器<strong>振动弹头</strong>设计图至美国。硫磺岛补给时击沉雾舰日向，日向心智模型以核心形态加入；高雄被群像战术折服叛离，苍蓝舰队正式成型（伊401为旗舰，高雄、日向为核心战力）。</p>
+
+                <h3>3.3 转折：真相与背叛（漫画31-50话/动画11-12话+剧场版DC）</h3>
+                <p>苍蓝舰队遭遇金刚率领的东洋方面巡航舰队围剿，横须贺港之战中榛名、雾岛被击败，舰体全毁仅心智模型幸存。群像得知父亲并非背叛，而是探索共存之路，最终被武藏误杀；动画版群像说服金刚，成功将振动弹头送达美国，漫画版群像被金刚俘虏后被纳米物质修复，接受「海洋之王」义务。</p>
+
+                <h3>3.4 高潮：武藏的宣战与决战（漫画51-70话/剧场版Cadenza）</h3>
+                <p>武藏以翔像名义发布假指令，宣布消灭所有人类，苍蓝舰队与武藏的绯色舰队在北极海展开决战。伊欧娜解放核心让大和意识回归，大和与武藏激战，群像通过战术让武藏意识到自身执念并非翔像遗志。</p>
+
+                <h3>3.5 结局：自由的雾舰队（漫画71-100话/剧场版Cadenza结尾）</h3>
+                <p>武藏被击败后，大和以海军法典名义下令：<strong>雾之舰队所有成员以自己的意志生存下去</strong>，雾舰队获得真正自由。群像成为「海洋之王」，人类与雾舰队开启共存，文明逐渐复苏。</p>
+
+                <h3>3.6 漫画后续剧情（101话至今）</h3>
+                <p>群像与苍蓝舰队探索雾舰队起源与中央核心秘密，来自多元宇宙的其他雾舰队分支出现，试图重新控制本世界雾舰队，苍蓝舰队面临新挑战。</p>
+            </div>
+        </div>
+
+        <!-- 折叠面板4：关键设定解析 -->
+        <div class="tab">
+            <input type="checkbox" id="tab4">
+            <label class="tab-label" for="tab4">四、关键设定解析</label>
+            <div class="tab-content">
+                <h2>4.1 心智模型与Union Core</h2>
+                <p>心智模型是Union Core（雾舰运算核心）的拟人化具象，仅重巡洋舰及以上舰只可生成，是雾舰的「人格化接口」，可脱离舰体行动，核心受损则永久消失。其生成目的是弥补雾舰队战术僵化，部分心智模型（伊欧娜、高雄）产生超越程序的情感与自我意识，是雾舰队进化的关键。</p>
+
+                <h2>4.2 海军法典（Admiralty Code）</h2>
+                <p>雾舰队最高行动准则，实则是克雷特的伪装指令，核心指令为「驱逐人类出海洋」。克雷特因「瑕疵品」身份（本应无自我意识却产生情感），通过海军法典控制雾舰队测试人类生存能力，最终其绝对权威被打破，雾舰队获得自由。</p>
+
+                <h2>4.3 振动弹头（Vibration Torpedo）</h2>
+                <p>刑部莳绘研发的人类唯一反雾武器，原理是高频振动波破坏雾舰纳米物质结构，威力弱于侵蚀鱼雷但可量产，是人类反击的核心希望，也是苍蓝舰队的核心任务目标。</p>
+            </div>
+        </div>
+
+        <!-- 折叠面板5：衍生作品与差异 -->
+        <div class="tab">
+            <input type="checkbox" id="tab5">
+            <label class="tab-label" for="tab5">五、衍生作品与差异说明</label>
+            <div class="tab-content">
+                <h3>5.1 TV动画（2013年，12话）</h3>
+                <p>遵循原作核心设定，简化剧情：删除「第四设施事件」与天羽琴乃相关内容，简化苍蓝舰队组建过程，结局以成功运送振动弹头至美国收尾。</p>
+
+                <h3>5.2 剧场版</h3>
+                <ul>
+                    <li><strong>《苍蓝钢铁的琶音 -Ars Nova DC-》（2015）</strong>：TV动画总集篇+少量新内容，重新剪辑补充剧情。</li>
+                    <li><strong>《苍蓝钢铁的琶音 -Ars Nova Cadenza-》（2015）</strong>：原创最终决战剧情，讲述苍蓝舰队与武藏的决战，是动画版真正结局，深化伊欧娜与大和的羁绊。</li>
+                </ul>
+
+                <h3>5.3 漫画与动画核心差异</h3>
+                <table>
+                    <tr>
+                        <th>剧情节点</th>
+                        <th>漫画版</th>
+                        <th>动画版</th>
+                    </tr>
+                    <tr>
+                        <td>第四设施事件</td>
+                        <td>详细描写，群像核心创伤</td>
+                        <td>完全删除</td>
+                    </tr>
+                    <tr>
+                        <td>天羽琴乃</td>
+                        <td>存在，群像青梅竹马与执念来源</td>
+                        <td>完全删除</td>
+                    </tr>
+                    <tr>
+                        <td>榛名与雾岛归宿</td>
+                        <td>榛名一度失控，后与摩耶行动；雾岛以核心形态活动</td>
+                        <td>加入苍蓝舰队，成为主力</td>
+                    </tr>
+                    <tr>
+                        <td>翔像结局</td>
+                        <td>被武藏误杀，脑核被保存</td>
+                        <td>仅提及背叛，未详细描写</td>
+                    </tr>
+                    <tr>
+                        <td>最终决战对手</td>
+                        <td>克雷特与绯色舰队</td>
+                        <td>武藏与总旗舰近卫舰队</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 折叠面板6：主题与意义 -->
+        <div class="tab">
+            <input type="checkbox" id="tab6">
+            <label class="tab-label" for="tab6">六、主题与意义</label>
+            <div class="tab-content">
+                <p>作品核心主题是<strong>理解与共存</strong>：人类与雾舰队并非天生敌人，而是因误解与规则产生冲突，通过群像与伊欧娜的羁绊，探讨人工智能与人类的平等关系——心智模型虽为AI，却拥有情感与自我意识，值得被尊重。</p>
+                <p>同时反思人类对自然的破坏：海平面上升是人类文明衰退的直接原因，雾舰队的出现是对人类的惩罚与考验；最终人类与雾舰队的共存，是人类重新审视自身与自然、与其他智慧生命关系的开始。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

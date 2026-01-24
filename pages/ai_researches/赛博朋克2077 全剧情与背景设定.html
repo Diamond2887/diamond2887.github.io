@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赛博朋克2077 全剧情与背景设定</title>
+    <style>
+        /* 全局基础样式 - 赛博朋克暗黑霓虹风 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+            background: #0A0A1A;
+            color: #E0E0E0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        /* 主标题样式 */
+        .main-title {
+            color: #00FFFF;
+            text-align: center;
+            font-size: 2.2em;
+            text-shadow: 0 0 12px #00FFFF, 0 0 24px #0080FF;
+            margin-bottom: 10px;
+        }
+        .sub-title {
+            color: #FF00FF;
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 8px #FF00FF;
+        }
+        /* 折叠面板样式 - 原生details实现，无JS */
+        .fold-panel {
+            margin: 20px 0;
+            border: 1px solid #00FFFF;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .fold-summary {
+            background: #1A1A3A;
+            color: #FF00FF;
+            padding: 15px 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            list-style: none;
+            text-shadow: 0 0 6px #FF00FF;
+            transition: background 0.3s;
+        }
+        .fold-summary:hover {
+            background: #25254A;
+        }
+        /* 移除details默认箭头 */
+        .fold-summary::-webkit-details-marker {
+            display: none;
+        }
+        .fold-content {
+            padding: 20px;
+            background: #12122A;
+        }
+        /* 层级标题样式 */
+        .h2 {
+            color: #00FFFF;
+            font-size: 1.5em;
+            border-bottom: 1px solid #00FFFF;
+            padding-bottom: 8px;
+            margin: 20px 0 15px;
+            text-shadow: 0 0 8px #00FFFF;
+        }
+        .h3 {
+            color: #FF00FF;
+            font-size: 1.2em;
+            margin: 15px 0 10px;
+            text-shadow: 0 0 5px #FF00FF;
+        }
+        .h4 {
+            color: #FFFF00;
+            font-size: 1.1em;
+            margin: 12px 0 8px;
+        }
+        /* 关键术语高亮 */
+        .highlight {
+            color: #FFFF00;
+            font-weight: bold;
+        }
+        /* 列表样式 */
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        /* 表格样式 - 关键信息可视化 */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: #151530;
+        }
+        .info-table th, .info-table td {
+            border: 1px solid #00FFFF;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .info-table th {
+            background: #1A1A3A;
+            color: #00FFFF;
+            font-weight: bold;
+        }
+        .info-table tr:nth-child(even) {
+            background: #1E1E40;
+        }
+        /* 段落样式 */
+        p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面标题 -->
+    <h1 class="main-title">赛博朋克2077 全剧情与背景设定</h1>
+    <p class="sub-title">本体 + DLC往日之影 完整解析</p>
+
+    <!-- 折叠面板1：世界观背景设定 -->
+    <details class="fold-panel" open>
+        <summary class="fold-summary">一、世界观背景设定</summary>
+        <div class="fold-content">
+            <h2 class="h2">1.1 2077年世界格局</h2>
+            <p>2077年地球沦为<span class="highlight">巨型跨国企业（超企）</span>博弈场，国家主权被资本侵蚀，根源为20世纪末经济崩溃与四次公司战争。日本<span class="highlight">荒坂集团</span>与美国<span class="highlight">军用科技</span>为全球两大霸权，前者掌控安保、金融与意识数字化技术，后者垄断军工与基础设施。</p>
+            <p>美国分裂为<span class="highlight">新美利坚合众国（NUSA）</span>与多个独立自由州，夜之城作为北加州自由州的国际自由城市，名义独立实则被荒坂完全掌控，边境巡逻权归荒坂警务部门。</p>
+
+            <h2 class="h2">1.2 夜之城：欲望与绝望的熔炉</h2>
+            <p>1994年由理查德·奈特规划为“无犯罪乌托邦”，奈特遇刺后陷入帮派混战；2009年荒坂以准军事力量击溃暴徒，确立公司统治。2023年强尼·银手突袭荒坂塔引爆核弹（夜城大屠杀），中心区化为废墟，重建后人口696万，被评为“全美最烂地区”。</p>
+            <p>城市按阶级严格分区：市政中心/威斯布鲁克为上层享乐场，沃森区/海伍德为底层聚集地，太平洲因资金断裂沦为废墟，后被割据为<span class="highlight">狗镇（Dogtown）</span>。</p>
+
+            <h2 class="h2">1.3 法外之地：狗镇（Dogtown）</h2>
+            <p>狗镇是夜之城太平洲的割据区域，诞生于2070年统一战争停火协议：前NUSA上校库尔特·汉森拒绝撤军，率部建立独立军阀政权，以“幽冥犬”军队为暴力支柱，靠军火走私、黑市交易与人体实验维持统治。</p>
+            <p>区域电力依赖废弃核动力滚装艇核心，资源匮乏且阶级分化极端，特权阶层占据豪华建筑，底层挤在集装箱贫民窟，是资本主义异化的极致体现。</p>
+        </div>
+    </details>
+
+    <!-- 折叠面板2：核心科技与社会设定 -->
+    <details class="fold-panel">
+        <summary class="fold-summary">二、核心科技与社会设定</summary>
+        <div class="fold-content">
+            <h2 class="h2">2.1 意识数字化与Relic芯片</h2>
+            <h3 class="h3">Relic芯片（生物印迹存储芯片）</h3>
+            <p>荒坂“守护你的灵魂”项目产物，通过纳米机器人重构神经通路，将数字化意识体（Engram）与宿主融合，最初为富豪提供意识交流，后成为数字永生工具。</p>
+            <p>致命缺陷：芯片会改写宿主DNA与神经结构，导致免疫系统攻击神经元，最终彻底取代宿主意识，V的生存危机正源于此。</p>
+
+            <h3 class="h3">灵魂杀手（Soulkiller）程序</h3>
+            <p>由黑客奥特·坎宁安发明，最初为意识备份工具，被荒坂改造为武器：复制意识体时抹除宿主物理意识，使其沦为植物人。2023年强尼·银手被亚当·重锤杀死后，意识被存入Relic原型芯片。</p>
+
+            <h2 class="h2">2.2 赛博义体与赛博精神病</h2>
+            <p>赛博义体从医疗修复演变为身份象征，过度非医疗改造会引发<span class="highlight">赛博精神病</span>——义体与精神偏差共同作用的解离性人格障碍，表现为暴力倾向、情感淡漠、身份认知混乱。</p>
+            <p>夜之城警方<span class="highlight">暴恐机动队（MAX-TAC）</span>专门镇压赛博精神病患者，直接处决失控者，是国家机器对科技失控的暴力掩盖。</p>
+
+            <h2 class="h2">2.3 网络空间与黑墙（Blackwall）</h2>
+            <p>2020年黑客瑞奇·巴特莫斯释放“数据崩溃”病毒，旧互联网瘫痪并催生敌视人类的游离AI。2044年网络监察（NetWatch）启动黑墙计划，构建超级AI屏障，隔绝人类可用的“新网”与游离AI盘踞的“旧网”。</p>
+            <p>黑墙是双刃剑：既是人类保护伞，也是资本限制信息自由、掩盖意识实验的工具，《往日之影》中汉森试图利用黑墙能量制造超级武器。</p>
+
+            <h2 class="h2">2.4 社会阶层：高技术低生活</h2>
+            <table class="info-table">
+                <tr>
+                    <th>阶级层级</th>
+                    <th>人口占比</th>
+                    <th>核心群体</th>
+                    <th>生存状态</th>
+                </tr>
+                <tr>
+                    <td>上层阶级</td>
+                    <td>＜10%</td>
+                    <td>超企核心家族、权贵富豪、精英高管</td>
+                    <td>垄断核心科技与财富，掌控城市规则</td>
+                </tr>
+                <tr>
+                    <td>中层阶级</td>
+                    <td>≈10%</td>
+                    <td>低级公司员工、政府职员、小私营主</td>
+                    <td>收入勉强体面，受公司监控，阶层快速萎缩</td>
+                </tr>
+                <tr>
+                    <td>下层阶级</td>
+                    <td>＞80%</td>
+                    <td>底层劳动者、雇佣兵/帮派/流浪者、赛博精神病</td>
+                    <td>生存艰难，无上升空间，被社会边缘化</td>
+                </tr>
+            </table>
+        </div>
+    </details>
+
+    <!-- 折叠面板3：本体全剧情梳理 -->
+    <details class="fold-panel">
+        <summary class="fold-summary">三、《赛博朋克2077》本体全剧情梳理</summary>
+        <div class="fold-content">
+            <h2 class="h2">3.1 序幕：死亡与重生</h2>
+            <p>玩家选择V的三大出身，最终与杰克·威尔斯成为雇佣兵搭档，六个月后接到德克斯特·德肖恩的天价委托：潜入绀碧大厦窃取荒坂赖宣的Relic芯片。</p>
+            <table class="info-table">
+                <tr>
+                    <th>出身类型</th>
+                    <th>核心背景</th>
+                    <th>初始困境</th>
+                </tr>
+                <tr>
+                    <td>流浪者</td>
+                    <td>阿德卡多族边缘成员</td>
+                    <td>被边境巡逻队追捕，被迫入夜之城</td>
+                </tr>
+                <tr>
+                    <td>街头小子</td>
+                    <td>海伍德区帮派底层</td>
+                    <td>欠帮派人情，需任务偿还</td>
+                </tr>
+                <tr>
+                    <td>公司员工</td>
+                    <td>荒坂反情报部门低级主管</td>
+                    <td>撞见高层黑幕被追杀，失去身份财富</td>
+                </tr>
+            </table>
+
+            <h2 class="h2">3.2 转折点：大劫案（The Heist）</h2>
+            <p>V与杰克在黑客T-Bug支持下潜入绀碧大厦，遭遇双重背叛：T-Bug被荒坂黑脑击杀，杰克重伤身亡，临死前将芯片塞入V头部；德克斯特为独吞报酬开枪击中V，抛入垃圾场。</p>
+            <p>V被维克多救回，Relic芯片启动应急程序，释放强尼·银手的意识体，V陷入人格融合与六个月生存倒计时。</p>
+
+            <h2 class="h2">3.3 主线：寻找生存之道</h2>
+            <p>V围绕“解除Relic意识侵蚀”展开主线，核心结盟路线：</p>
+            <ul>
+                <li><span class="highlight">荒坂路线</span>：与竹村五郎合作接触荒坂华子，华子承诺数字永生而非治愈身体</li>
+                <li><span class="highlight">流浪者路线</span>：帮助帕南·帕尔默夺回资源，与阿德卡多族结盟，潜入荒坂神舆</li>
+                <li><span class="highlight">罗格路线</span>：联系强尼旧情人罗格，重演2023年荒坂塔突袭，罗格最终战死</li>
+                <li><span class="highlight">黑客路线</span>：与巫毒帮合作联系奥特·坎宁安，奥特提出意识融合或上传网络的方案</li>
+            </ul>
+
+            <h2 class="h2">3.4 本体结局分支</h2>
+            <table class="info-table">
+                <tr>
+                    <th>结局名称</th>
+                    <th>触发条件</th>
+                    <th>核心剧情</th>
+                    <th>结局评价</th>
+                </tr>
+                <tr>
+                    <td>恶魔</td>
+                    <td>完成竹村支线，信任荒坂华子</td>
+                    <td>V意识上传荒坂服务器，或6个月后死亡被囚禁</td>
+                    <td>最讽刺，与虎谋皮沦为数字囚徒</td>
+                </tr>
+                <tr>
+                    <td>星星</td>
+                    <td>完成帕南支线，强尼友好度≥60%，选自己活</td>
+                    <td>摧毁神舆，与帕南和阿德卡多族离开夜之城</td>
+                    <td>最具希望，回归自然与集体</td>
+                </tr>
+                <tr>
+                    <td>太阳</td>
+                    <td>完成罗格支线，强尼友好度≥70%，选强尼去</td>
+                    <td>强尼摧毁荒坂塔，V成来生新传奇，生命剩6个月</td>
+                    <td>最符合赛博朋克精神，燃烧生命换荣耀</td>
+                </tr>
+                <tr>
+                    <td>节制</td>
+                    <td>联系奥特，选将身体交给强尼</td>
+                    <td>V意识上传网络，强尼以V身份活下去</td>
+                    <td>最具牺牲精神，自我毁灭换另一种永生</td>
+                </tr>
+                <tr>
+                    <td>秘密结局（自杀）</td>
+                    <td>最终任务独自攻荒坂塔，未呼叫盟友</td>
+                    <td>V单枪匹马战死，或选择自杀</td>
+                    <td>最绝望，拒绝妥协以死亡对抗异化</td>
+                </tr>
+            </table>
+        </div>
+    </details>
+
+    <!-- 折叠面板4：DLC往日之影剧情梳理 -->
+    <details class="fold-panel">
+        <summary class="fold-summary">四、DLC《往日之影》剧情梳理</summary>
+        <div class="fold-content">
+            <h2 class="h2">4.1 DLC概述</h2>
+            <p>2023年9月发布的唯一剧情DLC，时间线位于本体Act 2中期（巫毒帮任务后、最终章节前），V为获取Relic芯片治愈方案，潜入狗镇营救新美国总统罗莎琳德·迈尔斯，卷入NUSA、荒坂与汉森军阀的三方政治阴谋。</p>
+
+            <h2 class="h2">4.2 核心角色</h2>
+            <table class="info-table">
+                <tr>
+                    <th>角色名称</th>
+                    <th>身份</th>
+                    <th>核心动机</th>
+                </tr>
+                <tr>
+                    <td>所罗门·李德</td>
+                    <td>前NUSA FIA特工（伊德瑞斯·艾尔巴饰）</td>
+                    <td>被NUSA抛弃后潜伏狗镇，渴望恢复身份</td>
+                </tr>
+                <tr>
+                    <td>百灵鸟（宋昭美）</td>
+                    <td>前FIA黑客，V的联系人</td>
+                    <td>黑墙实验幸存者，渴望摆脱NUSA控制</td>
+                </tr>
+                <tr>
+                    <td>罗莎琳德·迈尔斯</td>
+                    <td>新美国总统，前军用科技CEO</td>
+                    <td>借营救事件巩固政治资本，发动统一战争</td>
+                </tr>
+                <tr>
+                    <td>库尔特·汉森</td>
+                    <td>前NUSA上校，狗镇统治者</td>
+                    <td>利用总统坠机引发NUSA与夜之城冲突</td>
+                </tr>
+            </table>
+
+            <h2 class="h2">4.3 剧情流程</h2>
+            <h3 class="h3">第一阶段：闯入狗镇</h3>
+            <p>V为治愈芯片接受百灵鸟委托，伪装身份潜入狗镇，与潜伏的所罗门·李德暂时结盟，获取总统坠机情报。</p>
+
+            <h3 class="h3">第二阶段：总统营救</h3>
+            <p>V与李德突破幽冥犬封锁，找到未受伤的迈尔斯，得知坠机是汉森策划的暗杀，目的是嫁祸NUSA引发战争，两人护送总统穿越狗镇废墟躲避追杀。</p>
+
+            <h3 class="h3">第三阶段：背叛与抉择</h3>
+            <p>V发现百灵鸟的真相：她是NUSA黑墙沟通实验的唯一幸存者，被视为“人形武器”，所谓治愈方案是陷阱，需V帮助窃取汉森的神经矩阵设备以摆脱控制。V面临三大核心抉择：信任百灵鸟、信任李德、独立行动。</p>
+
+            <h2 class="h2">4.4 DLC结局分支</h2>
+            <table class="info-table">
+                <tr>
+                    <th>结局名称</th>
+                    <th>触发条件</th>
+                    <th>核心剧情</th>
+                    <th>对本体的影响</th>
+                </tr>
+                <tr>
+                    <td>权杖国王</td>
+                    <td>信任百灵鸟，帮其窃取神经矩阵</td>
+                    <td>百灵鸟逃脱，V芯片侵蚀减缓，狗镇被NUSA夷平</td>
+                    <td>V生存时间延长至12个月</td>
+                </tr>
+                <tr>
+                    <td>宝剑国王</td>
+                    <td>信任李德，将百灵鸟交给NUSA</td>
+                    <td>百灵鸟被处决，李德恢复身份，V失去所有义体</td>
+                    <td>V意识独立但失去战斗能力</td>
+                </tr>
+                <tr>
+                    <td>高塔结局</td>
+                    <td>独立行动，摧毁神经矩阵保护总统</td>
+                    <td>汉森被击毙，狗镇被NUSA接管，V芯片侵蚀停止</td>
+                    <td>V需定期服药，生存时间无限延长</td>
+                </tr>
+                <tr>
+                    <td>秘密结局</td>
+                    <td>网络空间找到奥特·坎宁安</td>
+                    <td>V意识上传网络，彻底摆脱芯片困扰</td>
+                    <td>呼应本体节制结局，哲学性选择</td>
+                </tr>
+            </table>
+
+            <h2 class="h2">4.5 与本体剧情的联动</h2>
+            <ul>
+                <li>时间线嵌入本体Act 2中期，完成后可继续本体主线，DLC选择影响本体结局可用选项</li>
+                <li>补全强尼·银手2023年核爆前经历，以及与罗格、阿德卡多族的关系细节</li>
+                <li>将本体“科技失控”主题拓展至“政治异化”，NUSA与荒坂同为资本代言人，将人异化为武器</li>
+            </ul>
+        </div>
+    </details>
+
+    <!-- 折叠面板5：核心角色关系与心理剖析 -->
+    <details class="fold-panel">
+        <summary class="fold-summary">五、核心角色关系与心理剖析</summary>
+        <div class="fold-content">
+            <h2 class="h2">5.1 V & 强尼·银手：人格融合与身份认同</h2>
+            <h3 class="h3">关系演变</h3>
+            <ol>
+                <li><span class="highlight">敌视与对抗</span>：初期强尼试图夺舍，V视其为寄生虫，睡梦中被强尼控制破坏人际关系</li>
+                <li><span class="highlight">理解与合作</span>：V通过强尼回忆了解其过去，强尼认可V的生存意志，共同对抗荒坂</li>
+                <li><span class="highlight">融合与救赎</span>：两人达成和解，V接受强尼人格，强尼放弃夺舍，共同面对生死抉择</li>
+            </ol>
+            <h3 class="h3">心理剖析</h3>
+            <p><span class="highlight">V</span>：代表“生存的韧性”，底层出身坚守自我，即使面对死亡也不放弃活下去的希望。</p>
+            <p><span class="highlight">强尼·银手</span>：代表“反抗的虚无”，2020年代摇滚叛逆者，反抗荒坂却因冲动导致爱人死亡，意识被困芯片是对过去的惩罚。</p>
+
+            <h2 class="h2">5.2 帕南·帕尔默：自由与归属感</h2>
+            <p>帕南是V在夜之城为数不多的“真实”关系，曾是阿德卡多族成员，因理念不合离开，与V因共同生存困境建立信任。她的核心动机是寻找归属感，帮助V既是对抗荒坂，也是重新融入家族。V选择帕南路线，本质是选择“回归集体，拒绝异化”，与强尼的个人英雄主义形成对比。</p>
+
+            <h2 class="h2">5.3 杰克·威尔斯：初心与遗憾</h2>
+            <p>杰克是V的引路人，海伍德区拉丁裔，梦想赚大钱让母亲过上好日子，却因信任德克斯特在大劫案中死亡。他的死是V的核心创伤，让V失去对“夜之城梦想”的幻想，是V保持人性的最后防线，控诉资本对底层梦想的吞噬。</p>
+
+            <h2 class="h2">5.4 百灵鸟（宋昭美）：工具人与觉醒</h2>
+            <p>百灵鸟是科技异化的直接体现，19岁被FIA招募成为黑墙实验体，从“被资本利用的工具”转变为“反抗资本的觉醒者”。她帮助V的真实目的是摆脱NUSA控制，用黑客能力对抗资本压迫，即使失败也展现了人性的韧性。</p>
+        </div>
+    </details>
+
+    <!-- 折叠面板6：主题与社会隐喻 -->
+    <details class="fold-panel">
+        <summary class="fold-summary">六、主题与社会隐喻</summary>
+        <div class="fold-content">
+            <h2 class="h2">6.1 身份认同（Identity）</h2>
+            <p>在身体可替换、意识可数字化的世界，“我是谁”成为核心问题。V面临强尼的意识侵蚀与社会对雇佣兵的身份歧视，强尼则是数字幽灵寻找存在意义，百灵鸟从“代号工具”到找回自我，三者共同诠释：<span class="highlight">人性是身份认同的核心，技术无法复制人性</span>。</p>
+
+            <h2 class="h2">6.2 资本与异化（Capitalism and Alienation）</h2>
+            <p>游戏是马克思“商品拜物教”的极端体现：一切异化为商品，包括身体、意识与情感。荒坂Relic芯片垄断数字永生，赛博义体导致身体异化，NUSA将百灵鸟异化为武器，汉森将狗镇居民异化为剥削资源。核心隐喻：<span class="highlight">资本与权力结合，最终导致人性彻底异化，科技本身无善恶，恶在利用科技的资本</span>。</p>
+
+            <h2 class="h2">6.3 反抗与虚无（Rebellion and Nihilism）</h2>
+            <p>强尼的反抗是虚无的：为反抗而反抗，炸毁荒坂塔却未改变夜之城本质；V的反抗是务实的：活下去就是对异化世界的反抗；百灵鸟的反抗是技术的：用能力对抗资本压迫。核心主题：<span class="highlight">异化世界中，反抗的意义不在于胜利，而在于坚守人性</span>。</p>
+
+            <h2 class="h2">6.4 技术的双刃剑（The Double-Edged Sword of Technology）</h2>
+            <p>Relic芯片可实现数字永生也可夺舍，赛博义体可强化身体也可致疯，黑墙可保护人类也可被资本控制，黑墙技术可赋予能力也可沦为奴隶。游戏强调：<span class="highlight">科技无善恶，善恶取决于使用者，资本掌控下的科技只会成为压迫工具</span>。</p>
+        </div>
+    </details>
+
+    <!-- 折叠面板7：总结与评价 -->
+    <details class="fold-panel">
+        <summary class="fold-summary">七、总结与评价</summary>
+        <div class="fold-content">
+            <h2 class="h2">7.1 剧情总结</h2>
+            <p>《赛博朋克2077》本体讲述雇佣兵V因Relic芯片与强尼·银手意识融合，陷入生存倒计时与人格挣扎，最终在牺牲与坚守间抉择；DLC《往日之影》插入谍战支线，V为治愈芯片深入狗镇，卷入政治阴谋，在生存与正义间抉择。两者共同构建“高科技、低生活”的反乌托邦世界，探讨身份认同、资本异化与人性挣扎的核心命题。</p>
+
+            <h2 class="h2">7.2 游戏地位与影响</h2>
+            <p>CD Projekt RED继《巫师3》后的里程碑作品，将《赛博朋克2020》世界观推向新高度。2020年发售初期因技术问题饱受争议，后续2.0版本重构玩法、《往日之影》补充剧情后口碑逆转，成为赛博朋克文化新标杆，影响超越游戏本身。</p>
+
+            <h2 class="h2">7.3 核心结论</h2>
+            <p>《赛博朋克2077》及其DLC是一部“人性在科技与资本压迫下挣扎”的史诗，并非单纯爽游，而是充满哲学思考与社会批判的作品。它告诉玩家：<span class="highlight">即使身体可替换、意识可数字化，人性依然是最宝贵的存在，坚守人性就是对异化世界最有力的反抗</span>。</p>
+        </div>
+    </details>
+</body>
+</html>
