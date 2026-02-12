@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>计算机图形学 · 全境解析 | 2D→3D 理论·实践·趋势</title>
+    <style>
+        /* ---------- 极简科技内核 · 静态语义 · 层级生动 ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0e14;
+            font-family: 'Inter', 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            line-height: 1.65;
+            color: #e3e9f2;
+            padding: 2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .document-matrix {
+            max-width: 1280px;
+            width: 100%;
+            background: #12161f;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(66,153,225,0.2);
+            padding: 3rem 2.5rem;
+            backdrop-filter: blur(2px);
+        }
+
+        /* 标题系统 —— 硬边与光晕 */
+        h1 {
+            font-size: 2.7rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(145deg, #d6e6ff, #9ac7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            border-left: 10px solid #3b82f6;
+            padding-left: 1.8rem;
+            margin-top: 0.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 0 12px #3b82f640;
+        }
+
+        .meta-abstract {
+            background: #1a1f2c;
+            padding: 2rem 2rem;
+            border-radius: 28px;
+            margin-bottom: 3rem;
+            border: 1px solid #2f3a5c;
+            box-shadow: inset 0 0 0 1px #2a3142, 0 8px 0 #0c0f14;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 650;
+            color: #bdd3ff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px dashed #3f5585;
+            padding-bottom: 0.6rem;
+        }
+
+        h2::before {
+            content: "◆";
+            color: #5f9ef0;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #cfe2ff;
+            margin: 1.6rem 0 0.8rem 0;
+            display: flex;
+            align-items: baseline;
+        }
+
+        h3 span.section-tag {
+            background: #2e3b4e;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #b9d5ff;
+            margin-left: 0.8rem;
+            letter-spacing: 0.5px;
+            border: 1px solid #4d6a9f;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+            font-weight: 550;
+            margin: 1.2rem 0 0.3rem;
+            color: #e0edff;
+            border-left: 6px solid #4f93e0;
+            padding-left: 0.9rem;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            color: #d3def0;
+            font-size: 1.05rem;
+            font-weight: 350;
+            text-align: justify;
+        }
+
+        strong {
+            color: #ffe484;
+            font-weight: 650;
+            background: linear-gradient(145deg, #2a3442, #1f2632);
+            padding: 0.1rem 0.3rem;
+            border-radius: 6px;
+            border: 1px solid #5c7eb0;
+        }
+
+        .chip {
+            display: inline-block;
+            background: #1e2a3a;
+            border: 1px solid #3e6190;
+            border-radius: 20px;
+            padding: 0.1rem 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #c6dcff;
+            margin: 0 0.2rem;
+        }
+
+        /* 折叠容器 — 细节即层次，全静态details */
+        details {
+            background: #0f131c;
+            margin-bottom: 1.6rem;
+            border-radius: 24px;
+            border: 1px solid #2c3850;
+            transition: all 0.1s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        details[open] {
+            background: #141b26;
+            border-color: #5980c0;
+            box-shadow: 0 4px 16px rgba(0,80,200,0.2);
+        }
+
+        summary {
+            background: #1d2532;
+            padding: 1.2rem 1.8rem;
+            border-radius: 24px;
+            font-size: 1.7rem;
+            font-weight: 660;
+            color: #e7efff;
+            cursor: default;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 2px solid transparent;
+            transition: 0.1s;
+            letter-spacing: -0.3px;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::before {
+            content: "📐";
+            font-size: 1.9rem;
+            margin-right: 0.3rem;
+        }
+
+        details[open] summary {
+            background: #1f2a3c;
+            border-bottom: 2px solid #3b82f6;
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* 二级折叠（小节） */
+        .sub-details {
+            margin: 0.8rem 1.8rem 1.8rem 1.8rem;
+            background: #0f151e;
+            border-left: 6px solid #2a4a78;
+            border-radius: 16px;
+        }
+
+        .sub-details summary {
+            background: #1a212e;
+            padding: 0.9rem 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 550;
+            border-radius: 16px;
+            color: #d6e6ff;
+        }
+
+        .sub-details summary::before {
+            content: "⚙️";
+            font-size: 1.3rem;
+        }
+
+        .sub-details[open] summary {
+            background: #1f2c40;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .card-content {
+            padding: 1.6rem 2rem;
+        }
+
+        /* 标签网格 — 直观术语 */
+        .term-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin: 1.2rem 0;
+        }
+
+        .term-tag {
+            background: #19232e;
+            border: 1px solid #3f6190;
+            color: #b5dcff;
+            border-radius: 40px;
+            padding: 0.3rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 480;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-badge {
+            background: #212d40;
+            display: inline-block;
+            padding: 0.1rem 0.7rem;
+            border-radius: 20px;
+            color: #ffd966;
+            border: 1px solid #c8a43e;
+            font-size: 0.9rem;
+            margin: 0 0.2rem;
+        }
+
+        hr {
+            margin: 2rem 0;
+            border: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #2a3c58, #5080c0, #2a3c58);
+        }
+
+        .footer-quote {
+            margin-top: 3rem;
+            background: #0d121b;
+            padding: 2rem;
+            border-radius: 30px;
+            border-top: 6px solid #3f6eb0;
+            color: #baceff;
+            font-style: italic;
+        }
+
+        /* 代码内联风格（纯静态） */
+        .inline-code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #1d2530;
+            color: #ffb87c;
+            padding: 0.1rem 0.4rem;
+            border-radius: 8px;
+            border: 1px solid #7a5f3c;
+        }
+
+        @media (max-width: 700px) {
+            .document-matrix { padding: 1.8rem 1rem; }
+            h1 { font-size: 2rem; }
+            summary { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="document-matrix">
+
+    <!-- 主标题——硬核呈现 -->
+    <h1>⚡ 计算机图形学全面技术解析<br>〈 从2D光栅到3D神经渲染 〉</h1>
+
+    <!-- █ 摘要 · 学科总览 █ 静态卡片 + 关键指标 -->
+    <div class="meta-abstract">
+        <h2 style="border-bottom: none; margin-bottom: 0.3rem; border-left: 8px solid #ffe570; padding-left: 1.2rem;">📌 摘要</h2>
+        <p style="font-size: 1.1rem; font-weight: 350;">计算机图形学作为计算机科学的重要分支，是一门研究如何利用计算机技术生成、处理和显示图形图像的学科，其核心在于使用数学算法将二维或三维形体转化为计算机图形。本报告全面梳理了计算机图形学的技术体系，涵盖2D和3D图形学的核心内容，深入分析了绘制算法、坐标变换、MVP矩阵、着色器技术、渲染管线等关键技术。研究表明，计算机图形学从1950年代的被动式图形显示发展到2025年的AI驱动渲染，经历了六个重要发展阶段。当前，<strong>光线追踪硬件加速</strong>、<strong>基于物理的渲染（PBR）</strong>和<strong>AI神经网络渲染</strong>成为推动图形学发展的三大核心技术。在应用层面，计算机图形学已广泛渗透到游戏开发、虚拟现实、CAD设计、科学可视化等领域，2025年全球VR头显出货量预计达2860万台，AI驱动的CAD工具使设计效率提升85%。技术深度方面，图形学融合了线性代数、微积分、光学等多学科理论基础，现代GPU架构已从1999年的5700万晶体管发展到2025年的920亿晶体管，着色器数量从16个增长到超过21000个。</p>
+        <div class="term-grid">
+            <span class="term-tag">#光线追踪硬件</span>
+            <span class="term-tag">#PBR 能量守恒</span>
+            <span class="term-tag">#AI 神经渲染</span>
+            <span class="term-tag">#MVP矩阵</span>
+            <span class="term-tag">#着色器</span>
+            <span class="term-tag">#920亿晶体管</span>
+        </div>
+    </div>
+
+    <!-- ============ 第一部分：总论与概述 ============ -->
+    <details open>
+        <summary>一、计算机图形学总论与概述</summary>
+        <div style="padding: 1.2rem 2rem 2rem;">
+            <!-- 1.1 子折叠 -->
+            <details class="sub-details" open>
+                <summary>1.1 学科定义与研究范畴</summary>
+                <div class="card-content">
+                    <p><strong>计算机图形学（Computer Graphics，简称CG）</strong> 是一门研究如何利用计算机技术生成、处理和显示图形图像的学科，其本质是使用数学算法将二维或三维形体转化为计算机图形的科学。作为生成虚拟世界的基础技术，计算机图形学能够将真实世界的对象物体在相应的三维虚拟世界中重构，并保存其部分物理属性，通过逼真的计算机图形构筑出以假乱真的虚拟世界，使使用者产生身临其境的感觉。</p>
+                    <p>从技术构成来看，计算机图形学的<strong>基本元素</strong>主要包括四个核心方面：建模（表示选择、几何处理）、渲染（几何变换、可见性、光的模拟）、交互（输入输出设备、工具）和动画（逼真角色、自然现象及其交互）。这四个元素相互关联，共同构成了计算机图形学的完整技术体系。</p>
+                    <p><strong>跨学科特征</strong>：线性代数是计算机图形学最重要的数学工具，包括矩阵运算、向量空间、特征值等；光学原理为光照模型和渲染算法提供理论支撑，材料科学为材质属性的真实感模拟奠定了基础。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>1.2 发展历程与技术演进</summary>
+                <div class="card-content">
+                    <p><strong>六个重要阶段</strong>：1950年代开创（被动式图形，MIT旋风I号）；1960年代快速发展（Sketchpad，Sutherland，Bézier曲线）；1970年代光栅化时代（光反射模型，Phong光照模型）；1980年代真实感渲染（光线跟踪，辐射度）；1990-2000硬件加速（GPU诞生，可编程着色器）；2000至今可编程管线及AI驱动（Vulkan/DX12，RTX，DLSS）。</p>
+                    <p>1962年Ivan E. Sutherland发表“Sketchpad：一个人机交互通信的图形系统”，首次使用<em>Computer Graphics</em>术语。1975年Phong提出著名光照模型。1999年NVIDIA发布GeForce 256，首次提出GPU概念。2018年实时光线追踪（RTX）开启混合渲染新时代。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>1.3 技术发展现状与趋势</summary>
+                <div class="card-content">
+                    <p>2025年处于<strong>AI驱动的智能化转型期</strong>，视觉大模型参数达数千亿，多模态处理。三大支柱：光线追踪硬件化（RT Core）、PBR成为标准渲染范式、AI神经网络渲染（NVIDIA RTX神经网络渲染技术，DLSS 4，最高8倍性能提升）。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>1.4 学科地位与影响</summary>
+                <div class="card-content">
+                    <p>SIGGRAPH会议是世界上规模最大的专业会议，1997年参会达48700人。图形学标准化（ANSI、ISO，CGI、CGM、GKS、PHIGS）推动产业发展。从特效市场到数字孪生，图形学成为数字经济的核心驱动。</p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <!-- ============ 第二部分：2D图形学核心技术 ============ -->
+    <details open>
+        <summary>二、2D图形学核心技术</summary>
+        <div style="padding: 1.2rem 2rem 2rem;">
+            <details class="sub-details" open>
+                <summary>2.1 基础图形元素绘制算法</summary>
+                <div class="card-content">
+                    <p><strong>Bresenham直线算法</strong> (1965) — 整数加法与误差修正，避免浮点运算。主轴选择策略，整数型误差项e。</p>
+                    <p><strong>中点Bresenham画圆</strong>：八分法对称，整数判别式。<strong>椭圆及其他二次曲线</strong>同样采用整数增量绘图框架。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>2.2 光栅化原理与多边形填充</summary>
+                <div class="card-content">
+                    <p><strong>光栅化</strong>：判断像素是否在图形内。三角形填充常用<strong>叉乘法</strong>（符号一致）。<strong>扫描线算法</strong>：利用奇偶性确定填充区间，支持复杂多边形。现代GPU并行化光栅化，深度测试、模板混合。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>2.3 坐标变换与几何操作</summary>
+                <div class="card-content">
+                    <p><strong>仿射变换</strong> = 线性变换 + 平移。缩放、旋转、平移，齐次坐标统一为3×3矩阵。旋转矩阵正交，缩放分为一致缩放/差值缩放。齐次坐标系统用三维向量表示2D点。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>2.4 裁剪算法与优化策略</summary>
+                <div class="card-content">
+                    <p><strong>Sutherland-Hodgman逐边裁剪法</strong>：窗口每条边裁剪多边形，四种位置关系。通用凸凹多边形，任意凸窗口。<strong>Cohen-Sutherland编码裁剪</strong>：快速判断完全可见/不可见。现代GPU硬件裁剪、视锥体裁剪。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>2.5 反走样技术与图像质量</summary>
+                <div class="card-content">
+                    <p><strong>反走样</strong>：SSAA、MSAA、FXAA、TAA。边缘检测+颜色混合，通过低通滤波平滑锯齿。现代GPU支持硬件MSAA、CSAA、EQAA。AI抗弯技术崭露头角。</p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <!-- ============ 第三部分：3D图形学核心技术 ============ -->
+    <details open>
+        <summary>三、3D图形学核心技术</summary>
+        <div style="padding: 1.2rem 2rem 2rem;">
+            <details class="sub-details" open>
+                <summary>3.1 MVP矩阵变换体系</summary>
+                <div class="card-content">
+                    <p><strong>MVP = Model (模型空间→世界) × View (世界→相机) × Projection (相机→裁剪)</strong>。模型矩阵负责位置/旋转/缩放；视图矩阵由相机位置、目标、上方向定义；投影矩阵分为透视投影（近大远小）与正交投影。组合顺序 P×V×M，齐次坐标4×4矩阵。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>3.2 着色器技术架构</summary>
+                <div class="card-content">
+                    <p><strong>着色器</strong> (GLSL) ：顶点着色器（坐标变换，法线，gl_Position）；片段着色器（像素颜色，纹理采样）；几何着色器（生成图元、粒子、LOD）；GLSL精度限定符 (highp/mediump)。可编程管线颠覆固定功能。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>3.3 现代渲染管线架构</summary>
+                <div class="card-content">
+                    <p>几何处理 → 光栅化 → 片段处理。可编程着色器、曲面细分、几何着色器。光线追踪硬件RT Core，混合渲染。MRT多渲染目标，延迟渲染。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>3.4 光照模型与材质系统</summary>
+                <div class="card-content">
+                    <p><strong>Phong模型</strong>：环境+漫反射+镜面反射；Blinn-Phong使用半角向量简化。<strong>PBR</strong>：基于微表面模型、能量守恒、物理BRDF（GGX法线分布，菲涅尔Schlick近似）。金属度/粗糙度工作流。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>3.5 GPU架构与并行计算</summary>
+                <div class="card-content">
+                    <p>1999 GeForce 256 (5700万晶体管) → 2025 Blackwell (920亿晶体管，21000+着色器)。统一着色器架构，张量核心(Tensor Core)，RT Core。HBM2e显存(48GB)。SIMT，并行处理。AI加速器驱动DLSS。</p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <!-- ============ 第四部分：应用场景与领域分析 ============ -->
+    <details open>
+        <summary>四、应用场景与领域分析</summary>
+        <div style="padding: 1.2rem 2rem 2rem;">
+            <details class="sub-details" open>
+                <summary>4.1 游戏开发技术生态</summary>
+                <div class="card-content">
+                    <p><strong>2025神经网络渲染</strong>：RTX神经网络渲染额外生成3帧，8倍性能提升。Unity/Unreal合作跨平台；Nanite植被系统；腾讯MagicDawn AI光照烘焙(几天→几小时)；AMD FSR 4 (RDNA 4) AI神经渲染，4.9倍性能飞跃。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>4.2 虚拟现实与增强现实应用</summary>
+                <div class="card-content">
+                    <p>2025年VR头显预计出货2860万台，AR 2340万台。Micro OLED+Pancake光学；Meta Ray-Ban显示眼镜；MR混合现实；文旅元宇宙（敦煌AR、工体元宇宙）。5G-A网络10Gbps，1ms延迟。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>4.3 计算机辅助设计（CAD）技术革新</summary>
+                <div class="card-content">
+                    <p>AI驱动CAD设计效率↑85%。ARES Commander AI助手A3；Zixel集成DeepSeek；新迪天工CAD 2025，AI设计引擎；Text-to-CAD；闪设云端平台。支持DWG、SolidWorks等。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>4.4 科学可视化与数据展示</summary>
+                <div class="card-content">
+                    <p>ECharts-GL三维可视化，AI自动选择图表；基因组浏览器；AR增强手术导航；PCA降维聚合；实时分析，医学成像。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>4.5 新兴应用领域探索</summary>
+                <div class="card-content">
+                    <p>时尚元宇宙（广州时装周，4K 3D VR，裸眼3D）；数字孪生文化遗产；工业维护AR；自动驾驶环境感知；AI生成内容革新创意产业。</p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <!-- ============ 第五部分：技术深度分层解析 ============ -->
+    <details open>
+        <summary>五、技术深度分层解析</summary>
+        <div style="padding: 1.2rem 2rem 2rem;">
+            <details class="sub-details" open>
+                <summary>5.1 理论基础与数学框架</summary>
+                <div class="card-content">
+                    <p><strong>线性代数</strong>：矩阵变换、向量空间；计算几何、微分几何；微积分与数值方法（插值拟合）；概率统计（蒙特卡洛）；光学物理（反射、折射）。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>5.2 算法设计与实现优化</summary>
+                <div class="card-content">
+                    <p>数据结构：顶点缓冲区、索引缓冲区、AoS/SoA。视锥体裁剪、背面剔除、LOD。着色器优化（减少纹理访问，分支预测）。并行算法（数据并行，任务并行）。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>5.3 硬件架构与系统集成</summary>
+                <div class="card-content">
+                    <p>统一着色器，RT Core，张量核心，内存层次：全局/共享/寄存器。PCIe，UMA统一内存。软件栈：驱动、API、中间件、应用。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>5.4 图形API与跨平台技术</summary>
+                <div class="card-content">
+                    <p>OpenGL、Vulkan（低开销）、DirectX 12、Metal。<strong>WebGPU</strong>跨平台、低开销、并行计算。实例化渲染、计算着色器、异步计算。OpenPBR、MaterialX标准化。</p>
+                </div>
+            </details>
+            <details class="sub-details" open>
+                <summary>5.5 前沿技术与发展趋势</summary>
+                <div class="card-content">
+                    <p>光线追踪硬件化、AI驱动渲染（DLSS 4）、PBR成熟、量子计算萌芽、边缘/分布式渲染、绿色计算。RT Core加速相交检测。</p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <!-- ██ 结语：未来之路 ██ 用厚重卡片呈现 -->
+    <hr>
+    <div style="background: #101826; border-radius: 32px; padding: 2rem; margin-top: 1.5rem; border: 1px solid #3f6390;">
+        <h2 style="border-bottom: none; color: #ffea9f;">◈ 结语 · 智能图形纪元</h2>
+        <p style="font-size: 1.1rem;">计算机图形学作为连接数字世界与现实世界的桥梁，在过去七十多年的发展历程中经历了从被动显示到智能生成的巨大变革。从1950年MIT旋风I号计算机的第一台图形显示器，到2025年AI驱动的神经网络渲染技术，计算机图形学始终站在技术创新的前沿。</p>
+        <p>当前，<strong>三大技术趋势</strong>——光线追踪硬件普及、PBR成熟、AI深度融合——正重塑行业架构。预计2025年底全球VR/AR设备出货量超5000万台，AI CAD效率提升85%。GPU已进化为920亿晶体管、超21000个着色器的超级平台。未来AI与图形学深度融合、实时渲染接近电影级、WebGPU跨平台、元宇宙数字孪生等新兴场景将不断涌现。</p>
+        <div class="term-grid" style="margin-top: 1.8rem;">
+            <span class="stat-badge">RTX 神经网络渲染</span>
+            <span class="stat-badge">8倍性能提升</span>
+            <span class="stat-badge">PBR · 微表面</span>
+            <span class="stat-badge">DLSS 4</span>
+            <span class="stat-badge">920亿晶体管</span>
+            <span class="stat-badge">WebGPU</span>
+        </div>
+    </div>
+
+    <!-- 最后的详细讲解区块 — 加入深度知识标签（完全静态）-->
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; justify-content: space-between;">
+        <div style="background: #0e141e; border-radius: 24px; padding: 1.6rem; flex: 1 1 280px; border-top: 5px solid #6888c0;">
+            <h4 style="margin-top: 0;">🎯 绘制算法精粹</h4>
+            <p style="margin-bottom: 0.4rem;"><span class="inline-code">Bresenham</span> 整数误差项 · <span class="inline-code">中点圆</span> 八分法 · 扫描线填充</p>
+            <p><strong>Sutherland-Hodgman</strong> 逐边裁剪，Cohen-Sutherland 区域编码。</p>
+        </div>
+        <div style="background: #0e141e; border-radius: 24px; padding: 1.6rem; flex: 1 1 280px; border-top: 5px solid #6888c0;">
+            <h4 style="margin-top: 0;">🧬 3D变换核心</h4>
+            <p>MVP: 模型·视图·投影。透视投影矩阵，齐次坐标。着色器：顶点、片段、几何。GLSL精度。</p>
+            <p><strong>PBR BRDF</strong>: GGX + 菲涅尔，能量守恒。</p>
+        </div>
+        <div style="background: #0e141e; border-radius: 24px; padding: 1.6rem; flex: 1 1 280px; border-top: 5px solid #6888c0;">
+            <h4 style="margin-top: 0;">🧠 2025 硬件突破</h4>
+            <p>RT Core 光线相交加速，Tensor Core AI 计算，Blackwell 920亿晶体管。统一着色器21000+核心。</p>
+            <p>VR: 2860万台，AR: 2340万台，Pancake光学。</p>
+        </div>
+    </div>
+
+    <!-- 文档完整内容声明：已将全部文本细节呈现在各折叠块。无动态，纯静态层次 -->
+    <div style="margin-top: 2.2rem; font-size: 0.9rem; color: #9eb0d5; border-top: 1px solid #2f4260; padding-top: 1.5rem; text-align: center;">
+        ⚡ 计算机图形学全面技术解析 · 从2D到3D理论基础与实践应用 · 本页完整收录报告全文，含摘要、六阶段、MVP、光线追踪、PBR、AI渲染、CAD/VR等全部内容。静态语义折叠，层级清晰。内容由AI生成，仅作技术展示。
+    </div>
+</div>
+<!-- 结束 document-matrix -->
+</body>
+</html>
