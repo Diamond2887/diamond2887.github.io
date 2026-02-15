@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 8–25 演进全览 · 层级知识库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #f1f4f9;
+            color: #1e2b3c;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px -12px rgba(0,20,40,0.25);
+            padding: 2rem 1.8rem;
+        }
+        h1 {
+            font-size: 2.6rem;
+            font-weight: 600;
+            background: linear-gradient(145deg, #0b2b4e, #1f5e8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.02em;
+            border-left: 6px solid #2b7fc2;
+            padding-left: 1.4rem;
+        }
+        .subhead {
+            font-size: 1.1rem;
+            color: #2c5779;
+            margin-bottom: 2.5rem;
+            margin-top: 0.25rem;
+            padding-left: 2rem;
+            font-weight: 350;
+            border-bottom: 1px dashed #a0c2da;
+            padding-bottom: 0.6rem;
+        }
+        /* 主折叠卡片 */
+        .master-card {
+            margin-bottom: 1.5rem;
+            border-radius: 1.4rem;
+            background: white;
+            box-shadow: 0 6px 14px rgba(0,18,36,0.08);
+            transition: all 0.18s;
+            border: 1px solid #e7edf4;
+            overflow: hidden;
+        }
+        .master-card > summary {
+            background: #f9fcff;
+            padding: 1.2rem 2rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #113755;
+            cursor: pointer;
+            list-style: none;
+            border-bottom: 1px solid transparent;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .master-card > summary::-webkit-details-marker {
+            display: none;
+        }
+        .master-card > summary::before {
+            content: "📘";
+            font-size: 1.8rem;
+            margin-right: 10px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+        .master-card[open] > summary {
+            background: #e2effa;
+            border-bottom: 1px solid #c0d9ee;
+            border-radius: 1.4rem 1.4rem 0 0;
+        }
+        .master-card[open] > summary::before {
+            content: "📖";
+        }
+        .card-content {
+            padding: 1.8rem 2rem 2rem;
+            background: #ffffffd9;
+        }
+        /* 二级折叠 (小节) */
+        .section-card {
+            margin: 1.2rem 0 0.8rem 0;
+            border-radius: 1.2rem;
+            background: #f6fafd;
+            border: 1px solid #dbe8f2;
+            overflow: hidden;
+        }
+        .section-card > summary {
+            background: #edf4fa;
+            padding: 0.9rem 1.8rem;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #134872;
+            cursor: pointer;
+            list-style: none;
+            border-left: 5px solid #2f7fb5;
+            display: flex;
+            align-items: center;
+        }
+        .section-card > summary::-webkit-details-marker {
+            display: none;
+        }
+        .section-card > summary::before {
+            content: "▹";
+            font-size: 1.6rem;
+            margin-right: 10px;
+            color: #1f6392;
+        }
+        .section-card[open] > summary::before {
+            content: "▿";
+        }
+        .section-card[open] > summary {
+            background: #e3f0fa;
+            border-bottom: 1px solid #bed6ec;
+        }
+        .section-inner {
+            padding: 1.4rem 1.8rem 1.8rem;
+        }
+        /* 三级标题（直接显示，不折叠） */
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+            color: #0a3b5c;
+            border-bottom: 1px dotted #b6cfdf;
+            padding-bottom: 0.3rem;
+        }
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.3rem 0;
+            color: #1b4e72;
+        }
+        p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #203a4c;
+        }
+        ul, ol {
+            margin: 0.5rem 0 1rem 1.8rem;
+        }
+        li {
+            margin-bottom: 0.4rem;
+        }
+        /* 代码块 */
+        pre {
+            background: #1e2f3f;
+            color: #e2eef9;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 1.2rem 0;
+            box-shadow: inset 0 0 0 1px #30495f;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: #eef3f8;
+            color: #1c4b70;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+        }
+        /* 标注、高亮 */
+        .badge {
+            background: #1d70b8;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-left: 0.8rem;
+            letter-spacing: 0.3px;
+            vertical-align: middle;
+        }
+        .highlight {
+            background: #e1f0fa;
+            border-left: 4px solid #0077be;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.8rem;
+            margin: 1rem 0;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #bedaf0, transparent);
+            margin: 1.2rem 0;
+        }
+        .footer-note {
+            margin-top: 2.8rem;
+            text-align: right;
+            font-size: 0.9rem;
+            color: #5b7e9b;
+            border-top: 1px dashed #b8cbd9;
+            padding-top: 1rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <h1>☕ Java 8 → 25 版本演进</h1>
+    <div class="subhead">长期支持版本 · 模块化 · 虚拟线程 · AI原生 · 全部内嵌详解</div>
+
+    <!-- 第一章 概述 -->
+    <details class="master-card" open>
+        <summary>一、Java版本演进概述与学习路径</summary>
+        <div class="card-content">
+            <details class="section-card">
+                <summary>1.1 发布时间线与LTS策略 (2014-2025)</summary>
+                <div class="section-inner">
+                    <p>Java 8 (2014.3) 首个LTS，Lambda、Stream；Java 9 (2017.9) 模块化；Java 11 (2018.9) LTS；Java 17 (2021.9) LTS；Java 21 (2023.9) LTS；<strong>Java 25 (2025.9) LTS</strong>，支持至2033年。每6个月一次快速发布，LTS每2-3年一次。</p>
+                    <p>Java 25包含18项JEP，包括基本类型模式匹配、模块导入、紧凑对象头、作用域值正式版等。</p>
+                </div>
+            </details>
+            <details class="section-card">
+                <summary>1.2 学习新特性的重要性与策略</summary>
+                <div class="section-inner">
+                    <p>Lambda + Stream 提升集合处理效率；虚拟线程使吞吐量提升10倍；紧凑对象头内存减少20%。<br>建议渐进式：先掌握Java 8函数式，再逐版本学习预览特性，最后聚焦Java 25 AI/云原生增强。</p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <!-- 第二章 Java 8 核心 -->
+    <details class="master-card">
+        <summary>二、Java 8 核心特性详解</summary>
+        <div class="card-content">
+            <details class="section-card">
+                <summary>2.1 Lambda表达式与函数式编程</summary>
+                <div class="section-inner">
+                    <p><code>(参数) -> {代码}</code> 简化匿名类：</p>
+                    <pre><code>new Thread(() -> System.out.println("Thread")).start();</code></pre>
+                    <h4>四大核心函数式接口</h4>
+                    <ul>
+                        <li><strong>Consumer&lt;T&gt;</strong>：void accept(T t) —— 打印</li>
+                        <li><strong>Supplier&lt;T&gt;</strong>：T get() —— 产生对象</li>
+                        <li><strong>Function&lt;T,R&gt;</strong>：R apply(T) —— 转换</li>
+                        <li><strong>Predicate&lt;T&gt;</strong>：boolean test(T) —— 过滤</li>
+                    </ul>
+                    <pre><code>// 方法引用
+List.of(1,2,3).forEach(System.out::println);</code></pre>
+                </div>
+            </details>
+            <details class="section-card">
+                <summary>2.2 Stream API 集合革新</summary>
+                <div class="section-inner">
+                    <p>声明式处理：filter/map/collect。并行流 <code>parallelStream()</code> 利用多核。</p>
+                    <pre><code>List&lt;String&gt; words = Arrays.asList("Java", "Python");
+List&lt;String&gt; result = words.stream()
+    .filter(s -> s.length() > 3)
+    .map(String::toUpperCase)
+    .sorted()
+    .collect(Collectors.toList());</code></pre>
+                    <p><code>Collectors.groupingBy</code> 分组统计</p>
+                </div>
+            </details>
+            <details class="section-card">
+                <summary>2.3 Optional 空值安全</summary>
+                <div class="section-inner">
+                    <p>避免 NPE：<code>Optional.ofNullable()</code>、<code>orElse()</code>、<code>ifPresent()</code>。</p>
+                    <pre><code>Optional&lt;User&gt; user = Optional.ofNullable(getUser());
+String street = user.map(User::getAddress)
+                    .map(Address::getStreet)
+                    .orElse("No street");</code></pre>
+                </div>
+            </details>
+            <details class="section-card">
+                <summary>2.4 全新日期时间API</summary>
+                <div class="section-inner">
+                    <p><code>java.time</code> 包：LocalDate, LocalTime, LocalDateTime, Instant, Duration, Period。</p>
+                    <pre><code>DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+LocalDate today = LocalDate.now();
+LocalDate nextWeek = today.plusDays(7);</code></pre>
+                </div>
+            </details>
+            <details class="section-card">
+                <summary>2.5 接口增强：default/static</summary>
+                <div class="section-inner">
+                    <pre><code>interface Vehicle {
+    void run();
+    default void honk() { System.out.println("Beep"); }
+    static int add(int a, int b) { return a + b; }
+}</code></pre>
+                </div>
+            </details>
+            <details class="section-card">
+                <summary>2.6 重复注解 & 类型注解</summary>
+                <div class="section-inner">
+                    <p>使用 <code>@Repeatable</code> 实现重复注解，类型注解可用于泛型等。</p>
+                </div>
+            </details>
+        </div>
+    </details>
+
+    <!-- 第三章 Java 9-17 -->
+    <details class="master-card">
+        <summary>三、Java 9 - 17 特性演进</summary>
+        <div class="card-content">
+            <details class="section-card"><summary>3.1 Java 9：模块化(JPMS) + JShell</summary><div class="section-inner"><p>module-info.java 定义模块；JShell REPL；集合工厂方法 <code>List.of()</code>；Stream takeWhile/dropWhile。</p></div></details>
+            <details class="section-card"><summary>3.2 Java 10：局部变量类型推断(var)</summary><div class="section-inner"><pre><code>var list = new ArrayList&lt;String&gt;();</code></pre><p>AppCDS 共享类数据，G1优化。</p></div></details>
+            <details class="section-card"><summary>3.3 Java 11 (LTS) ：HTTP Client标准化</summary><div class="section-inner"><pre><code>HttpClient client = HttpClient.newHttpClient();
+client.sendAsync(request, BodyHandlers.ofString());</code></pre><p>ZGC 低延迟垃圾回收，String新方法(isBlank, repeat)。</p></div></details>
+            <details class="section-card"><summary>3.4 Java 12-14：Switch表达式、文本块预览、Record预览</summary><div class="section-inner"><p>Switch表达式使用 <code>-></code> 和 <code>yield</code>；文本块 <code>"""</code> 多行字符串；Record 简化POJO。</p></div></details>
+            <details class="section-card"><summary>3.5 Java 15-17：密封类、模式匹配、Records正式版</summary><div class="section-inner"><p>密封类 <code>sealed</code> 限制继承；<code>instanceof</code> 模式匹配；Java 17 LTS 密封类正式。</p></div></details>
+        </div>
+    </details>
+
+    <!-- 第四章 Java 18-25 -->
+    <details class="master-card">
+        <summary>四、Java 18-25 现代特性与前沿</summary>
+        <div class="card-content">
+            <details class="section-card"><summary>4.1 Java 18-20：简单Web服务器、虚拟线程预览、作用域值预览</summary><div class="section-inner"><p>jwebserver 命令行工具；虚拟线程 (Project Loom) 百万级并发；结构化并发孵化。</p></div></details>
+            <details class="section-card"><summary>4.2 Java 21 (LTS)：虚拟线程正式发布 🧵</summary><div class="section-inner"><pre><code>try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    executor.submit(() -> { Thread.sleep(10); return i; });
+}</code></pre><p>序列集合(Sequenced Collections)，switch模式匹配增强。</p></div></details>
+            <details class="section-card"><summary>4.3 Java 22-24：字符串模板、外部函数&内存API、结构化并发正式</summary><div class="section-inner"><p>字符串模板 <code>$\"Age: ${age}\"</code>；外部函数API (FFM) 替代JNI；结构化并发管理任务作用域。</p></div></details>
+            <details class="section-card"><summary>4.4 Java 25 (LTS) AI原生 & 性能优化 ⚡</summary><div class="section-inner">
+                <p><span class="badge">18项JEP</span></p>
+                <ul>
+                    <li><strong>基本类型模式匹配</strong> (JEP 507)：switch 可匹配 int/double 等</li>
+                    <li><strong>模块导入声明</strong> (JEP 511)：<code>import module java.base;</code></li>
+                    <li><strong>紧凑源文件+实例main方法</strong> (JEP 512)：<code>void main() { ... }</code></li>
+                    <li><strong>灵活构造函数体</strong> (JEP 513)：super()前可校验参数</li>
+                    <li><strong>紧凑对象头</strong> (JEP 519)：64位对象头压缩至64位，内存减少~20%</li>
+                    <li><strong>作用域值正式版</strong> (JEP 506)：替代ThreadLocal，更轻量安全</li>
+                    <li><strong>向量API (孵化)</strong> 加速AI推理</li>
+                </ul>
+                <pre><code>// 基本类型模式匹配
+Object obj = 42;
+switch (obj) {
+    case int i -> System.out.println("int: " + i);
+    default -> ...
+}</code></pre>
+            </div></details>
+        </div>
+    </details>
+
+    <!-- 第五章 实战案例与最佳实践 -->
+    <details class="master-card">
+        <summary>五、实战案例 · 性能对比 · 迁移策略</summary>
+        <div class="card-content">
+            <details class="section-card"><summary>5.1 性能飞跃：Java8→25实测</summary><div class="section-inner"><p>Java 17比8提升10-30%；虚拟线程使订单TPS从5000到30000；紧凑对象头减少20%内存；AOT编译启动提速30%</p></div></details>
+            <details class="section-card"><summary>5.2 企业级案例：电商/金融/云原生</summary><div class="section-inner"><p>电商：虚拟线程+作用域值，TPS提升4.7倍；金融：兼容层过渡，jlink定制运行时；云原生：结构化并发简化服务编排。</p></div></details>
+            <details class="section-card"><summary>5.3 开发效率最佳实践</summary><div class="section-inner"><p>var 合理使用，模式替代强制转换，Record承载数据，密封类实现状态模式。IDE配置JFR分析。</p></div></details>
+            <details class="section-card"><summary>5.4 系统性性能调优</summary><div class="section-inner"><p>ZGC/Shenandoah 选择，JFR监控，JMH基准测试。支付系统并发提升8倍，服务器减少75%。</p></div></details>
+            <details class="section-card"><summary>5.5 迁移策略与风险管控</summary><div class="section-inner"><p>分三阶段：评估(2-3月)→试点(3-4月)→核心迁移(6-8月)。灰度发布，建立基准测试，备好回滚。</p></div></details>
+        </div>
+    </details>
+
+    <!-- 第六章 学习资源 -->
+    <details class="master-card">
+        <summary>六、学习资源 & 持续进阶</summary>
+        <div class="card-content">
+            <details class="section-card"><summary>6.1 官方文档 & JEP</summary><div class="section-inner"><p>Oracle docs, OpenJDK jdk.java.net, JEP列表。Java 25 API文档在线。</p></div></details>
+            <details class="section-card"><summary>6.2 经典书籍</summary><div class="section-inner"><p>《Java 8实战》《Effective Java 3rd》《深入理解Java虚拟机》《Java并发编程实战》</p></div></details>
+            <details class="section-card"><summary>6.3 在线平台</summary><div class="section-inner"><p>Coursera普林斯顿专项，edX哈佛入门，国内慕课网/极客时间/B站免费教程。</p></div></details>
+            <details class="section-card"><summary>6.4 实战项目建议</summary><div class="section-inner"><p>初级：Stream处理CSV；中级：虚拟线程实时分析；高级：向量API推荐系统。</p></div></details>
+            <details class="section-card"><summary>6.5 持续学习建议</summary><div class="section-inner"><p>关注Oracle博客、OpenJDK邮件列表、社区分享，亲手重构老代码使用新特性。</p></div></details>
+        </div>
+    </details>
+
+    <!-- 补充特性展示：一些代码示例聚合 -->
+    <div style="margin-top: 2rem; background: #e6f0f9; border-radius: 1.4rem; padding: 1rem 2rem 1.5rem;">
+        <h3 style="border-bottom: none; display: flex; align-items: center;">✨ 新特性速览 (代码片段) </h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
+            <div style="flex:1; min-width:200px;">
+                <h4>Java 8 Stream</h4>
+                <pre><code>int sum = IntStream.range(0,10)
+    .filter(n -> n%2==0).sum();</code></pre>
+            </div>
+            <div style="flex:1; min-width:200px;">
+                <h4>Java 17 密封类</h4>
+                <pre><code>sealed class Shape permits Circle, Rectangle { }</code></pre>
+            </div>
+            <div style="flex:1; min-width:200px;">
+                <h4>Java 21 虚拟线程</h4>
+                <pre><code>Thread.startVirtualThread(() -> {
+    System.out.println("virtual");
+});</code></pre>
+            </div>
+            <div style="flex:1; min-width:200px;">
+                <h4>Java 25 紧凑main</h4>
+                <pre><code>void main() {
+    System.out.println("Hello Java 25");
+}</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全文总结 -->
+    <div class="highlight">
+        <p style="margin-bottom:0;">📌 <strong>Java 8到25演进核心</strong>：函数式 (8) → 模块化 (9) → 局部变量推断 (10) → HTTP Client (11) → Switch表达式 (12-14) → 密封类/Record (15-17) → 虚拟线程 (21 LTS) → 字符串模板/外部函数 (22-24) → AI原生/紧凑对象头 (25 LTS)。每个版本都带来生产力与性能的提升，建议循序渐进、实战融合。</p>
+    </div>
+
+    <div class="footer-note">
+        内容由 AI 生成 · 基于 Java 8–25 官方JEP与广泛实践 · 完全静态页面 · 无外部链接
+    </div>
+</div>
+</body>
+</html>
