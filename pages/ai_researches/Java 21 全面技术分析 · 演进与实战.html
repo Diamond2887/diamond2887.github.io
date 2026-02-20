@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 21 全面技术分析 · 演进与实战</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #eef2f5;
+            line-height: 1.6;
+            color: #1e293b;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 40px 40px 24px 24px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            overflow: hidden;
+            padding: 40px 45px;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #0b3b5c, #0a6e6f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 0.2rem 0;
+            letter-spacing: -0.5px;
+        }
+        .subhead {
+            font-size: 1.3rem;
+            color: #475569;
+            border-left: 8px solid #1e7b85;
+            padding-left: 24px;
+            margin: 10px 0 40px 0;
+            font-weight: 400;
+        }
+        .version-badge {
+            background: #0b3b5c;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 1rem;
+            display: inline-block;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 14px rgba(7, 89, 133, 0.3);
+        }
+        /* 折叠卡片 */
+        details {
+            background: #ffffff;
+            border-radius: 30px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 20px -8px rgba(0,50,50,0.12);
+            transition: all 0.15s;
+        }
+        details[open] {
+            box-shadow: 0 12px 28px -10px #0a6e6f40;
+            border-color: #b7d6d8;
+        }
+        details summary {
+            font-size: 1.9rem;
+            font-weight: 650;
+            padding: 25px 30px;
+            cursor: pointer;
+            list-style: none;
+            position: relative;
+            background: linear-gradient(0deg, #f9fcff, white);
+            border-radius: 30px;
+            color: #0f3b4a;
+            border: 1px solid transparent;
+        }
+        details[open] summary {
+            border-radius: 30px 30px 0 0;
+            border-bottom: 1px solid #cbd5e1;
+            background: #f7fbfd;
+        }
+        details summary::after {
+            content: "▼";
+            font-size: 1.8rem;
+            position: absolute;
+            right: 35px;
+            top: 22px;
+            color: #1e7b85;
+            transition: transform 0.2s;
+        }
+        details[open] summary::after {
+            transform: rotate(180deg);
+        }
+        /* 三级标题 */
+        h2 {
+            font-size: 1.9rem;
+            margin: 30px 0 16px 0;
+            font-weight: 620;
+            background: linear-gradient(135deg, #144e6b, #2c7a7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom: 3px solid #cbd5e1;
+            padding-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.5rem;
+            margin: 32px 0 12px 0;
+            font-weight: 600;
+            color: #155569;
+            padding-left: 8px;
+            border-left: 12px solid #34989b;
+            padding-top: 6px;
+            padding-bottom: 4px;
+            background: #f0f9fa;
+            border-radius: 0 20px 20px 0;
+            padding-left: 20px;
+        }
+        h4 {
+            font-size: 1.3rem;
+            margin: 24px 0 10px;
+            color: #266d7a;
+            font-weight: 560;
+        }
+        p, li {
+            color: #253c4b;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+        }
+        /* 表格 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 50, 50, 0.08);
+        }
+        th {
+            background: #0b4b5c;
+            color: white;
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 14px 12px;
+            text-align: left;
+        }
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #dbe7ed;
+            background-color: #fdfdfd;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        td:first-child, th:first-child { padding-left: 22px; }
+        td:last-child, th:last-child { padding-right: 22px; }
+        /* 代码块 */
+        pre {
+            background: #1e2a3a;
+            color: #e4f0fb;
+            padding: 22px 26px;
+            border-radius: 28px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 24px 0;
+            box-shadow: inset 0 0 0 1px #3b5266, 0 12px 20px -12px #0a1e2c;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        code {
+            font-family: inherit;
+            background: transparent;
+        }
+        /* 内联代码 */
+        :not(pre) > code {
+            background: #e9f0f5;
+            color: #0c4e5c;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            border: 1px solid #b9d3da;
+        }
+        /* 列表 */
+        ul, ol {
+            padding-left: 30px;
+            margin: 20px 0;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        /* 引用/高亮块 */
+        .insight-box {
+            background: #e3f2f5;
+            border-radius: 30px;
+            padding: 25px 30px;
+            border-left: 12px solid #1e7b85;
+            margin: 28px 0;
+        }
+        .tag {
+            background: #d0e9ed;
+            color: #05424b;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-right: 12px;
+            border: 1px solid #4a9ca5;
+        }
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, #cbd5e1, #ffffff, #cbd5e1);
+            margin: 35px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #62748a;
+            font-size: 0.95rem;
+        }
+        /* 表格增强 */
+        .numeric {
+            font-family: monospace;
+            font-weight: 600;
+        }
+        .feature-compare {
+            background: #f9fbfe;
+        }
+        /* 响应式 */
+        @media (max-width: 700px) {
+            .container { padding: 20px 18px; }
+            details summary { font-size: 1.5rem; }
+            h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <span class="version-badge">✨ LTS 2023 · 革新并发 ✨</span>
+    <h1>Java 21 全面技术分析<br>与版本对比研究报告</h1>
+    <div class="subhead">虚拟线程·结构化并发·分代ZGC·记录模式——Java再定义企业级开发</div>
+    
+    <!-- 第一章 概述与背景 -->
+    <details open>
+        <summary>📘 1. Java 21 版本概述与发布背景</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>1.1 官方发布信息与LTS地位</h3>
+            <p>Java 21 于 <strong>2023年9月19日</strong> 正式发布，是第12个基于六个月发布周期的功能版本。作为最新的长期支持（LTS）版本，Java 21延续了 Java 8、11、17 的LTS传统。Oracle承诺为Java 21提供至少8年的长期支持，支持周期将持续至2031年9月。</p>
+            <p>根据Oracle支持路线图，Java SE 8、11、17、21、25均为LTS版本，每两年发布一次LTS，下一个计划是2027年9月的Java 29。Java 21遵循GPL许可，自2023年9月起Oracle JDK 21在免费使用许可（Oracle No-Fee Terms and Conditions License）下提供。</p>
+            
+            <h3>1.2 主要技术改进概览</h3>
+            <p>Java 21包含15个JDK增强提案（JEPs），涵盖6个预览特性和1个孵化器特性。核心亮点包括：</p>
+            <ul>
+                <li><span class="tag">虚拟线程</span> JEP 444 (正式)</li>
+                <li><span class="tag">结构化并发</span> JEP 453 (预览)</li>
+                <li><span class="tag">作用域值</span> JEP 446 (预览)</li>
+                <li><span class="tag">记录模式</span> JEP 440 (正式)</li>
+                <li><span class="tag">switch模式匹配</span> JEP 441 (正式)</li>
+                <li><span class="tag">字符串模板</span> JEP 430 (预览)</li>
+                <li><span class="tag">无名模式和变量</span> JEP 443 (预览)</li>
+                <li><span class="tag">无名类和实例main方法</span> JEP 445 (预览)</li>
+                <li><span class="tag">分代ZGC</span> JEP 439</li>
+                <li><span class="tag">序列集合</span> JEP 431</li>
+                <li><span class="tag">外部函数与内存API</span> JEP 442 (第三预览)</li>
+                <li><span class="tag">密钥封装机制API (KEM)</span> JEP 452</li>
+            </ul>
+            <p>此外还包括向量API（孵化器）、弃用32位x86端口、安全管理器弃用推进等。</p>
+        </div>
+    </details>
+
+    <!-- 第二章 核心新特性 -->
+    <details open>
+        <summary>⚙️ 2. 核心新特性与功能模块详解</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>2.1 虚拟线程 —— 革命性并发</h3>
+            <p>虚拟线程是JVM管理的轻量级线程，资源开销极低（从2MB → KB级别），可创建数百万个。采用N:M映射模型，阻塞时自动释放载体线程。</p>
+            <div class="insight-box">
+                <p>🔹 <strong>性能提升：</strong> I/O密集型场景吞吐量提升81.6%，处理1万个阻塞任务从11分钟缩短至2.6秒，内存占用降低57%。Telefónica Germany案例：替代平台线程后吞吐量和平均响应时间提升20%。</p>
+            </div>
+            <pre><code>// 创建虚拟线程
+Thread.ofVirtual().start(() -> {
+    System.out.println("虚拟线程: " + Thread.currentThread());
+});
+
+// 使用Executors
+try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    executor.submit(() -> processRequest());
+}</code></pre>
+
+            <h3>2.2 结构化并发 (预览)</h3>
+            <p>通过<code>StructuredTaskScope</code>将并发子任务视为一个单元，自动管理生命周期与错误传播。</p>
+            <pre><code>try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Future&lt;String&gt; user = scope.fork(() -> findUser());
+    Future&lt;Integer&gt; order = scope.fork(() -> fetchOrder());
+    scope.join();
+    scope.throwIfFailed();
+    return new Response(user.resultNow(), order.resultNow());
+}</code></pre>
+
+            <h3>2.3 记录模式 & switch模式匹配 (正式)</h3>
+            <p>记录模式解构record组件，可与嵌套模式、守卫模式结合。</p>
+            <pre><code>record Point(int x, int y) {}
+record Rectangle(String name, Point topLeft, Point bottomRight) {}
+
+if (obj instanceof Rectangle(String name, Point(int x1,int y1), Point(int x2,int y2))) {
+    System.out.println(name + " width: " + (x2-x1));
+}
+
+// switch 表达式 + 类型模式
+return switch (obj) {
+    case Integer i when i > 0 -> "positive int " + i;
+    case String s -> "string " + s;
+    case null -> "null value";
+    default -> "other";
+};</code></pre>
+
+            <h3>2.4 字符串模板 (预览)</h3>
+            <pre><code>String name = "Alice";
+int age = 30;
+String message = STR."Hello, \{name}! You are \{age} years old.";
+// 多行文本块
+String html = STR."""
+    <html>
+        <body>\{message}</body>
+    </html>
+    """;</code></pre>
+
+            <h3>2.5 序列集合</h3>
+            <p>统一有序集合API：<code>SequencedCollection</code>, <code>SequencedSet</code>, <code>SequencedMap</code>。</p>
+            <pre><code>SequencedMap&lt;String, Integer&gt; map = ConcurrentHashMap.newKeyOrderMap();
+map.putFirst("apple", 1);
+map.putLast("banana", 2);
+map.firstEntry(); // apple=1</code></pre>
+
+            <h3>2.6 外部函数与内存API (预览)</h3>
+            <pre><code>// 调用C库函数
+try (var lib = Linker.nativeLinker().load("m")) {
+    var sin = lib.lookup("sin").get(...);
+    double result = (double) sin.invoke(1.0);
+}
+
+// 内存段
+try (MemorySegment segment = MemorySegment.allocateNative(1024)) {
+    segment.setAtIndex(ValueLayout.JAVA_INT, 0, 42);
+    int val = segment.getAtIndex(ValueLayout.JAVA_INT, 0);
+}</code></pre>
+
+            <h3>2.7 其他重要特性</h3>
+            <p><strong>作用域值 (Scoped Values) 预览</strong>：替代ThreadLocal，轻量安全</p>
+            <pre><code>private static final ScopedValue&lt;Context&gt; CONTEXT = ScopedValue.newInstance();
+ScopedValue.where(CONTEXT, new Context()).run(() -> handleRequest());</code></pre>
+            <p><strong>密钥封装机制 KEM API</strong>：支持DHKEM、RSA-KEM等后量子准备。</p>
+            <p><strong>弃用32位x86端口、安全管理器</strong>：为未来移除铺路。</p>
+        </div>
+    </details>
+
+    <!-- 第三章 性能优化深度分析 -->
+    <details open>
+        <summary>🚀 3. 性能优化深度分析</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>3.1 分代ZGC & G1改进</h3>
+            <p>分代ZGC（<code>-XX:+UseZGC -XX:+ZGenerational</code>）吞吐量提升约10%，停顿时间<1ms。G1在Full GC移动巨型对象减少OOM。</p>
+            <table>
+                <thead><tr><th>对比</th><th>Java 17</th><th>Java 21 (分代ZGC)</th></tr></thead>
+                <tbody>
+                    <tr><td>吞吐量 (max-jOPS)</td><td>基准</td><td>+10%</td></tr>
+                    <tr><td>内存占用(虚拟线程场景)</td><td>～2MB/线程</td><td>～KB级</td></tr>
+                    <tr><td>GC停顿</td><td>ZGC <1ms</td><td>分代ZGC 保持<1ms</td></tr>
+                </tbody>
+            </table>
+            <h3>3.2 JIT与启动优化</h3>
+            <p>启动时间提升15%，逃逸分析改进针对record类，向量化增强，锁优化（显式锁完胜synchronized）</p>
+            <h3>3.3 内存管理与资源利用</h3>
+            <p>元空间优化，压缩指针改进，虚拟线程内存效率极高。JFR新增“allocation-by-site”、“memory-leaks-by-class”事件。</p>
+            <h3>3.4 基准测试对比</h3>
+            <p>SPECjbb2015: Java 21 对比 Java 17 在critical-jOPS有显著提升。Spring Boot + GraalVM native 吞吐量提升40%，CPU下降15%。</p>
+        </div>
+    </details>
+
+    <!-- 第四章 并发处理能力全面提升 -->
+    <details open>
+        <summary>🧵 4. 并发处理能力全面提升</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>4.1 虚拟线程架构原理</h3>
+            <p>N:M映射，阻塞时载体线程让出。完全兼容ThreadLocal，调试友好。</p>
+            <h3>4.2 结构化并发API设计</h3>
+            <pre><code>// 扇出扇入示例
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    List&lt;Future&lt;Integer&gt;&gt; futures = inputs.stream()
+            .map(i -> scope.fork(() -> process(i)))
+            .toList();
+    scope.join();
+    int total = futures.stream().mapToInt(Future::resultNow).sum();
+}</code></pre>
+            <h3>4.3 作用域值数据共享</h3>
+            <p>不可变、隐式传递，与结构化并发天然集成。</p>
+            <h3>4.4 并发集合与同步机制</h3>
+            <p><code>ConcurrentHashMap.newKeyOrderMap()</code> 保留插入顺序。注意：synchronized在虚拟线程环境下性能下降，建议使用ReentrantLock。</p>
+        </div>
+    </details>
+
+    <!-- 第五章 语法糖与语言特性革新 -->
+    <details open>
+        <summary>🍬 5. 语法糖与语言特性革新</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>5.1 记录模式深度解析</h3>
+            <pre><code>record Person(String name, Address addr) {}
+record Address(String city, String street) {}
+if (person instanceof Person(String name, Address(String city, _))) {
+    System.out.println(name + " lives in " + city);
+}</code></pre>
+            <h3>5.2 switch模式匹配标准化</h3>
+            <p>支持null、类型模式、守卫模式，必须穷尽。</p>
+            <h3>5.3 无名模式与变量(预览)</h3>
+            <pre><code>if (obj instanceof Point(int x, _)) { } // 忽略y
+try { ... } catch (Exception _) { }</code></pre>
+            <h3>5.4 无名类与实例main方法(预览)</h3>
+            <pre><code>// 直接写main方法，无需class
+void main() {
+    System.out.println("Hello World");
+}</code></pre>
+            <h3>5.5 Math.clamp 及其他</h3>
+            <pre><code>int clamped = Math.clamp(25, 0, 10); // 10</code></pre>
+        </div>
+    </details>
+
+    <!-- 第六章 安全性与生态系统全面升级 -->
+    <details open>
+        <summary>🔒 6. 安全性与生态系统全面升级</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>6.1 安全管理器弃用与替代</h3>
+            <p>推荐使用AccessController、容器安全机制、OAuth2等。</p>
+            <h3>6.2 KEM API & TLS 1.3 默认启用</h3>
+            <pre><code>KEM kem = KEM.getInstance("DHKEM");
+Encapsulator sender = kem.newEncapsulator(publicKey);
+EncapsulatedKey encapsulated = sender.encapsulate();</code></pre>
+            <h3>6.3 内存安全与代码完整性</h3>
+            <p>外部内存访问边界检查，字节码验证增强。</p>
+            <h3>6.4 生态系统兼容性</h3>
+            <p>IntelliJ 2023.2+、Eclipse 2023-09+、Spring Boot 3.2+、Gradle 8.0+ 全面支持。主流框架已适配虚拟线程。</p>
+        </div>
+    </details>
+
+    <!-- 第七章 与历史版本全面对比分析 -->
+    <details open>
+        <summary>📊 7. 与Java 17/19/20 全面对比</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>7.1 vs Java 17 LTS</h3>
+            <table>
+                <tr><th>维度</th><th>Java 17</th><th>Java 21</th></tr>
+                <tr><td>线程模型</td><td>平台线程</td><td>虚拟线程+平台线程</td></tr>
+                <tr><td>最大并发线程</td><td>数千</td><td>数百万</td></tr>
+                <tr><td>ZGC</td><td>单代</td><td>分代 (吞吐量+10%)</td></tr>
+                <tr><td>模式匹配</td><td>预览</td><td>标准化(记录模式, switch)</td></tr>
+                <tr><td>字符串模板</td><td>无</td><td>预览</td></tr>
+                <tr><td>结构化并发</td><td>无</td><td>预览</td></tr>
+                <tr><td>安全管理器</td><td>弃用标记</td><td>继续弃用</td></tr>
+            </table>
+            <h3>7.2 从Java 19/20到21的演进</h3>
+            <p>虚拟线程在19预览、20二预览、21正式；结构化并发从孵化器到预览；作用域值从20孵化器到21预览。分代ZGC是21首次引入。</p>
+            <h3>7.3 关键领域改进总结</h3>
+            <table>
+                <tr><th>领域</th><th>Java 8</th><th>Java 11</th><th>Java 17</th><th>Java 21</th></tr>
+                <tr><td>线程内存</td><td>~2MB</td><td>~2MB</td><td>~2MB</td><td>~KB</td></tr>
+                <tr><td>I/O吞吐量</td><td>基准</td><td>+10%</td><td>+20%</td><td>+81.6%</td></tr>
+                <tr><td>启动时间</td><td>基准</td><td>-15%</td><td>-30%</td><td>-40%</td></tr>
+            </table>
+        </div>
+    </details>
+
+    <!-- 第八章 总结与展望 -->
+    <details open>
+        <summary>🔮 8. 总结与展望</summary>
+        <div style="padding: 10px 30px 30px;">
+            <h3>8.1 核心价值与采用建议</h3>
+            <p>虚拟线程使高并发应用开发回归简单，性能飞跃；语言特性大幅提升可读性；分代ZGC降低运维成本。强烈推荐新项目采用Java 21，存量项目逐步迁移。</p>
+            <ul>
+                <li><strong>企业级应用</strong>：优先使用虚拟线程重构I/O密集型服务</li>
+                <li><strong>云原生</strong>：Java 21容器化内存效率提升，冷启动更快</li>
+                <li><strong>教育</strong>：无名类+实例main方法降低入门门槛</li>
+            </ul>
+            <h3>8.2 未来发展趋势</h3>
+            <p>Project Loom后续（结构化并发正式化），Project Valhalla（值类型），Project Panama（外部函数稳定）。每两年LTS节奏不变，Java将持续演进，保持现代语言竞争力。</p>
+            <div class="insight-box">
+                <p>⭐ Java 21不仅是LTS，更是Java并发与生产力的分水岭。拥抱虚拟线程，开启下一代编程范式。</p>
+            </div>
+        </div>
+    </details>
+
+    <!-- 附加说明：所有代码均为示例，保留原文精髓 -->
+    <hr>
+    <footer>
+        📚 本页基于“Java 21全面技术分析与版本对比研究报告”整理，内容由AI生成，保留全部章节及细节。所有代码块、表格、讲解均内嵌展示。无需外部资源。
+    </footer>
+</div>
+<!-- 无任何外部链接，纯静态 -->
+</body>
+</html>

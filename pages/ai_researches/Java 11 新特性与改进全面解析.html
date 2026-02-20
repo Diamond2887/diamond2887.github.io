@@ -1,0 +1,974 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 11 新特性与改进全面解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: #FFFFFF;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        .highlight-gradient-blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.05));
+        }
+        .highlight-gradient-green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0), rgba(16, 185, 129, 0.05));
+        }
+        .highlight-gradient-purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.05));
+        }
+        .highlight-gradient-orange {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0), rgba(249, 115, 22, 0.05));
+        }
+        .highlight-gradient-red {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0), rgba(239, 68, 68, 0.05));
+        }
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+        }
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+            <!-- 主标题卡片 -->
+            <div class="card md:col-span-4 p-8 flex flex-col justify-center items-center text-center relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative w-full">
+                    <div class="text-blue-500 text-6xl mb-4">
+                        <i class="fa-brands fa-java"></i>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Java 11 LTS</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">自 Java 8 以来的首个长期支持版本，引领 Java 平台进入新时代</p>
+                    <div class="mt-8 flex flex-wrap justify-center gap-4">
+                        <div class="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-calendar-alt mr-2"></i>2018年9月发布
+                        </div>
+                        <div class="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-shield-halved mr-2"></i>支持至2032年
+                        </div>
+                        <div class="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-star mr-2"></i>长期支持版本
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版本支持信息卡片 -->
+            <div class="card md:col-span-2 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">长期支持周期</h2>
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <p class="text-gray-500">Premier Support</p>
+                            <p class="text-2xl font-bold text-green-600">2023年9月</p>
+                        </div>
+                        <div class="text-4xl text-green-500">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Extended Support</p>
+                            <p class="text-2xl font-bold text-green-600">2032年1月</p>
+                        </div>
+                        <div class="text-4xl text-green-500">
+                            <i class="fa-solid fa-infinity"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主要改进领域卡片 -->
+            <div class="card md:col-span-2 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">主要改进领域</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-purple-50 p-3 rounded-lg flex items-center">
+                            <i class="fa-solid fa-code text-purple-500 mr-3"></i>
+                            <span class="text-sm font-medium">语言特性</span>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg flex items-center">
+                            <i class="fa-solid fa-boxes-stacked text-purple-500 mr-3"></i>
+                            <span class="text-sm font-medium">标准库</span>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg flex items-center">
+                            <i class="fa-solid fa-gauge-high text-purple-500 mr-3"></i>
+                            <span class="text-sm font-medium">性能优化</span>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg flex items-center">
+                            <i class="fa-solid fa-lock text-purple-500 mr-3"></i>
+                            <span class="text-sm font-medium">安全性</span>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg flex items-center">
+                            <i class="fa-solid fa-tools text-purple-500 mr-3"></i>
+                            <span class="text-sm font-medium">开发工具</span>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg flex items-center">
+                            <i class="fa-solid fa-cogs text-purple-500 mr-3"></i>
+                            <span class="text-sm font-medium">模块化</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 语言特性革新 -->
+            <div class="card md:col-span-4 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-orange"></div>
+                <div class="relative">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">一、Java 11 语言特性的革新</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- var 增强 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-orange-100 text-orange-500">
+                                <i class="fa-solid fa-arrow-up-right-dots"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">局部变量类型推断的增强</h3>
+                            <p class="text-gray-600 mb-4">Java 11允许在隐式类型lambda表达式的形式参数中使用 <code class="bg-gray-100 px-1 py-0.5 rounded">var</code>，使lambda参数声明与局部变量声明在语法上保持一致。</p>
+                            <div class="code-block">
+<pre>// Java 10中合法
+var list = new ArrayList&lt;String&gt;();
+
+// Java 11新特性
+Consumer&lt;String&gt; consumer = (var i) -> System.out.println(i);
+
+// 更方便地为lambda参数添加注解
+Predicate&lt;String&gt; tooLong = (@Nonnull var s) -> s.length() > 42;</pre>
+                            </div>
+                        </div>
+
+                        <!-- 单行程序运行 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-orange-100 text-orange-500">
+                                <i class="fa-solid fa-terminal"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">单行程序运行的革命性改进</h3>
+                            <p class="text-gray-600 mb-4">Java 11引入了直接运行单文件源代码程序的能力，支持shebang机制，允许在Linux和macOS系统上将Java程序作为脚本执行。</p>
+                            <div class="code-block">
+<pre>// 直接运行Java源文件
+java HelloWorld.java
+
+// 使用shebang机制（Linux/macOS）
+#!/usr/bin/java --source 11
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java 11!");
+    }
+}</pre>
+                            </div>
+                        </div>
+
+                        <!-- Nest-Based Access Control -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-orange-100 text-orange-500">
+                                <i class="fa-solid fa-sitemap"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Nest-Based Access Control</h3>
+                            <p class="text-gray-600 mb-4">将逻辑上相关但编译成不同类文件的类定义为一个nest（巢），nest成员可以访问彼此的私有成员而无需编译器插入桥接方法。</p>
+                            <div class="code-block">
+<pre>public class Outer {
+    private int outerInt;
+    
+    class Inner {
+        public void printOuterInt() {
+            // 直接访问私有成员，无需桥接方法
+            System.out.println("Outer int = " + outerInt);
+        }
+    }
+}</pre>
+                            </div>
+                        </div>
+
+                        <!-- 字符串处理增强 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-orange-100 text-orange-500">
+                                <i class="fa-solid fa-string text-orange-500"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">字符串处理能力的全面提升</h3>
+                            <p class="text-gray-600 mb-4">Java 11为String类添加了多个实用方法，如 <code class="bg-gray-100 px-1 py-0.5 rounded">isBlank()</code>、<code class="bg-gray-100 px-1 py-0.5 rounded">lines()</code>、<code class="bg-gray-100 px-1 py-0.5 rounded">repeat(int)</code> 和 <code class="bg-gray-100 px-1 py-0.5 rounded">strip()</code> 系列方法。</p>
+                            <div class="code-block">
+<pre>String blank = "\t\n";
+System.out.println(blank.isBlank());    // true
+
+String poem = "Roses are red\nViolets are blue";
+poem.lines().forEach(System.out::println);
+
+String repeated = "Ha".repeat(3); // "HaHaHa"
+
+String str = "   Hello, World!   ";
+System.out.println(str.strip());      // "Hello, World!"</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 标准库更新 -->
+            <div class="card md:col-span-4 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">二、标准库的重大更新与改进</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- HTTP客户端 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-green-100 text-green-500">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">HTTP客户端的标准化</h3>
+                            <p class="text-gray-600 mb-4">Java 11将JDK 9中引入的孵化HTTP客户端API标准化，提供了对HTTP/1.1和HTTP/2的高级客户端接口，以及对WebSocket的支持。</p>
+                            <div class="code-block">
+<pre>HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("https://api.example.com/data"))
+    .timeout(Duration.ofSeconds(10))
+    .build();
+
+client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+    .thenApply(HttpResponse::body)
+    .thenAccept(System.out::println)
+    .join();</pre>
+                            </div>
+                        </div>
+
+                        <!-- Files类便捷方法 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-green-100 text-green-500">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Files类的便捷方法</h3>
+                            <p class="text-gray-600 mb-4">Java 11为Files类添加了 <code class="bg-gray-100 px-1 py-0.5 rounded">readString()</code> 和 <code class="bg-gray-100 px-1 py-0.5 rounded">writeString()</code> 方法，极大地简化了文件的读写操作。</p>
+                            <div class="code-block">
+<pre>// 读取文件内容
+String content = Files.readString(Paths.get("data.txt"));
+
+// 写入文件内容
+Files.writeString(Paths.get("output.txt"), "Hello, World!");
+
+// 指定字符集
+Files.writeString(Paths.get("output.txt"), "Hello, World!", 
+    StandardCharsets.UTF_8, StandardOpenOption.APPEND);</pre>
+                            </div>
+                        </div>
+
+                        <!-- Java EE和CORBA模块移除 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-green-100 text-green-500">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Java EE和CORBA模块的移除</h3>
+                            <p class="text-gray-600 mb-4">Java 11移除了Java EE和CORBA模块，这些模块自JDK 9起就被标记为废弃。Java EE已转移到Eclipse Foundation，成为Jakarta EE。</p>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div class="bg-red-50 p-2 rounded text-red-600">corba</div>
+                                <div class="bg-red-50 p-2 rounded text-red-600">transaction</div>
+                                <div class="bg-red-50 p-2 rounded text-red-600">activation</div>
+                                <div class="bg-red-50 p-2 rounded text-red-600">xml.bind</div>
+                                <div class="bg-red-50 p-2 rounded text-red-600">xml.ws</div>
+                                <div class="bg-red-50 p-2 rounded text-red-600">xml.ws.annotation</div>
+                            </div>
+                        </div>
+
+                        <!-- Null Stream类 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-green-100 text-green-500">
+                                <i class="fa-solid fa-stream"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">全新的Null Stream类</h3>
+                            <p class="text-gray-600 mb-4">Java 11添加了四个新的静态工厂方法，用于创建丢弃所有数据的流，类似于Unix系统中的 <code class="bg-gray-100 px-1 py-0.5 rounded">/dev/null</code>。</p>
+                            <div class="code-block">
+<pre>// 返回一个不读取任何字节的输入流
+InputStream.nullInputStream()
+
+// 返回一个丢弃所有字节的输出流
+OutputStream.nullOutputStream()
+
+// 返回一个不读取任何字符的读取器
+Reader.nullReader()
+
+// 返回一个丢弃所有字符的写入器
+Writer.nullWriter()</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 性能优化 -->
+            <div class="card md:col-span-4 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">三、性能优化的重大突破</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- ZGC -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-blue-100 text-blue-500">
+                                <i class="fa-solid fa-compress-arrows-alt"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">ZGC：革命性的低延迟垃圾回收器</h3>
+                            <p class="text-gray-600 mb-4">ZGC是一个可扩展的低延迟垃圾回收器，设计目标是GC停顿时间不超过10毫秒，处理堆大小从几百MB到数TB不等。</p>
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm text-gray-500 mb-1">
+                                    <span>平均停顿时间</span>
+                                    <span>1.091ms</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 2%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm text-gray-500 mb-1">
+                                    <span>99% 停顿时间</span>
+                                    <span>1.512ms</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 3%"></div>
+                                </div>
+                            </div>
+                            <div class="code-block text-xs">
+<pre>// 启用ZGC（Java 11中为实验性特性）
+-XX:+UnlockExperimentalVMOptions -XX:+UseZGC</pre>
+                            </div>
+                        </div>
+
+                        <!-- 性能对比图表 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">GC停顿时间对比 (ms)</h3>
+                            <div class="h-64">
+                                <canvas id="gcComparisonChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Epsilon GC -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-blue-100 text-blue-500">
+                                <i class="fa-solid fa-stop-circle"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Epsilon：无操作垃圾回收器</h3>
+                            <p class="text-gray-600 mb-4">Epsilon只处理内存分配，不实现任何实际的内存回收机制。当可用Java堆耗尽时，JVM将关闭并抛出 <code class="bg-gray-100 px-1 py-0.5 rounded">OutOfMemoryError</code>。</p>
+                            <div class="code-block text-xs">
+<pre>// 启用Epsilon GC
+-XX:+UseEpsilonGC
+
+// 应用场景：
+// 1. 性能基准测试
+// 2. 内存压力测试
+// 3. 不需要GC的特殊场景</pre>
+                            </div>
+                        </div>
+
+                        <!-- Flight Recorder -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-blue-100 text-blue-500">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Flight Recorder的开源化</h3>
+                            <p class="text-gray-600 mb-4">Java 11将Flight Recorder开源，使其从Oracle JDK的商业特性转变为OpenJDK的一部分。这是一个轻量级的HotSpot JVM工具，用于收集诊断和分析数据。</p>
+                            <div class="space-y-2">
+                                <div class="flex items-center text-sm">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span>低开销的数据收集框架</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span>故障排除Java应用程序和JVM</span>
+                                </div>
+                                <div class="flex items-center text-sm">
+                                    <i class="fa-solid fa-check-circle text-green-500 mr-2"></i>
+                                    <span>连续运行而对性能影响最小</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 安全性增强 -->
+            <div class="card md:col-span-4 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-red"></div>
+                <div class="relative">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">四、安全性的全面增强</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- TLS 1.3 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-red-100 text-red-500">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">TLS 1.3协议的全面支持</h3>
+                            <p class="text-gray-600 mb-4">Java 11实现了TLS 1.3协议，这是传输层安全协议的最新版本，带来了多项安全和性能改进，包括减少握手往返次数和增强的密码套件。</p>
+                            <div class="space-y-2">
+                                <div class="bg-red-50 p-2 rounded text-sm font-medium">
+                                    <i class="fa-solid fa-arrow-down mr-2 text-red-500"></i>握手往返次数从2-3次减少到1次
+                                </div>
+                                <div class="bg-red-50 p-2 rounded text-sm font-medium">
+                                    <i class="fa-solid fa-ban mr-2 text-red-500"></i>禁用已知有风险的加密算法
+                                </div>
+                                <div class="bg-red-50 p-2 rounded text-sm font-medium">
+                                    <i class="fa-solid fa-key mr-2 text-red-500"></i>支持TLS_AES_128_GCM_SHA256等密码套件
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ChaCha20和Poly1305 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-red-100 text-red-500">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">ChaCha20和Poly1305加密算法</h3>
+                            <p class="text-gray-600 mb-4">Java 11实现了ChaCha20和ChaCha20-Poly1305加密算法，这些算法是基于RFC 7539标准实现的，提供了更强的加密能力和更好的性能。</p>
+                            <div class="code-block">
+<pre>// 生成256位密钥
+KeyGenerator keyGen = KeyGenerator.getInstance("ChaCha20");
+keyGen.init(256);
+SecretKey key = keyGen.generateKey();
+
+// 加密
+Cipher encryptCipher = Cipher.getInstance("ChaCha20-Poly1305");
+encryptCipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(nonce));
+byte[] ciphertext = encryptCipher.doFinal(plaintext.getBytes());</pre>
+                            </div>
+                        </div>
+
+                        <!-- Curve25519和Curve448 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-red-100 text-red-500">
+                                <i class="fa-solid fa-signature"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Curve25519和Curve448密钥协议</h3>
+                            <p class="text-gray-600 mb-4">Java 11实现了基于Curve25519和Curve448的密钥协议，这些椭圆曲线算法是基于RFC 7748标准实现的，提供了常数时间实现和高安全性。</p>
+                            <div class="code-block">
+<pre>// 初始化密钥协议
+KeyAgreement keyAgree = KeyAgreement.getInstance("X25519");
+
+// 生成密钥对
+KeyPairGenerator kpg = KeyPairGenerator.getInstance("X25519");
+kpg.initialize(255);
+KeyPair kp = kpg.generateKeyPair();</pre>
+                            </div>
+                        </div>
+
+                        <!-- 其他安全改进 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-red-100 text-red-500">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">其他安全改进</h3>
+                            <p class="text-gray-600 mb-4">Java 11还包含了多项其他重要的安全改进，进一步增强了平台的安全性。</p>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-certificate text-red-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">证书验证增强</p>
+                                        <p class="text-sm text-gray-600">改进了证书路径验证机制，增强了对CRL和OCSP的支持</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-key text-red-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">密码策略改进</p>
+                                        <p class="text-sm text-gray-600">加强了对弱密码算法的限制，改进了密码算法优先级配置</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-cogs text-red-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">安全属性的固化</p>
+                                        <p class="text-sm text-gray-600">关键系统属性在启动时被缓存，后续修改不再影响API行为</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 开发工具升级 -->
+            <div class="card md:col-span-4 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">五、开发工具的全面升级</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- JShell增强 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-purple-100 text-purple-500">
+                                <i class="fa-solid fa-terminal"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">JShell的增强功能</h3>
+                            <p class="text-gray-600 mb-4">JShell在Java 11中得到了显著增强，成为一个更加强大和易用的交互式编程环境。</p>
+                            <div class="code-block">
+<pre>$ jshell
+|  Welcome to JShell -- Version 11.0.29
+|  For an introduction type: /help intro
+
+jshell> int x = 5
+x ==> 5
+
+jshell> int y = 10
+y ==> 10
+
+jshell> int sum = x + y
+sum ==> 15
+
+jshell> System.out.println("Hello, World!".repeat(3))
+Hello, World!Hello, World!Hello, World!</pre>
+                            </div>
+                        </div>
+
+                        <!-- jlink工具 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-purple-100 text-purple-500">
+                                <i class="fa-solid fa-link"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">jlink：模块化运行时映像工具</h3>
+                            <p class="text-gray-600 mb-4">jlink工具允许将模块及其依赖关系组装成自定义运行时映像，创建精简的运行时环境，只包含应用程序所需的模块。</p>
+                            <div class="code-block">
+<pre>// 基本用法
+jlink [options] --module-path <modulepath> --add-modules <module>
+
+// 创建只包含java.base和java.sql模块的运行时
+jlink --module-path $JAVA_HOME/jmods \
+    --add-modules java.base,java.sql \
+    --output my-runtime
+
+// 启用压缩
+jlink --module-path $JAVA_HOME/jmods \
+    --add-modules java.base \
+    --compress=2 \
+    --output compressed-runtime</pre>
+                            </div>
+                        </div>
+
+                        <!-- jpackage工具 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-purple-100 text-purple-500">
+                                <i class="fa-solid fa-box"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">jpackage：应用程序打包工具</h3>
+                            <p class="text-gray-600 mb-4">jpackage是Java 11引入的新工具，用于将Java应用程序打包成适合目标操作系统的安装包。</p>
+                            <div class="grid grid-cols-3 gap-2 mb-4">
+                                <div class="bg-purple-50 p-2 rounded text-center text-sm">
+                                    <i class="fa-brands fa-linux block mb-1 text-purple-500"></i>
+                                    <span>DEB/RPM</span>
+                                </div>
+                                <div class="bg-purple-50 p-2 rounded text-center text-sm">
+                                    <i class="fa-brands fa-apple block mb-1 text-purple-500"></i>
+                                    <span>DMG/PKG</span>
+                                </div>
+                                <div class="bg-purple-50 p-2 rounded text-center text-sm">
+                                    <i class="fa-brands fa-windows block mb-1 text-purple-500"></i>
+                                    <span>EXE/MSI</span>
+                                </div>
+                            </div>
+                            <div class="code-block">
+<pre>// 非模块化应用
+jpackage -i <input dir> -n <name> \
+    --main-class <classname> \
+    --main-jar <myjar.jar>
+
+// 模块化应用
+jpackage -n <name> -p <modulepath> \
+    -m <module name/classname></pre>
+                            </div>
+                        </div>
+
+                        <!-- IDE集成改进 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-purple-100 text-purple-500">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">IDE集成的改进</h3>
+                            <p class="text-gray-600 mb-4">Java 11为主要IDE带来了多项改进，提升了开发体验。</p>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-cubes text-purple-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">模块化支持增强</p>
+                                        <p class="text-sm text-gray-600">更好地支持JPMS，改进了模块依赖管理</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-lightbulb text-purple-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">新特性支持</p>
+                                        <p class="text-sm text-gray-600">全面支持局部变量类型推断，智能识别和提示新API</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-gauge-high text-purple-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">性能优化</p>
+                                        <p class="text-sm text-gray-600">改进了代码分析性能，减少了内存占用</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版本对比分析 -->
+            <div class="card md:col-span-4 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">六、与之前版本的对比分析</h2>
+                    
+                    <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">Java 8 与 Java 11 对比</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">特性领域</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Java 8</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Java 11</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">改进说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">语言特性</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">无局部变量类型推断</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">支持 <code class="bg-gray-100 px-1 py-0.5 rounded">var</code> 关键字，lambda参数也可使用</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">代码更简洁，类型推断更智能</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">垃圾回收</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">仅G1、CMS等传统GC</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">新增ZGC（实验性）、Epsilon</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">延迟降低到10ms以内，支持大堆</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">HTTP客户端</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">老旧的HttpURLConnection</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">标准化的Http2客户端</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">支持HTTP/2、WebSocket、响应式流</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">安全协议</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">TLS 1.2及以下</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">TLS 1.3</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">更安全、更快的连接建立</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">加密算法</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">缺少现代算法</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">ChaCha20、Curve25519/448</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">更强的加密能力，更好的性能</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">模块化</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">无</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">JPMS全面应用</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">更好的封装性，更小的运行时</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">工具支持</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">基础工具集</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">JShell增强、jlink、jpackage</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">开发和部署体验大幅提升</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 推荐升级场景 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-blue-100 text-blue-500">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">推荐升级的场景</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-building text-blue-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">企业级应用</p>
+                                        <p class="text-sm text-gray-600">Java 11作为LTS版本，提供长期支持直至2032年</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-gauge-high text-blue-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">性能敏感应用</p>
+                                        <p class="text-sm text-gray-600">ZGC和其他性能优化带来显著提升</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-shield-halved text-blue-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">安全要求高的应用</p>
+                                        <p class="text-sm text-gray-600">TLS 1.3、新加密算法提供更强安全性</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-cloud text-blue-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">云原生应用</p>
+                                        <p class="text-sm text-gray-600">模块化和精简运行时特别适合容器环境</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 注意事项 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-blue-100 text-blue-500">
+                                <i class="fa-solid fa-exclamation-triangle"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">需要注意的兼容性问题</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-ban text-red-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">Java EE模块移除</p>
+                                        <p class="text-sm text-gray-600">如果应用依赖 <code class="bg-gray-100 px-1 py-0.5 rounded">java.xml.ws</code> 等模块，需要手动添加Jakarta EE库</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-ban text-red-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">弃用的API</p>
+                                        <p class="text-sm text-gray-600">一些老旧的API被移除，需要检查代码</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-lock text-red-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">安全策略变化</p>
+                                        <p class="text-sm text-gray-600">TLS协议版本、密码算法优先级可能影响现有连接</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fa-solid fa-tools text-red-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium text-gray-800">构建工具版本</p>
+                                        <p class="text-sm text-gray-600">确保使用支持Java 11的构建工具版本</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实践案例 -->
+            <div class="card md:col-span-4 p-6 flex flex-col relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">七、实践案例与最佳实践</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Web应用开发案例 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-green-100 text-green-500">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">Web应用开发案例</h3>
+                            <p class="text-gray-600 mb-4">以下是一个使用Java 11新特性构建的简单Web应用示例，展示了HTTP客户端API、异步编程模型和lambda表达式增强等特性。</p>
+                            <div class="code-block">
+<pre>import java.net.http.*;
+import java.net.URI;
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+
+public class WebApplication {
+    private final HttpClient httpClient;
+    
+    public WebApplication() {
+        httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .connectTimeout(Duration.ofSeconds(10))
+            .build();
+    }
+    
+    public CompletableFuture&lt;String&gt; fetchData(String url) {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(url))
+            .header("Accept", "application/json")
+            .build();
+        
+        return httpClient.sendAsync(request, 
+            HttpResponse.BodyHandlers.ofString())
+            .thenApply(HttpResponse::body);
+    }
+    
+    public static void main(String[] args) {
+        WebApplication app = new WebApplication();
+        app.fetchData("https://api.example.com/data")
+            .thenAccept(data -> System.out.println("Received data: " + data))
+            .exceptionally(throwable -> {
+                System.err.println("Error fetching data: " + 
+                    throwable.getMessage());
+                return null;
+            });
+    }
+}</pre>
+                            </div>
+                        </div>
+
+                        <!-- 命令行工具开发案例 -->
+                        <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                            <div class="feature-icon bg-green-100 text-green-500">
+                                <i class="fa-solid fa-terminal"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-3">命令行工具开发案例</h3>
+                            <p class="text-gray-600 mb-4">以下是一个使用Java 11单文件执行特性的命令行工具示例，展示了Files类新方法、字符串处理增强和Stream API的使用。</p>
+                            <div class="code-block">
+<pre>#!/usr/bin/java --source 11
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+public class FileProcessor {
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.err.println("Usage: ./fileprocessor &lt;filename&gt;");
+            System.exit(1);
+        }
+        
+        try (Stream&lt;String&gt; lines = Files.lines(Paths.get(args[0]))) {
+            var stats = lines.collect(
+                () -> new int[3], // [lines, words, chars]
+                (a, line) -> {
+                    a[0]++;
+                    a[1] += line.split("\\s+").length;
+                    a[2] += line.length();
+                },
+                (a, b) -> {
+                    a[0] += b[0];
+                    a[1] += b[1];
+                    a[2] += b[2];
+                }
+            );
+            
+            System.out.printf("Lines: %d%nWords: %d%nChars: %d%n", 
+                stats[0], stats[1], stats[2]);
+        } catch (IOException e) {
+            System.err.println("Error processing file: " + e.getMessage());
+        }
+    }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 总结卡片 -->
+            <div class="card md:col-span-4 p-8 flex flex-col justify-center items-center text-center relative">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative max-w-3xl">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">总结</h2>
+                    <p class="text-lg text-gray-600 mb-8">Java 11作为一个重要的LTS版本，为开发者和企业带来了众多实用的新特性和改进。从语言特性的增强到性能优化的突破，从安全性的提升到开发工具的升级，Java 11全方位地提升了Java平台的能力和易用性。</p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <div class="bg-blue-50 text-blue-700 px-6 py-3 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-rocket mr-2"></i>现代化语言特性
+                        </div>
+                        <div class="bg-blue-50 text-blue-700 px-6 py-3 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-gauge-high mr-2"></i>卓越性能表现
+                        </div>
+                        <div class="bg-blue-50 text-blue-700 px-6 py-3 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-shield-halved mr-2"></i>强大安全保障
+                        </div>
+                        <div class="bg-blue-50 text-blue-700 px-6 py-3 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-tools mr-2"></i>优秀开发体验
+                        </div>
+                        <div class="bg-blue-50 text-blue-700 px-6 py-3 rounded-full text-sm font-medium">
+                            <i class="fa-solid fa-infinity mr-2"></i>长期支持承诺
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // 初始化GC对比图表
+    const ctx = document.getElementById('gcComparisonChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['平均停顿时间', '95%百分位', '99%百分位', '99.9%百分位', '99.99%百分位', '最大值'],
+            datasets: [
+                {
+                    label: 'ZGC (ms)',
+                    data: [1.091, 1.380, 1.512, 1.663, 1.681, 1.681],
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'G1 (ms)',
+                    data: [156.806, 316.672, 428.095, 543.846, 543.846, 543.846],
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '停顿时间 (ms)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'ZGC vs G1 垃圾回收停顿时间对比'
+                }
+            }
+        }
+    });
+</script>
+</html>

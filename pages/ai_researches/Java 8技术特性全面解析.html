@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 8技术特性全面解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #FFFFFF;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1.25rem; /* 20px */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        .highlight-gradient-blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0), rgba(59, 130, 246, 0.05)); }
+        .highlight-gradient-green { background: linear-gradient(135deg, rgba(16, 185, 129, 0), rgba(16, 185, 129, 0.05)); }
+        .highlight-gradient-purple { background: linear-gradient(135deg, rgba(139, 92, 246, 0), rgba(139, 92, 246, 0.05)); }
+        .highlight-gradient-amber { background: linear-gradient(135deg, rgba(245, 158, 11, 0), rgba(245, 158, 11, 0.05)); }
+        .highlight-gradient-red { background: linear-gradient(135deg, rgba(239, 68, 68, 0), rgba(239, 68, 68, 0.05)); }
+        .highlight-gradient-cyan { background: linear-gradient(135deg, rgba(6, 182, 212, 0), rgba(6, 182, 212, 0.05)); }
+    </style>
+</head>
+<body class="bg-white">
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <!-- 标题卡片 -->
+        <div class="card md:col-span-4 p-8 mb-6 md:mb-8 flex flex-col justify-center">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+            <div class="relative">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="bg-blue-500/10 p-3 rounded-lg">
+                        <i class="fa-brands fa-java text-4xl text-blue-500"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl md:text-5xl font-bold text-gray-800">Java 8</h1>
+                        <p class="text-xl md:text-2xl text-gray-500">技术特性全面解析与版本对比研究</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 max-w-3xl">发布于2014年3月18日，作为Java平台自2004年Java 5以来最重要的版本更新，标志着Java从纯粹的面向对象编程向函数式编程的重要转变。</p>
+            </div>
+        </div>
+
+        <!-- 核心特性卡片组 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+            <!-- Lambda表达式 -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-between">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">Lambda表达式</h3>
+                        <div class="bg-green-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-code text-green-500"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">允许将函数作为一等公民在语言中进行传递和操作，基本语法结构为：<code class="bg-gray-100 px-2 py-1 rounded">(parameters) -> { statements; }</code></p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">// Lambda表达式方式</p>
+                        <p class="text-gray-700 font-mono">new Thread(() -> System.out.println("Hello from lambda")).start();</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stream API -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-between">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">Stream API</h3>
+                        <div class="bg-purple-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-stream text-purple-500"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">为集合处理提供函数式编程风格，支持过滤、映射、归约等操作，并内置并行处理能力。</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">// 过滤并统计</p>
+                        <p class="text-gray-700 font-mono">long count = list.stream().filter(...).count();</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 日期时间API -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-between">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-amber"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">新日期时间API</h3>
+                        <div class="bg-amber-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-calendar-days text-amber-500"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">位于 <code class="bg-gray-100 px-2 py-1 rounded">java.time</code> 包下，提供不可变、线程安全的日期时间处理能力，完全取代旧的 <code class="bg-gray-100 px-2 py-1 rounded">Date</code> 和 <code class="bg-gray-100 px-2 py-1 rounded">Calendar</code> 类。</p>
+                    <div class="flex gap-4 text-sm">
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <p class="font-bold text-gray-700">LocalDate</p>
+                            <p class="text-gray-600">表示不带时区的日期</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <p class="font-bold text-gray-700">ZonedDateTime</p>
+                            <p class="text-gray-600">表示带时区的日期时间</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 方法引用 -->
+            <div class="card md:col-span-2 p-6 flex flex-col justify-between">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-red"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">方法引用</h3>
+                        <div class="bg-red-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-quote-right text-red-500"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Lambda表达式的语法糖，用于简化已命名方法的调用，共有四种类型：静态方法引用、实例方法引用、类实例方法引用和构造器引用。</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">// 方法引用方式</p>
+                        <p class="text-gray-700 font-mono">names.stream().map(String::toUpperCase).forEach(System.out::println);</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 版本概述与历史意义 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+            <!-- 发布信息 -->
+            <div class="card md:col-span-1 p-6 flex flex-col justify-center items-center text-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-cyan"></div>
+                <div class="relative">
+                    <div class="bg-cyan-500/10 p-4 rounded-full mb-4">
+                        <i class="fa-solid fa-calendar-check text-3xl text-cyan-500"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 mb-1">2014.03.18</h3>
+                    <p class="text-gray-500">正式发布日期</p>
+                </div>
+            </div>
+
+            <!-- 版本代号 -->
+            <div class="card md:col-span-1 p-6 flex flex-col justify-center items-center text-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative">
+                    <div class="bg-blue-500/10 p-4 rounded-full mb-4">
+                        <i class="fa-solid fa-spider text-3xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 mb-1">Spider</h3>
+                    <p class="text-gray-500">开发代号</p>
+                </div>
+            </div>
+
+            <!-- 支持周期 -->
+            <div class="card md:col-span-1 p-6 flex flex-col justify-center items-center text-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <div class="bg-green-500/10 p-4 rounded-full mb-4">
+                        <i class="fa-solid fa-shield-halved text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 mb-1">8年</h3>
+                    <p class="text-gray-500">LTS支持周期</p>
+                </div>
+            </div>
+
+            <!-- 修复问题数 -->
+            <div class="card md:col-span-1 p-6 flex flex-col justify-center items-center text-center">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <div class="bg-purple-500/10 p-4 rounded-full mb-4">
+                        <i class="fa-solid fa-bug text-3xl text-purple-500"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 mb-1">8000+</h3>
+                    <p class="text-gray-500">修复Bug和增强</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 性能对比图表 -->
+        <div class="card md:col-span-4 p-6 mb-6 md:mb-8">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-amber"></div>
+            <div class="relative">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Java 8 与 Java 7 性能对比 (基准测试)</h3>
+                <div class="h-[300px] md:h-[400px]">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 语言层面新特性 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+            <!-- 默认方法和静态方法 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-blue-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-layer-group text-blue-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">默认方法和静态方法</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">接口设计的重大革新，解决了接口演化问题。默认方法使用 <code class="bg-gray-100 px-2 py-1 rounded">default</code> 关键字修饰，允许在接口中提供方法的默认实现。</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">interface A {</p>
+                        <p class="text-gray-700 font-mono pl-4">default void show() {</p>
+                        <p class="text-gray-700 font-mono pl-8">System.out.println("A's default method");</p>
+                        <p class="text-gray-700 font-mono pl-4">}</p>
+                        <p class="text-gray-700 font-mono">}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 重复注解与类型注解 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-green"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-green-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-tags text-green-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">重复注解与类型注解</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">允许在同一个元素上多次使用相同的注解，使用 <code class="bg-gray-100 px-2 py-1 rounded">@Repeatable</code> 元注解标记。类型注解则允许在任何使用类型的地方应用注解。</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">@Repeatable(Schedules.class)</p>
+                        <p class="text-gray-700 font-mono">public @interface Schedule {</p>
+                        <p class="text-gray-700 font-mono pl-4">String dayOfMonth() default "first";</p>
+                        <p class="text-gray-700 font-mono pl-4">String dayOfWeek() default "Mon";</p>
+                        <p class="text-gray-700 font-mono pl-4">int hour() default 12;</p>
+                        <p class="text-gray-700 font-mono">}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 标准库增强 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+            <!-- Optional类 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-purple-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-question-circle text-purple-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Optional类</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">为解决空指针异常（NullPointerException）问题而引入的容器类。通过强制开发者显式处理可能缺失的值，从根本上减少空指针异常的发生。</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">// 安全访问可能为null的值</p>
+                        <p class="text-gray-700 font-mono">Optional.ofNullable(value).ifPresent(v -> System.out.println(v));</p>
+                        <p class="text-gray-700 font-mono">// 提供默认值</p>
+                        <p class="text-gray-700 font-mono">String result = Optional.ofNullable(value).orElse("default");</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CompletableFuture类 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-amber"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-amber-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">CompletableFuture类</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">为异步编程提供强大工具，实现了 <code class="bg-gray-100 px-2 py-1 rounded">Future</code> 和 <code class="bg-gray-100 px-2 py-1 rounded">CompletionStage</code> 接口，支持链式调用、组合多个异步操作和优雅的异常处理。</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">// 异步任务与回调</p>
+                        <p class="text-gray-700 font-mono">CompletableFuture.supplyAsync(() -> "Hello")</p>
+                        <p class="text-gray-700 font-mono pl-4">.thenApply(s -> s + " World")</p>
+                        <p class="text-gray-700 font-mono pl-4">.thenAccept(System.out::println);</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内存管理与并发改进 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+            <!-- 元空间替代永久代 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-red"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-red-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-memory text-red-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">元空间替代永久代</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">最重要的内存管理改进之一。元空间使用本地内存，理论上只受系统可用内存限制，大大降低了内存溢出的风险。字符串常量池也从永久代移动到了Java堆中。</p>
+                    <div class="flex gap-4">
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 flex-1">
+                            <p class="font-bold text-gray-700 mb-1">永久代 (Java 7)</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li><i class="fa-solid fa-times text-red-400 mr-1"></i> 固定大小限制</li>
+                                <li><i class="fa-solid fa-times text-red-400 mr-1"></i> 易发生OOM</li>
+                                <li><i class="fa-solid fa-times text-red-400 mr-1"></i> 类元数据在堆内</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 flex-1">
+                            <p class="font-bold text-gray-700 mb-1">元空间 (Java 8)</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li><i class="fa-solid fa-check text-green-400 mr-1"></i> 本地内存</li>
+                                <li><i class="fa-solid fa-check text-green-400 mr-1"></i> 动态扩展</li>
+                                <li><i class="fa-solid fa-check text-green-400 mr-1"></i> 类元数据在堆外</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 并发机制增强 -->
+            <div class="card md:col-span-2 p-6">
+                <div class="absolute top-0 left-0 w-full h-full highlight-gradient-cyan"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-cyan-500/10 p-2 rounded-lg">
+                            <i class="fa-solid fa-users-gear text-cyan-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">并发机制增强</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">引入 <code class="bg-gray-100 px-2 py-1 rounded">StampedLock</code> 类提供更高性能的读写锁，以及 <code class="bg-gray-100 px-2 py-1 rounded">LongAdder</code>、<code class="bg-gray-100 px-2 py-1 rounded">LongAccumulator</code> 等新原子类，在高并发场景下性能优于传统原子类。</p>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
+                        <p class="text-gray-700 font-mono">// StampedLock支持三种模式</p>
+                        <p class="text-gray-700 font-mono">StampedLock lock = new StampedLock();</p>
+                        <p class="text-gray-700 font-mono">long stamp = lock.readLock(); // 读锁</p>
+                        <p class="text-gray-700 font-mono">// long stamp = lock.writeLock(); // 写锁</p>
+                        <p class="text-gray-700 font-mono">// long stamp = lock.tryOptimisticRead(); // 乐观读</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实践应用与最佳实践 -->
+        <div class="card md:col-span-4 p-6 mb-6 md:mb-8">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-blue"></div>
+            <div class="relative">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">实践应用与最佳实践建议</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-yellow-500"></i>
+                            函数式编程风格转变
+                        </h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-arrow-right text-blue-500 mt-1.5"></i>
+                                <span>从命令式到声明式：描述"做什么"而非"怎么做"</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-arrow-right text-blue-500 mt-1.5"></i>
+                                <span>避免外部迭代：使用Stream API的内部迭代</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-arrow-right text-blue-500 mt-1.5"></i>
+                                <span>拥抱不可变性：使用不可变对象提高线程安全性</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-gauge-high text-green-500"></i>
+                            性能优化建议
+                        </h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-arrow-right text-green-500 mt-1.5"></i>
+                                <span>合理使用并行流：数据量小或有I/O时谨慎使用</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-arrow-right text-green-500 mt-1.5"></i>
+                                <span>避免过度使用Lambda：传统方法可能更清晰</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-arrow-right text-green-500 mt-1.5"></i>
+                                <span>注意装箱拆箱：优先使用基本类型流(IntStream等)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 总结 -->
+        <div class="card md:col-span-4 p-8">
+            <div class="absolute top-0 left-0 w-full h-full highlight-gradient-purple"></div>
+            <div class="relative">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">总结</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Java 8作为Java语言发展史上的一个重要里程碑，在多个方面带来了革命性的变化。Lambda表达式和Stream API的引入使得Java具备了函数式编程能力，大大简化了代码编写并提高了表达能力。新的日期时间API解决了旧API的设计缺陷，Optional类从根本上减少了空指针异常。元空间替代永久代和并发机制的增强也显著提升了Java应用的性能和稳定性。
+                </p>
+                <p class="text-gray-600 leading-relaxed mt-3">
+                    尽管迁移到Java 8需要一定的学习成本，但从长远来看，这些投资是值得的。Java 8的新特性不仅能够提高开发效率，还能够写出更加优雅、高效和健壮的代码，这对于任何Java开发者来说都是一个不容错过的机会。
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // 性能对比图表
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['启动时间', '集合处理', '并发性能', 'Fork/Join框架', 'Stream并行处理'],
+            datasets: [{
+                label: 'Java 7',
+                data: [100, 100, 100, 100, 100],
+                backgroundColor: 'rgba(156, 163, 175, 0.5)',
+                borderColor: 'rgba(156, 163, 175, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Java 8',
+                data: [70, 85, 88, 65, 75],
+                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                borderColor: 'rgba(59, 130, 246, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                // 假设基准值为100，数值越低表示性能越好
+                                const improvement = 100 - context.parsed.y;
+                                label += `${context.parsed.y} (提升 ${improvement}%)`;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '相对性能指数 (越低越好)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulkan 1.2 全面技术解析 · 生动讲解版</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f2f5f9;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: #1a2639;
+      padding: 2rem 1rem;
+    }
+
+    .doc-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(2px);
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0,20,40,0.25);
+      padding: 2.5rem 2rem;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    /* 标题体系 */
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(145deg, #1e2b5e, #2c3e7c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+      border-left: 8px solid #4f7ebe;
+      padding-left: 1.5rem;
+    }
+
+    .subhead {
+      font-size: 1.2rem;
+      color: #2c3e66;
+      margin-bottom: 2rem;
+      margin-top: 0.2rem;
+      padding-left: 2.3rem;
+      font-weight: 400;
+      border-bottom: 2px dashed #b0c8e0;
+      padding-bottom: 0.8rem;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, #1e3a5f, #2b4b7a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      border-bottom: 3px solid currentColor;
+      padding-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    h2:before {
+      content: "⚡";
+      font-size: 2rem;
+      background: transparent;
+      -webkit-text-fill-color: initial;
+      color: #e68a2e;
+    }
+
+    h3 {
+      font-size: 1.6rem;
+      font-weight: 550;
+      margin: 1.5rem 0 1rem 0;
+      color: #1f3a5f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h3:before {
+      content: "🔹";
+      color: #3f6ab3;
+      font-size: 1.5rem;
+    }
+
+    /* 折叠卡片 */
+    details {
+      background: white;
+      border-radius: 24px;
+      margin: 1rem 0 1.5rem 0;
+      padding: 0.2rem 0.5rem 0.5rem 0.5rem;
+      box-shadow: 0 6px 14px rgba(0,10,30,0.08);
+      border: 1px solid #e7edf4;
+      transition: all 0.2s;
+    }
+    details[open] {
+      box-shadow: 0 12px 28px rgba(25,55,100,0.12);
+      border-color: #b9d2f0;
+    }
+    summary {
+      font-weight: 600;
+      font-size: 1.35rem;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      border-radius: 20px;
+      background: #f9fcff;
+      color: #10345e;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      transition: 0.1s;
+    }
+    summary::-webkit-details-marker {
+      display: none;
+    }
+    summary:before {
+      content: "📌";
+      font-size: 1.4rem;
+      margin-right: 8px;
+    }
+    details[open] summary {
+      background: #e5effb;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: 1px dashed #aac2df;
+    }
+    summary:hover {
+      background: #deebff;
+    }
+
+    /* 内容区域美化 */
+    .section-content {
+      padding: 1rem 1.8rem 1.8rem 1.8rem;
+    }
+
+    p, li, .text-block {
+      margin-bottom: 0.9rem;
+      color: #1f2e46;
+      font-size: 1.04rem;
+    }
+
+    /* 代码块 */
+    pre {
+      background: #0d1f2e;
+      padding: 1.5rem;
+      border-radius: 20px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      box-shadow: inset 0 0 0 1px #304d6d;
+    }
+    code {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.95rem;
+      color: #e3f2fd;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .inline-code {
+      background: #eef3fa;
+      color: #173e6b;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      border: 1px solid #cbd6e6;
+    }
+
+    /* 列表与标签 */
+    ul, ol {
+      padding-left: 2rem;
+      margin: 1rem 0;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    li::marker {
+      color: #3569b3;
+      font-weight: 600;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #deeaf9;
+      padding: 0.2rem 0.9rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #113355;
+      margin-right: 0.6rem;
+      border: 1px solid #aec6e6;
+    }
+
+    .feature-badge {
+      background: #1f4b7a;
+      color: white;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-right: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .highlight {
+      background: #fff9e0;
+      border-left: 6px solid #f3b23a;
+      padding: 1.2rem 1.8rem;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+    }
+
+    /* 按钮行 */
+    .toolbar {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      background: white;
+      border: 2px solid #1e3f6e;
+      padding: 0.6rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 600;
+      color: #1e3f6e;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background: #1e3f6e;
+      color: white;
+      border-color: #1e3f6e;
+    }
+
+    hr {
+      border: none;
+      border-top: 3px dotted #b1cbe5;
+      margin: 2rem 0;
+    }
+
+    footer {
+      margin-top: 3.5rem;
+      text-align: right;
+      font-style: italic;
+      color: #5d738e;
+      padding-top: 1rem;
+      border-top: 2px solid #cbdae9;
+    }
+
+    /* 层级视觉 */
+    .chapter-indent {
+      border-left: 4px solid #8fb4dc;
+      padding-left: 1.2rem;
+      margin-left: 0.5rem;
+    }
+
+    /* 表格风格 */
+    .ext-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 0.8rem;
+      background: #e9f0fa;
+      padding: 1.5rem;
+      border-radius: 32px;
+    }
+    .ext-item {
+      background: white;
+      padding: 0.6rem 1rem;
+      border-radius: 60px;
+      font-family: monospace;
+      border: 1px solid #aac3e1;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+  </style>
+</head>
+<body>
+<div class="doc-container">
+  <h1>Vulkan 1.2 全面技术解析</h1>
+  <div class="subhead">⏱️ 2020.1.15 · 23个核心扩展 · 正式内存模型 · 时间线信号量</div>
+
+  <!-- 工具栏: 全部展开/折叠 (无外部链接) -->
+  <div class="toolbar">
+    <button class="btn" id="expandAllBtn">📂 展开全部</button>
+    <button class="btn" id="collapseAllBtn">📁 折叠全部</button>
+  </div>
+
+  <!-- 内容开始 (所有details默认open) -->
+  <section>
+    <h2>1. Vulkan 1.2概述与发布背景</h2>
+    <div class="chapter-indent">
+      <details open>
+        <summary><span class="tag">里程碑</span> 1.1 发布时间与版本定位</summary>
+        <div class="section-content">
+          <p><strong>2020年1月15日正式发布</strong>，继2018年3月7日Vulkan 1.1之后的一次重大更新。Vulkan采用主版本号.次版本号.补丁版本号控制，1.2标志着进入新发展阶段。</p>
+          <p>将23个经过验证的扩展集成到核心API中，带来新硬件功能访问、性能改进和可用性增强。保持向后兼容，所有支持1.0/1.1的GPU只需更新驱动即可支持1.2。</p>
+        </div>
+      </details>
+      <details open>
+        <summary><span class="tag">设计哲学</span> 1.2 主要目标与设计理念</summary>
+        <div class="section-content">
+          <p>延续低开销、跨平台3D图形和计算API。目标：<strong>开发者需求驱动</strong>（时间线信号量、内存模型、描述符索引）、<strong>统一功能集</strong>、<strong>性能优化</strong>、<strong>开发便利性</strong>（增强HLSL支持）。</p>
+        </div>
+      </details>
+      <details open>
+        <summary><span class="tag">规范&支持</span> 1.3 官方规范与支持情况</summary>
+        <div class="section-content">
+          <p>官方规范文档1.2.257，包含所有已注册扩展。发布时已有AMD、ARM、Imagination、Intel、NVIDIA及Mesa RADV通过一致性测试。提供Vulkan SDK、CTS、RenderDoc等工具。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Vulkan 1.2核心新功能与特性</h2>
+    <div class="chapter-indent">
+      <!-- 2.1 同步机制2.0 -->
+      <details open>
+        <summary><span class="feature-badge">⏳ 2.1</span> 同步机制2.0 · 时间线信号量</summary>
+        <div class="section-content">
+          <p><strong>时间线信号量（Timeline Semaphores）</strong> 扩展二进制信号量模型：64位时间线值，单调递增；支持设备队列与主机线程双向同步；一个信号量用于多个同步操作；跨队列族精确同步。</p>
+          <p>工作原理：比较信号量当前值与预期值。用于多帧同步、精确GPU调度、多线程优化、循环依赖同步。</p>
+          <div class="highlight">✅ <strong>详细讲解：</strong> 传统二进制信号量类似“一次性的阀门”，而时间线信号量像“连续计数器”。例如第3帧需要等待第2帧完成渲染，只需等待时间线值≥2，无需每帧新建信号量，极大降低开销。</div>
+        </div>
+      </details>
+      <!-- 2.2 SPIR-V -->
+      <details open>
+        <summary><span class="feature-badge">🖥️ 2.2</span> SPIR-V 1.4/1.5支持与着色器增强</summary>
+        <div class="section-content">
+          <p>支持SPIR-V 1.5及以下版本。1.4特性：64位整数原子操作、浮点原子操作、共享内存原子操作、子组扩展类型（64位整数/双精度）。1.5特性：改进双精度浮点、新矢量类型、增强内存模型支持。</p>
+          <p>额外着色器增强：8位存储支持（VK_KHR_8bit_storage）、16位/8位计算、着色器浮点控制（VK_KHR_shader_float_controls）。</p>
+        </div>
+      </details>
+      <!-- 2.3 渲染通道2.0 -->
+      <details open>
+        <summary><span class="feature-badge">🎨 2.3</span> 渲染通道2.0与管线布局2.0</summary>
+        <div class="section-content">
+          <p><strong>渲染通道2.0</strong>：vkCreateRenderPass2 支持pNext扩展；独立的深度模板布局（VK_KHR_separate_depth_stencil_layouts）；深度模板解析（VK_KHR_depth_stencil_resolve）；无图像帧缓冲区（VK_KHR_imageless_framebuffer）。</p>
+          <p><strong>管线布局增强</strong>：描述符索引、标量块布局（VK_EXT_scalar_block_layout）、统一缓冲区标准布局（std130/430）。</p>
+        </div>
+      </details>
+      <!-- 2.4 设备组2.0 -->
+      <details open>
+        <summary><span class="feature-badge">💠 2.4</span> 设备组2.0 · 多设备协同</summary>
+        <div class="section-content">
+          <p>支持最多32个物理设备组成设备组；设备队列创建标志VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT；依赖标志VK_DEPENDENCY_DEVICE_GROUP_BIT；增强跨设备同步。适用于多GPU并行渲染、大场景、分布式光线追踪。</p>
+        </div>
+      </details>
+      <!-- 2.5 描述符索引 -->
+      <details open>
+        <summary><span class="feature-badge">📦 2.5</span> 描述符索引与动态资源管理</summary>
+        <div class="section-content">
+          <p>描述符索引（Descriptor Indexing）：绑定后更新描述符（Update-after-bind）、运行时大小数组、部分绑定、非一致索引。</p>
+          <p>着色器示例：</p>
+          <pre><code>layout(set=0, binding=0) uniform TextureArray textures[];
+layout(set=0, binding=1) uniform sampler samplers[];
+
+void main() {
+    int index = gl_InstanceIndex;
+    vec4 color = texture(textures[index], samplers[index], uv);
+    // ...
+}</code></pre>
+          <p>减少描述符集数量，提高灵活性、缓存利用率。</p>
+        </div>
+      </details>
+      <!-- 2.6 内存模型 & 原子操作 -->
+      <details open>
+        <summary><span class="feature-badge">🧠 2.6</span> 内存模型与原子操作增强</summary>
+        <div class="section-content">
+          <p><strong>正式内存模型（Formal Memory Model）</strong> 图形API首个，基于C++11但适配GPU。定义内存序（Relaxed、Release/Acquire、Sequentially Consistent）。</p>
+          <p>原子操作增强：64位原子（VK_KHR_shader_atomic_int64）、图像原子操作、子组原子操作。用于并行数据结构、原子计数器、无锁算法。</p>
+        </div>
+      </details>
+      <!-- 2.7 HLSL增强 -->
+      <details open>
+        <summary><span class="feature-badge">🔄 2.7</span> HLSL着色器语言支持增强</summary>
+        <div class="section-content">
+          <p>支持Shader Model 6.2，完整HLSL特性（64位整数、双精度、位运算、纹理采样）。使用与D3D相同的前端和验证，可调用Vulkan扩展（如光线追踪）。简化DirectX移植，跨平台便利。</p>
+        </div>
+      </details>
+      <!-- 2.8 其他重要新功能 -->
+      <details open>
+        <summary><span class="feature-badge">✨ 2.8</span> 其他重要新功能</summary>
+        <div class="section-content">
+          <ul>
+            <li><span class="inline-code">VK_KHR_buffer_device_address</span>：着色器直接使用64位地址访问缓冲区，类似指针。</li>
+            <li><span class="inline-code">VK_KHR_draw_indirect_count</span>：带计数的间接绘制。</li>
+            <li><span class="inline-code">VK_EXT_shader_viewport_index_layer</span>：着色器动态控制视口/层索引。</li>
+            <li><span class="inline-code">VK_EXT_separate_stencil_usage</span>：深度模板不同用途。</li>
+            <li><span class="inline-code">VK_KHR_sampler_mirror_clamp_to_edge</span> / <span class="inline-code">VK_EXT_sampler_filter_minmax</span>：采样器新模式。</li>
+            <li><span class="inline-code">VK_EXT_host_query_reset</span>：主机直接重置查询池。</li>
+            <li><span class="inline-code">VK_KHR_image_format_list</span>：高效查询格式支持。</li>
+            <li><span class="inline-code">VK_KHR_driver_properties</span>：查询驱动名称、版本等。</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Vulkan 1.2相较于1.1版本的修改对比</h2>
+    <div class="chapter-indent">
+      <details open><summary>3.1 API层面的变化</summary><div class="section-content"><p>新函数：vkCreateRenderPass2、vkGetRenderPass2、vkCreatePipelineCache2、vkGetPhysicalDeviceProperties2。新结构体如VkSemaphoreSignalInfo、VkPhysicalDeviceVulkan12Features。扩展的枚举与位掩码：VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT等。</p></div></details>
+      <details open><summary>3.2 功能层面的改进</summary><div class="section-content"><p>同步机制时间线信号量、SPIR-V 1.5、HLSL SM6.2、渲染通道2.0、描述符索引、缓冲区设备地址、主机查询重置、内存模型。</p></div></details>
+      <details open><summary>3.3 废弃和移除的功能</summary><div class="section-content"><p>原始的vkCreateRenderPass等被版本2函数废弃，但保留向后兼容。旧扩展被核心替代，但仍可用。</p></div></details>
+      <details open><summary>3.4 行为变化与兼容性考虑</summary><div class="section-content"><p>所有1.2实现必须支持23个提升扩展；时间线信号量改变同步行为；可通过特性查询适配；硬件兼容（驱动升级即可）。</p></div></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Vulkan 1.2性能优化分析</h2>
+    <div class="chapter-indent">
+      <details open><summary>4.1 同步机制带来的性能提升</summary><div class="section-content"><p>时间线信号量减少同步开销、提高并行性、简化多帧同步。复杂场景下性能提升可达20-30% (开发者反馈)。</p></div></details>
+      <details open><summary>4.2 多设备协同的性能优势</summary><div class="section-content"><p>设备组最多32设备，优化跨设备同步，负载均衡，内存优化，效率接近线性。</p></div></details>
+      <details open><summary>4.3 内存管理与原子操作优化</summary><div class="section-content"><p>正式内存模型优化内存访问、减少屏障；64位/浮点原子操作提升并行计算效率。子组原子操作加速图像处理。</p></div></details>
+      <details open><summary>4.4 着色器与渲染效率改进</summary><div class="section-content"><p>8/16位计算减少带宽，描述符索引减少切换开销，缓冲区设备地址避免描述符查找，渲染通道2.0减少屏障。</p></div></details>
+      <details open><summary>4.5 实际性能基准测试数据</summary><div class="section-content"><p>官方声明改进性能、视觉质量。开发者反馈：同步场景+20-30%，多GPU效率85-95%，内存减少20-40%，帧率提升10-20%。具体依赖硬件。</p></div></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Vulkan 1.2扩展体系与标准化</h2>
+    <div class="chapter-indent">
+      <details open><summary>5.1 新增扩展概览</summary><div class="section-content"><p>发布时新扩展：VK_EXT_descriptor_indexing, VK_EXT_host_query_reset, VK_EXT_sampler_filter_minmax, VK_EXT_scalar_block_layout, VK_EXT_separate_stencil_usage, VK_EXT_shader_viewport_index_layer。后续扩展如VK_ARM_rasterization_order_attachment_access等。</p></div></details>
+      <details open><summary>5.2 被提升为核心的23个扩展</summary>
+        <div class="section-content">
+          <p>完整列表 (已集成核心)：</p>
+          <div class="ext-list">
+            <span class="ext-item">VK_KHR_8bit_storage</span><span class="ext-item">VK_KHR_buffer_device_address</span><span class="ext-item">VK_KHR_create_renderpass2</span><span class="ext-item">VK_KHR_depth_stencil_resolve</span><span class="ext-item">VK_KHR_draw_indirect_count</span><span class="ext-item">VK_KHR_driver_properties</span><span class="ext-item">VK_KHR_image_format_list</span><span class="ext-item">VK_KHR_imageless_framebuffer</span><span class="ext-item">VK_KHR_sampler_mirror_clamp_to_edge</span><span class="ext-item">VK_KHR_separate_depth_stencil_layouts</span><span class="ext-item">VK_KHR_shader_atomic_int64</span><span class="ext-item">VK_KHR_shader_float16_int8</span><span class="ext-item">VK_KHR_shader_float_controls</span><span class="ext-item">VK_KHR_shader_subgroup_extended_types</span><span class="ext-item">VK_KHR_spirv_1_4</span><span class="ext-item">VK_KHR_timeline_semaphore</span><span class="ext-item">VK_KHR_uniform_buffer_standard_layout</span><span class="ext-item">VK_KHR_vulkan_memory_model</span><span class="ext-item">VK_EXT_descriptor_indexing</span><span class="ext-item">VK_EXT_host_query_reset</span><span class="ext-item">VK_EXT_sampler_filter_minmax</span><span class="ext-item">VK_EXT_scalar_block_layout</span><span class="ext-item">VK_EXT_separate_stencil_usage</span>
+          </div>
+        </div>
+      </details>
+      <details open><summary>5.3 扩展的技术特性与应用场景</summary><div class="section-content"><p>每项扩展详细特性及应用见上文，例如时间线信号量用于多帧同步，描述符索引用于纹理数组，缓冲区设备地址用于类似指针的工作流。</p></div></details>
+      <details open><summary>5.4 扩展与核心功能的关系</summary><div class="section-content"><p>扩展先发布验证，成熟后提升为核心，保证稳定性。核心功能所有实现必须支持，扩展可选但需查询。优先使用核心。</p></div></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. Vulkan 1.2技术实现深度解析</h2>
+    <div class="chapter-indent">
+      <details open><summary>6.1 内存模型实现原理</summary><div class="section-content"><p>基于内存序（Relaxed, Release/Acquire, Sequentially Consistent）与原子操作，为GPU大规模并行设计。编译器/驱动/硬件共同配合，优化内存访问并减少屏障。</p></div></details>
+      <details open><summary>6.2 命令缓冲与执行机制</summary><div class="section-content"><p>新命令：vkCmdDrawIndirectCount等；队列优先级、跨队列同步标志VK_DEPENDENCY_DEVICE_GROUP_BIT；二级命令缓冲、预记录优化。</p></div></details>
+      <details open><summary>6.3 着色器执行与优化</summary><div class="section-content"><p>SPIR-V 1.5 原子操作、子组增强；HLSL优化前端；工作组规模增大；使用8/16位类型、减少指令、利用子组操作。</p></div></details>
+      <details open><summary>6.4 资源管理机制</summary><div class="section-content"><p>描述符索引（update-after-bind, 部分绑定），缓冲区设备地址（64位指针），std430布局，无图像帧缓冲，主机查询重置。</p></div></details>
+      <details open><summary>6.5 跨平台兼容性实现</summary><div class="section-content"><p>统一API抽象硬件差异；平台特定实现（Windows WDDM, Linux KMS/UMD, Android, MoltenVK）；CTS一致性测试确保兼容；向后兼容。</p></div></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>7. Vulkan 1.2开发支持与生态系统</h2>
+    <div class="chapter-indent">
+      <details open><summary>7.1 GPU厂商支持情况</summary><div class="section-content"><p>AMD、ARM、Imagination、Intel、NVIDIA及Mesa RADV均已通过一致性测试，提供完整驱动支持。所有支持1.1的硬件可升级。</p></div></details>
+      <details open><summary>7.2 开发工具与IDE支持</summary><div class="section-content"><p>Vulkan SDK, RenderDoc, Nsight, RGP, Intel GPA；Visual Studio/CLion/Vim插件；VMA内存分配器；glslang/dxc编译器；性能工具VkMark, 3DMark。</p></div></details>
+      <details open><summary>7.3 文档资源与学习材料</summary><div class="section-content"><p>官方规范1.2.257，Vulkan Samples，教程，Vulkan Programming Guide，Khronos Slack，GitHub仓库，Stack Overflow，迁移指南。</p></div></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>8. 总结与展望</h2>
+    <div class="chapter-indent">
+      <details open>
+        <summary>📋 8. 成就与未来</summary>
+        <div class="section-content">
+          <p><strong>主要成就：</strong>23个核心扩展，时间线信号量、正式内存模型、描述符索引、HLSL SM6.2、SPIR-V 1.5。首个支持正式内存模型的图形API，灵活的同步，现代化着色器，高效资源管理。</p>
+          <p><strong>对开发者价值：</strong>生产力提升，性能优化，代码可维护性，学习成本可控。</p>
+          <p><strong>展望：</strong>光线追踪、机器学习集成，生态系统完善，云游戏/物联网扩展，更多扩展将提升为核心。</p>
+          <p>Vulkan 1.2为未来创新奠定基础，开放标准的力量持续推动图形和计算发展。</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <hr>
+  <footer>📄 内容由 AI 生成 · 基于《Vulkan 1.2全面技术解析》全文整理 · 生动讲解内嵌</footer>
+</div>
+
+<!-- 内联JS：折叠/展开所有details -->
+<script>
+  (function() {
+    const expandBtn = document.getElementById('expandAllBtn');
+    const collapseBtn = document.getElementById('collapseAllBtn');
+    const allDetails = document.querySelectorAll('details');
+
+    function setAllDetails(open) {
+      allDetails.forEach(d => d.open = open);
+    }
+
+    expandBtn.addEventListener('click', () => setAllDetails(true));
+    collapseBtn.addEventListener('click', () => setAllDetails(false));
+  })();
+</script>
+
+<!-- 确保所有代码换行，pre已经处理 -->
+</body>
+</html>
